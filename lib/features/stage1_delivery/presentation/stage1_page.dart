@@ -29,9 +29,7 @@ class Stage1Page extends ConsumerWidget {
     final isNew = projectId == 'new';
     final project = isNew
         ? null
-        : ref
-              .watch(syncStage1ProjectsProvider)
-              .firstWhere((p) => p.id == projectId);
+        : ref.watch(stage1ProjectByIdProvider(projectId));
     return Scaffold(
       appBar: AppBar(
         title: Text(

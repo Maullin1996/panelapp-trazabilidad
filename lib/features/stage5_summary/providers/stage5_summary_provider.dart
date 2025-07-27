@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_load_provider.dart';
+import 'package:registro_panela/features/stage2_load/providers/providers.dart';
 import 'package:registro_panela/features/stage5_summary/domain/stage5_summary_item.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -8,7 +8,7 @@ part 'stage5_summary_provider.g.dart';
 @riverpod
 List<Stage5SummaryDay> stage5Summary(Ref ref, String projectId) {
   final loads = ref
-      .watch(stage2LoadProvider)
+      .watch(syncStage2ProjectsProvider)
       .where((l) => l.projectId == projectId);
 
   // 1) Agrupar por fecha

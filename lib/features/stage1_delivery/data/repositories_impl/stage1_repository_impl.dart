@@ -16,7 +16,7 @@ class Stage1RepositoryImpl implements Stage1Repository {
 
   @override
   Future<void> delete(String id) {
-    return datasource.delete(id); // ✅
+    return datasource.delete(id);
   }
 
   @override

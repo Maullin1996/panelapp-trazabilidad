@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:go_router/go_router.dart';
-import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
-import 'package:registro_panela/features/stage2_load/domain/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/providers/stage2_load_form_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -28,28 +26,9 @@ class Stage2LoadForm extends ConsumerStatefulWidget {
 
 class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  bool _listenerAttached = false;
 
   @override
   Widget build(BuildContext context) {
-    if (!_listenerAttached) {
-      ref.listen(stage2FormProvider, (previous, next) {
-        if (previous?.status == Stage2FormStatus.submitting &&
-            next.status == Stage2FormStatus.success) {
-          context.go('${Routes.stage2}/${widget.project.id}');
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Cargue registrado')));
-        }
-        if (next.status == Stage2FormStatus.error) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(next.errorMessage ?? 'Error al guardar')),
-          );
-        }
-      });
-      _listenerAttached = true;
-    }
-
     final init = widget.initialData;
     final Map<String, dynamic> initialMap = init != null
         ? {
@@ -148,14 +127,14 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Peso', style: textTheme.headlineMedium),
+                            Text('Peso (kg)', style: textTheme.headlineMedium),
                             AppFormTextFild(
                               name: 'basketWeight',
                               label: 'Peso de referencia (kg)',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
-                                FormBuilderValidators.integer(),
+                                FormBuilderValidators.numeric(),
                                 FormBuilderValidators.min(1),
                               ]),
                             ),

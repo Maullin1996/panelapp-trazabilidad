@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_load_provider.dart';
+import 'package:registro_panela/features/stage2_load/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/widget/stage3_load_form.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_load_provider.dart';
@@ -30,7 +30,7 @@ class Stage3FormPage extends ConsumerWidget {
     }
 
     final load2 = ref
-        .watch(stage2LoadProvider)
+        .watch(syncStage2ProjectsProvider)
         .firstWhereOrNull((l) => l.id == load2Id);
 
     final initialData = ref

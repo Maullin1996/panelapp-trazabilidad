@@ -5,8 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_load_form_provider.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_load_provider.dart';
+import 'package:registro_panela/features/stage2_load/providers/providers.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 
 import 'package:registro_panela/shared/widgets/custom_card.dart';
@@ -34,8 +33,10 @@ class Stage2Page extends ConsumerWidget {
     });
     final project = ref.watch(stage1ProjectByIdProvider(projectId));
 
+    final error = ref.watch(stage2LoadsErrorProvider);
+
     final loads = ref
-        .watch(stage2LoadProvider)
+        .watch(syncStage2ProjectsProvider)
         .where((l) => l.projectId == projectId)
         .toList();
 
@@ -54,6 +55,26 @@ class Stage2Page extends ConsumerWidget {
       ),
       body: loads.isEmpty
           ? const Center(child: Text('Aún no hay cargues registrados'))
+          : (error != null)
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  SizedBox(height: 16),
+                  Text('Ocurrió un error al cargar los proyectos'),
+                  SizedBox(height: 8),
+                  Text(error, style: TextStyle(color: Colors.grey)),
+                  SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () =>
+                        ref.read(stage2LoadProvider.notifier).refresh(),
+                    icon: Icon(Icons.refresh),
+                    label: Text('Reintentar'),
+                  ),
+                ],
+              ),
+            )
           : ListView.builder(
               padding: const EdgeInsets.only(bottom: AppSpacing.medium),
               itemCount: loads.length,

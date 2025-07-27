@@ -1,5 +1,6 @@
-import 'package:registro_panela/features/stage2_load/domain/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/providers/stage2_load_provider.dart';
+import 'package:registro_panela/features/stage2_load/providers/stage2_usecases_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage2_load_form_provider.g.dart';
@@ -38,14 +39,14 @@ class Stage2Form extends _$Stage2Form {
   Future<void> submit(Stage2LoadData data, {required bool isNew}) async {
     state = state.copyWith(status: Stage2FormStatus.submitting);
     try {
-      // Aquí simularías la subida a backend, luego quitas el delay.
-      await Future.delayed(const Duration(milliseconds: 300));
-      final loadRepo = ref.read(stage2LoadProvider.notifier);
       if (isNew) {
-        loadRepo.add(data);
+        final createUseCase = ref.read(createStage2DataProvider);
+        await createUseCase(data);
       } else {
-        loadRepo.update(data);
+        final updateUseCase = ref.read(updateStage2DataProvider);
+        await updateUseCase(data);
       }
+      ref.invalidate(stage2LoadProvider);
       state = state.copyWith(status: Stage2FormStatus.success, data: data);
     } catch (e) {
       state = state.copyWith(

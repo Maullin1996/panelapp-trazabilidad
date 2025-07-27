@@ -1,4 +1,4 @@
-import 'package:registro_panela/features/stage2_load/domain/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:uuid/uuid.dart';
 
 final _uuid = Uuid();

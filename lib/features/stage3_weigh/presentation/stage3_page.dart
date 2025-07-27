@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage2_load/domain/stage2_load_data.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_load_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_load_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -22,7 +22,7 @@ class Stage3Page extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final project = ref.watch(stage1ProjectByIdProvider(projectId));
     final loads2 = ref
-        .watch(stage2LoadProvider)
+        .watch(syncStage2ProjectsProvider)
         .where((l) => l.projectId == projectId)
         .toList();
 
@@ -79,7 +79,7 @@ class Stage3Page extends ConsumerWidget {
                     Center(
                       child: Text(
                         'Registrado en Molienda',
-                        style: textTheme.headlineSmall,
+                        style: textTheme.headlineMedium,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.small),
@@ -111,7 +111,7 @@ class Stage3Page extends ConsumerWidget {
                     Center(
                       child: Text(
                         'Registrado en bodega',
-                        style: textTheme.headlineSmall,
+                        style: textTheme.headlineMedium,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.small),
@@ -132,7 +132,7 @@ class Stage3Page extends ConsumerWidget {
                     Center(
                       child: Text(
                         'Canastillas y Peso faltante',
-                        style: textTheme.headlineSmall,
+                        style: textTheme.headlineMedium,
                       ),
                     ),
                     const SizedBox(height: AppSpacing.small),
