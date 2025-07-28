@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/providers/auth_provider.dart';
@@ -26,7 +25,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     ref.listen<AuthParams>(authProvider, (previous, next) {
       if (previous?.authStatus != next.authStatus) {
         if (next.authStatus == AuthStatus.authenticated) {
-          context.go(Routes.projects);
+          context.go('/splash');
         } else if (next.authStatus == AuthStatus.notAuthenticated &&
             next.errorMessage?.isNotEmpty == true) {
           ScaffoldMessenger.of(

@@ -6,10 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/stage3_form_data.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
+import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage3LoadForm extends ConsumerStatefulWidget {
@@ -77,7 +78,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
       }
     }
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.only(bottom: AppSpacing.medium),
       child: FormBuilder(
         key: _formKey,
         initialValue: initMap,
@@ -85,17 +86,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
           children: [
             ...List.generate(
               _indices.length,
-              (index) => Card(
-                margin: const EdgeInsets.only(bottom: 16),
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16), // Bordes redondeados
-                  side: BorderSide(
-                    color: AppColors.inputBorder, // Color del borde
-                    width: 2, // Grosor del borde
-                  ),
-                ),
-                elevation: 2,
+              (index) => CustomCard(
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

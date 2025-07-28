@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/auth_redirect.dart';
@@ -6,6 +5,7 @@ import 'package:registro_panela/core/router/go_router_notifier.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/presentation/login_page.dart';
 import 'package:registro_panela/features/project_selector/presentation/project_selector_page.dart';
+import 'package:registro_panela/features/splash/splash_screen.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/stage1_page.dart';
 import 'package:registro_panela/features/stage2_load/presentation/stage2_page.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/stage3_form_page.dart';
@@ -23,7 +23,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   final notifier = GoRouterNotifier(ref);
 
   return GoRouter(
-    initialLocation: Routes.login,
+    initialLocation: '/splash',
     refreshListenable: notifier,
     redirect: (context, state) => authRedirect(ref, state),
 
@@ -148,21 +148,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      GoRoute(
-        path: '/splash',
-        builder: (_, __) => const Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Verificando sesión...'),
-              ],
-            ),
-          ),
-        ),
-      ),
+      GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
     ],
   );
 });

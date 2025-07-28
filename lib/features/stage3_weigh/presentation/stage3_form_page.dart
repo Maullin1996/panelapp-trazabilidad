@@ -62,7 +62,7 @@ class Stage3FormPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           isNew ? 'Registrar pesaje' : 'Editar pesaje',
-          style: textTheme.headlineMedium,
+          style: textTheme.headlineLarge,
         ),
         leading: BackButton(onPressed: () => context.pop()),
       ),
