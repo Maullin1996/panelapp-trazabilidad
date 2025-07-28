@@ -7,7 +7,7 @@ part of 'global_missing_provider.dart';
 // **************************************************************************
 
 String _$stage3GlobalSummaryHash() =>
-    r'0add0401ace65e803efeb6b012490ee87ebd9509';
+    r'140379c0cfeff9324deafbc2cef77617fad49d2e';
 
 /// Copied from Dart SDK
 class _SystemHash {

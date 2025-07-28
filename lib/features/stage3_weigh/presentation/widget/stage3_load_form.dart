@@ -157,11 +157,13 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       ),
                       if (_photoPaths[index]?.isNotEmpty == true) ...[
                         const SizedBox(height: 8),
-                        Image.file(
-                          File(_photoPaths[index]!),
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.cover,
+                        Center(
+                          child: Image.file(
+                            File(_photoPaths[index]!),
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ],
                     ],

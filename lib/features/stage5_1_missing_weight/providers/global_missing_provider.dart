@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/stage3_load_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'global_missing_provider.g.dart';
@@ -35,7 +35,7 @@ Stage3GlobalSummary stage3GlobalSummary(Ref ref, String projectId) {
 
   // Trae todos los registros de pesaje del proyecto
   final entries3 = ref
-      .watch(stage3LoadProvider)
+      .watch(syncStage3ProjectsProvider)
       .where((e) => e.projectId == projectId);
 
   int expectedCount = 0;

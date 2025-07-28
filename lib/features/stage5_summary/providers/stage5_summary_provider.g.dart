@@ -6,7 +6,7 @@ part of 'stage5_summary_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage5SummaryHash() => r'cdeb0130c47a980b3a559bb82751ea3eef31187e';
+String _$stage5SummaryHash() => r'3d8e6eef79d2aebf3ba3f2403a698ae8be14a87a';
 
 /// Copied from Dart SDK
 class _SystemHash {

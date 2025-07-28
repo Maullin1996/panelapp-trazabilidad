@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/providers/providers.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/stage3_load_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
@@ -23,21 +23,17 @@ class Stage3PageSummary extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final project = ref.watch(stage1ProjectByIdProvider(projectId))!;
-    final load2 = ref.watch(stage2LoadsByIdProvider(projectId))!;
-    // .where((l) => l.projectId == projectId)
-    // .first;
+    final load2 = ref.watch(stage2LoadsByIdProvider(load2Id))!;
     final entry3 = ref
-        .watch(stage3LoadProvider)
+        .watch(syncStage3ProjectsProvider)
         .where((p) => p.projectId == project.id)
         .first;
-
     // 2) Cálculos de totales
     final group = load2.baskets;
     final totalBaskets = group.count;
     final totalRefKg = group.realWeight * totalBaskets;
 
-    final regCount =
-        entry3.baskets.length; // cada elemento es una canastilla registrada
+    final regCount = entry3.baskets.length;
     final regWeight = entry3.baskets.fold<double>(
       0,
       (sum, b) => sum + b.realWeight,
@@ -123,7 +119,7 @@ class Stage3PageSummary extends ConsumerWidget {
                     firstText: 'Peso faltante: ',
                     secondText: '${missingWeight.toStringAsFixed(2)} kg',
                   ),
-                  SizedBox(height: AppSpacing.medium),
+                  const SizedBox(height: AppSpacing.medium),
 
                   Center(
                     child: Text(
@@ -175,12 +171,19 @@ class Stage3PageSummary extends ConsumerWidget {
 
                       const SizedBox(height: AppSpacing.xSmall),
                       if (b.photoPath.isNotEmpty)
-                        Image.file(
-                          File(b.photoPath),
-                          width: double.infinity,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
+                        (b.photoPath.startsWith('http'))
+                            ? Image.network(
+                                b.photoPath,
+                                width: 300,
+                                height: 300,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.file(
+                                File(b.photoPath),
+                                width: double.infinity,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
                     ],
                   ),
                 ),

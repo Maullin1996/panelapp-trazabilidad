@@ -9,7 +9,7 @@ import 'package:registro_panela/features/stage1_delivery/providers/stage1_projec
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/stage3_load_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
@@ -26,7 +26,7 @@ class Stage3Page extends ConsumerWidget {
         .where((l) => l.projectId == projectId)
         .toList();
 
-    final entries3 = ref.watch(stage3LoadProvider);
+    final entries3 = ref.watch(syncStage3ProjectsProvider);
 
     if (project == null) {
       return const Scaffold(

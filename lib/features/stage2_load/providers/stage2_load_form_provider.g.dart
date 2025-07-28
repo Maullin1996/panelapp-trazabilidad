@@ -6,7 +6,7 @@ part of 'stage2_load_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage2FormHash() => r'b24d7eafa2d6ee61d9fc5f56212650c132354a78';
+String _$stage2FormHash() => r'167cab7c2072fd0e7a20b04d3efec084bdb8df23';
 
 /// See also [Stage2Form].
 @ProviderFor(Stage2Form)
