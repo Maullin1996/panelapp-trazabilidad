@@ -9,6 +9,9 @@ import '../../features/auth/providers/auth_provider.dart';
 String? authRedirect(Ref ref, GoRouterState state) {
   final auth = ref.read(authProvider);
   final path = state.uri.path;
+  print(
+    '🔄 authRedirect → path: $path, authStatus: ${auth.authStatus}, role: ${auth.user?.role}',
+  );
   final isChecking = auth.authStatus == AuthStatus.checking;
   final isAuth = auth.authStatus == AuthStatus.authenticated;
   final isAnon = auth.authStatus == AuthStatus.notAuthenticated;
@@ -25,28 +28,30 @@ String? authRedirect(Ref ref, GoRouterState state) {
     return Routes.projects;
   }
 
-  final roleByName = <String, UserRole>{
-    'stage1': UserRole.stage1,
-    'stage2Detail': UserRole.stage2,
-    'stage3Detail': UserRole.stage3,
-    'stage3Form': UserRole.stage3,
-    'stage3Summary': UserRole.stage3,
-    'stage4Detail': UserRole.stage4,
-    'stage5page': UserRole.stage5,
-    'stage5summary': UserRole.stage5,
-    'stage5report': UserRole.stage5,
-    'stage5records': UserRole.stage5,
-    'stage52form': UserRole.stage5,
-    'stage52summary': UserRole.stage5,
-  };
+  if (isAuth) {
+    final roleByName = <String, UserRole>{
+      'stage1': UserRole.stage1,
+      'stage2Detail': UserRole.stage2,
+      'stage3Detail': UserRole.stage3,
+      'stage3Form': UserRole.stage3,
+      'stage3Summary': UserRole.stage3,
+      'stage4Detail': UserRole.stage4,
+      'stage5page': UserRole.stage5,
+      'stage5summary': UserRole.stage5,
+      'stage5report': UserRole.stage5,
+      'stage5records': UserRole.stage5,
+      'stage52form': UserRole.stage5,
+      'stage52summary': UserRole.stage5,
+    };
 
-  final routeName = state.name;
-  final requiredRole = routeName != null ? roleByName[routeName] : null;
+    final routeName = state.name;
+    final requiredRole = routeName != null ? roleByName[routeName] : null;
 
-  if (requiredRole != null &&
-      auth.user?.role != requiredRole &&
-      auth.user?.role != UserRole.admin) {
-    return Routes.projects;
+    if (requiredRole != null &&
+        auth.user?.role != requiredRole &&
+        auth.user?.role != UserRole.admin) {
+      return Routes.projects;
+    }
   }
 
   return null;

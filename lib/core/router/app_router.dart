@@ -73,7 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             name: 'stage3Summary',
-            path: '/:load2Id/summary',
+            path: ':load2Id/summary',
             builder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
               final load2Id = state.pathParameters['load2Id']!;
@@ -150,7 +150,18 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: '/splash',
-        builder: (_, __) => const Center(child: CircularProgressIndicator()),
+        builder: (_, __) => const Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Verificando sesión...'),
+              ],
+            ),
+          ),
+        ),
       ),
     ],
   );

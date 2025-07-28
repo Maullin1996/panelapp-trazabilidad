@@ -10,7 +10,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Auth extends _$Auth {
   late final AuthRepository _authRepository;
   @override
@@ -47,14 +47,18 @@ class Auth extends _$Auth {
   }
 
   Future<void> checkAuthStatus() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      state = const AuthParams(authStatus: AuthStatus.notAuthenticated);
+    if (state.authStatus == AuthStatus.authenticated && state.user != null) {
+      print('🔒 Ya autenticado, no se verifica de nuevo');
       return;
     }
-    final uid = user.uid;
 
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        state = const AuthParams(authStatus: AuthStatus.notAuthenticated);
+        return;
+      }
+      final uid = user.uid;
       final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
