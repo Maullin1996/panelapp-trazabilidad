@@ -39,18 +39,37 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
   late final Map<int, String> _photoPaths;
 
   @override
+  void didUpdateWidget(covariant Stage3LoadForm old) {
+    super.didUpdateWidget(old);
+    if (old.initialData != widget.initialData) {
+      // Reconstruir initMap y _photoPaths aquí
+      _initFormFields();
+      // Y forzar al FormBuilder a resetearse:
+      _formKey.currentState?.reset();
+    }
+  }
+
+  void _initFormFields() {
+    final basketsData = widget.initialData?.baskets ?? [];
+
+    // 1) Mapa de sequence → photoPath
+    final photoMap = <int, String>{
+      for (final b in basketsData) b.sequence: b.photoPath,
+    };
+
+    // 2) Genera tu lista de índices
+    _totalBaskets = widget.load2.baskets.count;
+    _refWeightPerBasket = widget.load2.baskets.referenceWeight;
+    _indices = List.generate(_totalBaskets, (i) => i);
+
+    // 3) Llena _photoPaths usando el mapa, o '' si no existe
+    _photoPaths = {for (final i in _indices) i: photoMap[i] ?? ''};
+  }
+
+  @override
   void initState() {
     super.initState();
-    final baskets = widget.load2.baskets;
-    _totalBaskets = baskets.count;
-    _refWeightPerBasket = baskets.referenceWeight;
-    _indices = List.generate(_totalBaskets, (index) => index);
-    _photoPaths = {
-      for (var i in _indices)
-        i: widget.initialData != null
-            ? widget.initialData!.baskets[i].photoPath
-            : '',
-    };
+    _initFormFields();
   }
 
   Future<void> _pickImage(int index) async {
@@ -71,10 +90,9 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
     final uuid = const Uuid();
     final initMap = <String, dynamic>{};
     if (widget.initialData != null) {
-      for (BasketWeighData element in widget.initialData!.baskets) {
-        initMap['realWeight_${element.sequence}'] = element.realWeight
-            .toString();
-        initMap['quality_${element.sequence}'] = element.quality.name;
+      for (final b in widget.initialData!.baskets) {
+        initMap['realWeight_${b.sequence}'] = b.realWeight.toString();
+        initMap['quality_${b.sequence}'] = b.quality.name;
       }
     }
     return SingleChildScrollView(
@@ -157,14 +175,23 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       ),
                       if (_photoPaths[index]?.isNotEmpty == true) ...[
                         const SizedBox(height: 8),
-                        Center(
-                          child: Image.file(
-                            File(_photoPaths[index]!),
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        (_photoPaths[index]!.startsWith('http'))
+                            ? Center(
+                                child: Image.network(
+                                  _photoPaths[index]!,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Center(
+                                child: Image.file(
+                                  File(_photoPaths[index]!),
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                       ],
                     ],
                   ),

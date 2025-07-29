@@ -73,7 +73,12 @@ class Stage3FormPage extends ConsumerWidget {
           AppSpacing.small,
           AppSpacing.medium,
         ),
-        child: Stage3LoadForm(project: project, load2: load2!, isNew: isNew),
+        child: Stage3LoadForm(
+          project: project,
+          load2: load2!,
+          isNew: isNew,
+          initialData: initialData,
+        ),
       ),
     );
   }
