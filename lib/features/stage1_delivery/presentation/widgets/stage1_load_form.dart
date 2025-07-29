@@ -229,6 +229,16 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               const SizedBox(height: 20),
               Center(
                 child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.colorElevatedButton,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSpacing.extraLarge,
+                      vertical: AppSpacing.smallLarge,
+                    ),
+                  ),
                   onPressed: _onPickImage,
                   icon: const Icon(Icons.camera_alt, size: 30),
                   label: Text('Tomar Foto'),
@@ -257,59 +267,72 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                 ),
 
               const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: state.status == Stage1FormStatus.submitting
-                      ? null
-                      : () async {
-                          final isValid =
-                              _formKey.currentState?.saveAndValidate() ?? false;
-                          if (!isValid) return;
+              SafeArea(
+                child: Center(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.colorElevatedButton,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.extraLarge,
+                        vertical: AppSpacing.smallLarge,
+                      ),
+                    ),
+                    onPressed: state.status == Stage1FormStatus.submitting
+                        ? null
+                        : () async {
+                            final isValid =
+                                _formKey.currentState?.saveAndValidate() ??
+                                false;
+                            if (!isValid) return;
 
-                          final values = _formKey.currentState!.value;
-                          final gaveras = <GaveraData>[];
-                          for (int i = 0; i < _gaveras.length; i++) {
-                            final cantidad =
-                                int.tryParse(
-                                  values['gaverasCantidad_$i'] ?? '',
-                                ) ??
-                                0;
-                            final peso =
-                                double.tryParse(
-                                  values['gaverasPeso_$i'] ?? '',
-                                ) ??
-                                0.0;
-                            gaveras.add(
-                              GaveraData(
-                                quantity: cantidad,
-                                referenceWeight: peso,
+                            final values = _formKey.currentState!.value;
+                            final gaveras = <GaveraData>[];
+                            for (int i = 0; i < _gaveras.length; i++) {
+                              final cantidad =
+                                  int.tryParse(
+                                    values['gaverasCantidad_$i'] ?? '',
+                                  ) ??
+                                  0;
+                              final peso =
+                                  double.tryParse(
+                                    values['gaverasPeso_$i'] ?? '',
+                                  ) ??
+                                  0.0;
+                              gaveras.add(
+                                GaveraData(
+                                  quantity: cantidad,
+                                  referenceWeight: peso,
+                                ),
+                              );
+                            }
+                            final data = Stage1FormData(
+                              id: widget.initialData?.id ?? uuid.v4(),
+                              name: values['name'],
+                              gaveras: gaveras,
+                              basketsQuantity: int.parse(
+                                values['basketsQuantity'],
                               ),
+                              preservativesWeight: double.parse(
+                                values['preservativesWeight'],
+                              ),
+                              preservativesJars: int.parse(
+                                values['preservativesJars'],
+                              ),
+                              limeWeight: double.parse(values['limeWeight']),
+                              limeJars: int.parse(values['limeJars']),
+                              phone: values['phone'],
+                              date: initial?.date ?? DateTime.now(),
+                              photoPath: _fotoPath,
                             );
-                          }
-                          final data = Stage1FormData(
-                            id: widget.initialData?.id ?? uuid.v4(),
-                            name: values['name'],
-                            gaveras: gaveras,
-                            basketsQuantity: int.parse(
-                              values['basketsQuantity'],
-                            ),
-                            preservativesWeight: double.parse(
-                              values['preservativesWeight'],
-                            ),
-                            preservativesJars: int.parse(
-                              values['preservativesJars'],
-                            ),
-                            limeWeight: double.parse(values['limeWeight']),
-                            limeJars: int.parse(values['limeJars']),
-                            phone: values['phone'],
-                            date: initial?.date ?? DateTime.now(),
-                            photoPath: _fotoPath,
-                          );
-                          formNotifier.submit(data, isNew: isNew);
-                        },
-                  child: state.status == Stage1FormStatus.submitting
-                      ? const CircularProgressIndicator()
-                      : Text('Guardar'),
+                            formNotifier.submit(data, isNew: isNew);
+                          },
+                    child: state.status == Stage1FormStatus.submitting
+                        ? const CircularProgressIndicator()
+                        : Text('Guardar'),
+                  ),
                 ),
               ),
             ],

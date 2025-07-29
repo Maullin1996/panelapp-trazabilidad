@@ -36,29 +36,81 @@ class ProjectSelectorPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            onPressed: () => ref.read(authProvider.notifier).logout(),
-            icon: Icon(Icons.logout, size: 30),
+          PopupMenuButton<String>(
+            position: PopupMenuPosition.under,
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'logout') {
+                ref.read(authProvider.notifier).logout();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Text(
+                  'Cerrar sesión',
+                  style: TextStyle(
+                    fontFamily: AppTypography.familyRoboto,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
         title: Text('Seleccionar Proyecto', style: textTheme.headlineLarge),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Sólo admin y stage1 pueden crear
-          if (user != null &&
-              (user.role == UserRole.admin || user.role == UserRole.stage1)) {
-            context.go('${Routes.stage1}/new');
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Sólo admin o Stage1 pueden crear proyectos'),
-                backgroundColor: Colors.red,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // Sólo admin y stage1 pueden crear
+      //     if (user != null &&
+      //         (user.role == UserRole.admin || user.role == UserRole.stage1)) {
+      //       context.go('${Routes.stage1}/new');
+      //     } else {
+      //       ScaffoldMessenger.of(context).showSnackBar(
+      //         const SnackBar(
+      //           content: Text('Sólo admin o Stage1 pueden crear proyectos'),
+      //           backgroundColor: Colors.red,
+      //         ),
+      //       );
+      //     }
+      //   },
+      //   child: const Icon(Icons.add_outlined),
+      // ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppRadius.small),
+                ),
               ),
-            );
-          }
-        },
-        child: const Icon(Icons.add_outlined),
+              icon: const Icon(Icons.add_outlined),
+              label: const Text('Crear proyecto'),
+              onPressed: () {
+                // Sólo admin y stage1 pueden crear
+                if (user != null &&
+                    (user.role == UserRole.admin ||
+                        user.role == UserRole.stage1)) {
+                  context.go('${Routes.stage1}/new');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Sólo admin o Stage1 pueden crear proyectos',
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ),
       ),
       body: (error != null)
           ? Center(
@@ -215,7 +267,7 @@ class ProjectSelectorPage extends ConsumerWidget {
                     padding: const EdgeInsets.all(AppSpacing.smallLarge),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 226, 230, 231),
+                        color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(AppRadius.large),
                       ),
                       child: ListTile(
@@ -225,13 +277,26 @@ class ProjectSelectorPage extends ConsumerWidget {
                         dense: true,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
-                            16,
+                            10,
                           ), // Bordes redondeados
                         ),
-                        leading: Icon(_iconForStage(stage), size: 30),
+                        leading: Icon(
+                          _iconForStage(stage),
+                          size: 30,
+                          color: Colors.black,
+                        ),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 20),
                         title: Text(
                           _stageName(stage),
-                          style: TextTheme.of(context).headlineMedium,
+                          style: TextTheme.of(
+                            context,
+                          ).headlineMedium?.copyWith(color: Colors.black),
+                        ),
+                        subtitle: Text(
+                          'Proyecto: Porno de ancianos',
+                          style: TextTheme.of(
+                            context,
+                          ).bodyLarge?.copyWith(color: Colors.black54),
                         ),
                         onTap: () => context.go('${byStage(stage)}/$projectId'),
                       ),

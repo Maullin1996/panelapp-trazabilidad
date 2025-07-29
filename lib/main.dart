@@ -17,6 +17,7 @@ class MainApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Registro Panela',
       routerConfig: router,
       theme: AppThemes.lightTheme,

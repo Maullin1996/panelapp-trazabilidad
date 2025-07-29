@@ -46,7 +46,7 @@ class AppFormTextFild extends StatelessWidget {
             spreadRadius: 1,
           ),
         ],
-        borderRadius: BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.inputBorder, width: 2),
       ),
       child: FormBuilderTextField(

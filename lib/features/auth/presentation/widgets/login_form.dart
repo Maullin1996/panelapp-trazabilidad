@@ -77,6 +77,22 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ? Center(child: const CircularProgressIndicator())
               : Center(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.colorElevatedButton,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSpacing.extraLarge,
+                        vertical: AppSpacing.smallLarge,
+                      ),
+                      // textStyle: TextStyle(
+                      //   fontFamily: AppTypography.familyRoboto,
+                      //   fontSize: AppTypography.h3,
+                      //   fontWeight: FontWeight.bold,
+                      //   color: Colors.white,
+                      // ),
+                    ),
                     onPressed: formState.isValid
                         ? () async {
                             if (_fbkey.currentState?.saveAndValidate() ??
@@ -89,7 +105,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                           }
                         : null,
 
-                    child: const Text('Iniciar sesión'),
+                    child: const Text(
+                      'Iniciar sesión',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
         ],

@@ -7,6 +7,7 @@ abstract class AppThemes {
   /// Light theme configuration.
   static final ThemeData lightTheme = ThemeData(
     useMaterial3: true,
+    scaffoldBackgroundColor: Colors.brown.shade50,
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       extendedTextStyle: TextStyle(
         fontFamily: AppTypography.familyRoboto,
@@ -17,6 +18,7 @@ abstract class AppThemes {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.colorElevatedButton,
+        foregroundColor: Colors.white,
         elevation: 5,
         padding: EdgeInsets.symmetric(
           horizontal: AppSpacing.medium,

@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'registro-panela.firebaseapp.com',
     storageBucket: 'registro-panela.firebasestorage.app',
   );
+
 }
