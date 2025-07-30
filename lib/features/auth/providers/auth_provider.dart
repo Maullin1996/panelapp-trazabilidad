@@ -16,7 +16,7 @@ class Auth extends _$Auth {
   @override
   AuthParams build() {
     _authRepository = ref.read(authRepositoryProvider);
-    return const AuthParams(authStatus: AuthStatus.notAuthenticated);
+    return const AuthParams();
   }
 
   Future<void> login({required String email, required String password}) async {
@@ -51,6 +51,8 @@ class Auth extends _$Auth {
       print('🔒 Ya autenticado, no se verifica de nuevo');
       return;
     }
+
+    await Future.delayed(const Duration(milliseconds: 1000));
 
     try {
       final user = FirebaseAuth.instance.currentUser;

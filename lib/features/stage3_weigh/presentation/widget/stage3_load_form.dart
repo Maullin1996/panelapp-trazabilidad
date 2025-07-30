@@ -113,7 +113,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       Center(
                         child: Text(
                           'Canastilla #${index + 1}',
-                          style: textTheme.headlineMedium,
+                          style: textTheme.headlineLarge,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -139,9 +139,9 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                               spreadRadius: 1,
                             ),
                           ],
-                          borderRadius: BorderRadius.circular(26),
+                          borderRadius: BorderRadius.circular(AppRadius.small),
                           border: Border.all(
-                            color: AppColors.inputBorder,
+                            color: AppColors.secondaryDarkPanela,
                             width: 2,
                           ),
                         ),
@@ -165,14 +165,26 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                           }).toList(),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.medium),
                       Center(
-                        child: ElevatedButton.icon(
-                          onPressed: () => _pickImage(index),
-                          icon: const Icon(Icons.camera_alt),
-                          label: Text('Tomar foto'),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: () => _pickImage(index),
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: AppColors.textDark,
+                              size: 30,
+                            ),
+                            label: Text(
+                              'Tomar foto',
+                              style: textTheme.headlineLarge,
+                            ),
+                          ),
                         ),
                       ),
+                      const SizedBox(height: AppSpacing.smallLarge),
                       if (_photoPaths[index]?.isNotEmpty == true) ...[
                         const SizedBox(height: 8),
                         (_photoPaths[index]!.startsWith('http'))
@@ -198,51 +210,61 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                 ),
               ),
             ),
-            ElevatedButton(
-              onPressed: formState.status == Stage3FormStatus.submitting
-                  ? null
-                  : () async {
-                      if (!(_formKey.currentState?.saveAndValidate() ??
-                          false)) {
-                        return;
-                      }
-                      final values = _formKey.currentState!.value;
-                      final baskets = <BasketWeighData>[];
-                      for (final i in _indices) {
-                        final raw = values['realWeight_$i'] as String?;
-                        final qual = values['quality_$i'] as String?;
-                        if (raw != null &&
-                            raw.isNotEmpty &&
-                            qual != null &&
-                            qual.isNotEmpty) {
-                          baskets.add(
-                            BasketWeighData(
-                              id:
-                                  widget.initialData?.baskets[i].id ??
-                                  uuid.v4(),
-                              sequence: i,
-                              referenceWeight: _refWeightPerBasket,
-                              realWeight: double.parse(raw),
-                              quality: BasketQuality.values.firstWhere(
-                                (q) => q.name == qual,
-                              ),
-                              photoPath: _photoPaths[i] ?? '',
-                            ),
+            const SizedBox(height: AppSpacing.medium),
+            SafeArea(
+              child: SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: formState.status == Stage3FormStatus.submitting
+                      ? null
+                      : () async {
+                          if (!(_formKey.currentState?.saveAndValidate() ??
+                              false)) {
+                            return;
+                          }
+                          final values = _formKey.currentState!.value;
+                          final baskets = <BasketWeighData>[];
+                          for (final i in _indices) {
+                            final raw = values['realWeight_$i'] as String?;
+                            final qual = values['quality_$i'] as String?;
+                            if (raw != null &&
+                                raw.isNotEmpty &&
+                                qual != null &&
+                                qual.isNotEmpty) {
+                              baskets.add(
+                                BasketWeighData(
+                                  id:
+                                      widget.initialData?.baskets[i].id ??
+                                      uuid.v4(),
+                                  sequence: i,
+                                  referenceWeight: _refWeightPerBasket,
+                                  realWeight: double.parse(raw),
+                                  quality: BasketQuality.values.firstWhere(
+                                    (q) => q.name == qual,
+                                  ),
+                                  photoPath: _photoPaths[i] ?? '',
+                                ),
+                              );
+                            }
+                          }
+                          final formData = Stage3FormData(
+                            id: widget.initialData?.id ?? uuid.v4(),
+                            projectId: widget.project.id,
+                            stage2LoadId: widget.load2.id,
+                            date: widget.initialData?.date ?? DateTime.now(),
+                            baskets: baskets,
                           );
-                        }
-                      }
-                      final formData = Stage3FormData(
-                        id: widget.initialData?.id ?? uuid.v4(),
-                        projectId: widget.project.id,
-                        stage2LoadId: widget.load2.id,
-                        date: widget.initialData?.date ?? DateTime.now(),
-                        baskets: baskets,
-                      );
-                      formNotifier.submit(formData, isNew: widget.isNew);
-                    },
-              child: formState.status == Stage3FormStatus.submitting
-                  ? const CircularProgressIndicator()
-                  : Text(widget.isNew ? 'Register' : 'Actualizar'),
+                          formNotifier.submit(formData, isNew: widget.isNew);
+                        },
+                  child: formState.status == Stage3FormStatus.submitting
+                      ? const CircularProgressIndicator()
+                      : Text(
+                          widget.isNew ? 'Register' : 'Actualizar',
+                          style: textTheme.headlineLarge,
+                        ),
+                ),
+              ),
             ),
           ],
         ),

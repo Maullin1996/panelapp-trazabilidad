@@ -18,12 +18,13 @@ import 'package:registro_panela/features/stage5_2_records/presentation/Stage52_p
 import 'package:registro_panela/features/stage5_2_records/presentation/stage52_form_page.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/stage5_records.dart';
 import 'package:registro_panela/features/stage5_summary/presentation/stage5_summary.dart';
+import 'package:registro_panela/features/stage_selector/presentation/stage_selector_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = GoRouterNotifier(ref);
 
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: Routes.splash,
     refreshListenable: notifier,
     redirect: (context, state) => authRedirect(ref, state),
 
@@ -37,6 +38,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'projects',
         path: Routes.projects,
         builder: (_, __) => const ProjectSelectorPage(),
+        routes: [
+          GoRoute(
+            path: '${Routes.stages}/:projectId',
+            builder: (context, state) {
+              final projectId = state.pathParameters['projectId']!;
+              return StageSelectorPage(projectId: projectId);
+            },
+          ),
+        ],
       ),
       GoRoute(
         name: 'stage1',
@@ -148,7 +158,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
+      GoRoute(path: Routes.splash, builder: (_, __) => const SplashScreen()),
     ],
   );
 });

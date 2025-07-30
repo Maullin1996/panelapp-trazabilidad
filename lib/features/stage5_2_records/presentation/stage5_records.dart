@@ -20,19 +20,9 @@ class Stage52Page extends ConsumerWidget {
         .where((r) => r.projectId == projectId)
         .toList();
 
-    final textTheme = TextTheme.of(context);
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Registros de Panela', style: textTheme.headlineMedium),
-      ),
       body: ListView.separated(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.small,
-          AppSpacing.small,
-          AppSpacing.small,
-          AppSpacing.large,
-        ),
+        padding: const EdgeInsets.only(bottom: AppSpacing.large),
         itemCount: records.length,
         separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.small),
         itemBuilder: (_, i) {
@@ -47,21 +37,28 @@ class Stage52Page extends ConsumerWidget {
                 children: [
                   CustomRichText(
                     icon: Icons.unarchive_outlined,
+                    iconColor: AppColors.textDark,
                     firstText: 'Unidades de panela: ',
                     secondText: r.unitCount.toString(),
                   ),
+                  SizedBox(height: AppSpacing.xSmall),
                   CustomRichText(
                     icon: Icons.scale,
+                    iconColor: AppColors.weight,
                     firstText: 'Peso paquete: ',
                     secondText: '${r.gaveraWeight.toStringAsFixed(0)}g',
                   ),
+                  SizedBox(height: AppSpacing.xSmall),
                   CustomRichText(
                     icon: Icons.storage_outlined,
+                    iconColor: AppColors.weight,
                     firstText: 'Gavera: ',
                     secondText: '${r.panelaWeight.toStringAsFixed(2)} kg',
                   ),
+                  SizedBox(height: AppSpacing.xSmall),
                   CustomRichText(
                     icon: Icons.verified,
+                    iconColor: AppColors.accepted,
                     firstText: 'Calidad: ',
                     secondText: r.quality.name.toUpperCase(),
                   ),
@@ -77,12 +74,23 @@ class Stage52Page extends ConsumerWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add),
-        label: const Text('Nuevo registro'),
-        onPressed: () {
-          context.push('${Routes.stage5}/$projectId/records/form');
-        },
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.smallLarge),
+          child: SizedBox(
+            width: double.infinity,
+            height: 60,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                context.push('${Routes.stage5}/$projectId/records/form');
+              },
+              label: Text(
+                'Nuevo registro',
+                style: TextTheme.of(context).headlineLarge,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

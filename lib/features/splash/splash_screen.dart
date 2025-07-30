@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/providers/auth_provider.dart';
+import 'package:registro_panela/shared/utils/tokens.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -22,9 +23,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     try {
       // Verificar auth
       await ref.read(authProvider.notifier).checkAuthStatus();
-
-      // Pequeño delay para UX (opcional)
-      await Future.delayed(const Duration(milliseconds: 500));
     } catch (e) {
       print('Initialization error: $e');
     }
@@ -33,36 +31,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final textTheme = TextTheme.of(context);
 
     ref.listen<AuthParams>(authProvider, (previous, next) {
       if (next.authStatus != AuthStatus.checking) {}
     });
 
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.agriculture, size: 80, color: Colors.white),
+              Icon(Icons.agriculture, size: 80, color: AppColors.textDark),
               const SizedBox(height: 24),
-              const Text(
-                'Registro Panela',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+              Text('Registro Panela', style: textTheme.headlineLarge),
               const SizedBox(height: 40),
               const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                valueColor: AlwaysStoppedAnimation<Color>(AppColors.textDark),
               ),
               const SizedBox(height: 16),
               Text(
                 _getLoadingMessage(authState.authStatus),
-                style: const TextStyle(color: Colors.white70),
+                style: const TextStyle(color: AppColors.textDark),
               ),
             ],
           ),

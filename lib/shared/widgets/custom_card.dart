@@ -8,7 +8,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 226, 230, 231),
+      color: AppColors.cardBackground,
       margin: EdgeInsets.all(AppSpacing.smallLarge),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(

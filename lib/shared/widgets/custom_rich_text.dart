@@ -5,8 +5,10 @@ class CustomRichText extends StatelessWidget {
   final String firstText;
   final String secondText;
   final IconData icon;
+  final Color? iconColor;
   const CustomRichText({
     super.key,
+    this.iconColor,
     required this.firstText,
     required this.secondText,
     required this.icon,
@@ -16,15 +18,20 @@ class CustomRichText extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = TextTheme.of(context);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20),
+        Icon(icon, size: 20, color: iconColor),
         const SizedBox(width: AppSpacing.xSmall),
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(style: textTheme.headlineMedium, text: firstText),
-              TextSpan(style: textTheme.bodyLarge, text: secondText),
-            ],
+        Expanded(
+          child: RichText(
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              children: [
+                TextSpan(style: textTheme.headlineMedium, text: firstText),
+                TextSpan(style: textTheme.bodyLarge, text: secondText),
+              ],
+            ),
           ),
         ),
       ],

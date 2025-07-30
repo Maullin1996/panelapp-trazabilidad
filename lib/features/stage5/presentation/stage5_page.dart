@@ -33,7 +33,8 @@ class _Stage5PageState extends ConsumerState<Stage5Page> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(project.name, style: textTheme.headlineMedium),
+        centerTitle: true,
+        title: Text(project.name, style: textTheme.headlineLarge),
         leading: BackButton(onPressed: () => context.go(Routes.projects)),
       ),
       body: screens[selectedIndex],

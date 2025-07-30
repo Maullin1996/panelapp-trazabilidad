@@ -32,6 +32,7 @@ class Stage1Page extends ConsumerWidget {
         : ref.watch(stage1ProjectByIdProvider(projectId));
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           project == null ? 'Nuevo proyecto' : 'Modificar ${project.name}',
           style: textTheme.headlineLarge,
@@ -42,14 +43,16 @@ class Stage1Page extends ConsumerWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(
-            AppSpacing.small,
-            AppSpacing.smallLarge,
-            AppSpacing.small,
-            AppSpacing.medium,
+        child: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.small,
+              AppSpacing.smallLarge,
+              AppSpacing.small,
+              AppSpacing.medium,
+            ),
+            child: Stage1LoadForm(initialData: project, isNew: isNew),
           ),
-          child: Stage1LoadForm(initialData: project, isNew: isNew),
         ),
       ),
     );

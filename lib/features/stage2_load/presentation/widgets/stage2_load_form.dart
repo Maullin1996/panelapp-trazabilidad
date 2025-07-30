@@ -72,8 +72,11 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                       spreadRadius: 1,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(26),
-                  border: Border.all(color: AppColors.inputBorder, width: 2),
+                  borderRadius: BorderRadius.circular(AppRadius.small),
+                  border: Border.all(
+                    color: AppColors.secondaryDarkPanela,
+                    width: 2,
+                  ),
                 ),
                 child: FormBuilderDropdown<double>(
                   padding: EdgeInsets.symmetric(
@@ -146,38 +149,39 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                 ],
               ),
               const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: formState.status == Stage2FormStatus.submitting
-                    ? null
-                    : () {
-                        if (!(_formKey.currentState?.saveAndValidate() ??
-                            false)) {
-                          return;
-                        }
-                        final values = _formKey.currentState!.value;
-                        final data = Stage2LoadData(
-                          id: init?.id ?? uuid.v4(),
-                          projectId: widget.project.id,
-                          date: init?.date ?? DateTime.now(),
-                          baskets: BasketLoadData(
-                            referenceWeight:
-                                values['referenceWeight'] as double,
-                            count: int.parse(values['basketsCount']),
-                            realWeight: double.parse(
-                              values['basketWeight'] as String,
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: ElevatedButton(
+                  onPressed: formState.status == Stage2FormStatus.submitting
+                      ? null
+                      : () {
+                          if (!(_formKey.currentState?.saveAndValidate() ??
+                              false)) {
+                            return;
+                          }
+                          final values = _formKey.currentState!.value;
+                          final data = Stage2LoadData(
+                            id: init?.id ?? uuid.v4(),
+                            projectId: widget.project.id,
+                            date: init?.date ?? DateTime.now(),
+                            baskets: BasketLoadData(
+                              referenceWeight:
+                                  values['referenceWeight'] as double,
+                              count: int.parse(values['basketsCount']),
+                              realWeight: double.parse(
+                                values['basketWeight'] as String,
+                              ),
                             ),
-                          ),
-                        );
-                        formNotifier.submit(data, isNew: widget.isNew);
-                      },
-                child: formState.status == Stage2FormStatus.submitting
-                    ? const SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : Text('Guardar cargue'),
+                          );
+                          formNotifier.submit(data, isNew: widget.isNew);
+                        },
+                  child: formState.status == Stage2FormStatus.submitting
+                      ? const CircularProgressIndicator(strokeWidth: 2)
+                      : Text('Guardar cargue', style: textTheme.headlineLarge),
+                ),
               ),
+              SizedBox(height: AppSpacing.medium),
             ],
           ),
         ),

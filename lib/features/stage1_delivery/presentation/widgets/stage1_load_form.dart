@@ -6,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_form_provider.dart';
@@ -228,10 +229,18 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               ),
               const SizedBox(height: 20),
               Center(
-                child: ElevatedButton.icon(
-                  onPressed: _onPickImage,
-                  icon: const Icon(Icons.camera_alt, size: 30),
-                  label: Text('Tomar Foto'),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton.icon(
+                    onPressed: _onPickImage,
+                    icon: const Icon(
+                      Icons.camera_alt,
+                      size: 30,
+                      color: AppColors.textDark,
+                    ),
+                    label: Text('Tomar Foto', style: textTheme.headlineLarge),
+                  ),
                 ),
               ),
               if (_fotoPath != null)
@@ -258,122 +267,64 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
 
               const SizedBox(height: 20),
               Center(
-                child: ElevatedButton(
-                  onPressed: state.status == Stage1FormStatus.submitting
-                      ? null
-                      : () async {
-                          final isValid =
-                              _formKey.currentState?.saveAndValidate() ?? false;
-                          if (!isValid) return;
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: state.status == Stage1FormStatus.submitting
+                        ? null
+                        : () async {
+                            final isValid =
+                                _formKey.currentState?.saveAndValidate() ??
+                                false;
+                            if (!isValid) return;
 
-                          final values = _formKey.currentState!.value;
-                          final gaveras = <GaveraData>[];
-                          for (int i = 0; i < _gaveras.length; i++) {
-                            final cantidad =
-                                int.tryParse(
-                                  values['gaverasCantidad_$i'] ?? '',
-                                ) ??
-                                0;
-                            final peso =
-                                double.tryParse(
-                                  values['gaverasPeso_$i'] ?? '',
-                                ) ??
-                                0.0;
-                            gaveras.add(
-                              GaveraData(
-                                quantity: cantidad,
-                                referenceWeight: peso,
+                            final values = _formKey.currentState!.value;
+                            final gaveras = <GaveraData>[];
+                            for (int i = 0; i < _gaveras.length; i++) {
+                              final cantidad =
+                                  int.tryParse(
+                                    values['gaverasCantidad_$i'] ?? '',
+                                  ) ??
+                                  0;
+                              final peso =
+                                  double.tryParse(
+                                    values['gaverasPeso_$i'] ?? '',
+                                  ) ??
+                                  0.0;
+                              gaveras.add(
+                                GaveraData(
+                                  quantity: cantidad,
+                                  referenceWeight: peso,
+                                ),
+                              );
+                            }
+                            final data = Stage1FormData(
+                              id: widget.initialData?.id ?? uuid.v4(),
+                              name: values['name'],
+                              gaveras: gaveras,
+                              basketsQuantity: int.parse(
+                                values['basketsQuantity'],
                               ),
+                              preservativesWeight: double.parse(
+                                values['preservativesWeight'],
+                              ),
+                              preservativesJars: int.parse(
+                                values['preservativesJars'],
+                              ),
+                              limeWeight: double.parse(values['limeWeight']),
+                              limeJars: int.parse(values['limeJars']),
+                              phone: values['phone'],
+                              date: initial?.date ?? DateTime.now(),
+                              photoPath: _fotoPath,
                             );
-                          }
-                          final data = Stage1FormData(
-                            id: widget.initialData?.id ?? uuid.v4(),
-                            name: values['name'],
-                            gaveras: gaveras,
-                            basketsQuantity: int.parse(
-                              values['basketsQuantity'],
-                            ),
-                            preservativesWeight: double.parse(
-                              values['preservativesWeight'],
-                            ),
-                            preservativesJars: int.parse(
-                              values['preservativesJars'],
-                            ),
-                            limeWeight: double.parse(values['limeWeight']),
-                            limeJars: int.parse(values['limeJars']),
-                            phone: values['phone'],
-                            date: initial?.date ?? DateTime.now(),
-                            photoPath: _fotoPath,
-                          );
-                          formNotifier.submit(data, isNew: isNew);
-                        },
-                  child: state.status == Stage1FormStatus.submitting
-                      ? const CircularProgressIndicator()
-                      : Text('Guardar'),
+                            formNotifier.submit(data, isNew: isNew);
+                          },
+                    child: state.status == Stage1FormStatus.submitting
+                        ? const CircularProgressIndicator()
+                        : Text('Guardar', style: textTheme.headlineLarge),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class TwoFormsRow extends StatelessWidget {
-  final String nameFirst;
-  final String labeFirst;
-  final String nameSecond;
-  final String labeSecond;
-
-  const TwoFormsRow({
-    super.key,
-    required this.nameFirst,
-    required this.labeFirst,
-    required this.nameSecond,
-    required this.labeSecond,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = TextTheme.of(context);
-
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(labeFirst, style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
-              AppFormTextFild(
-                name: nameFirst,
-                label: labeFirst,
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.numeric(),
-                  FormBuilderValidators.min(0),
-                ]),
-                keyboardType: TextInputType.number,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            children: [
-              Text(labeSecond, style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
-              AppFormTextFild(
-                name: nameSecond,
-                label: labeSecond,
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.numeric(),
-                  FormBuilderValidators.min(0),
-                ]),
-                keyboardType: TextInputType.number,
               ),
             ],
           ),

@@ -9,7 +9,7 @@ import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
 import 'package:registro_panela/features/auth/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
+import 'package:registro_panela/shared/widgets/widgets.dart';
 
 class ProjectSelectorPage extends ConsumerWidget {
   const ProjectSelectorPage({super.key});
@@ -36,29 +36,64 @@ class ProjectSelectorPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            onPressed: () => ref.read(authProvider.notifier).logout(),
-            icon: Icon(Icons.logout, size: 30),
+          PopupMenuButton<String>(
+            position: PopupMenuPosition.under,
+            icon: const Icon(Icons.more_vert),
+            onSelected: (value) {
+              if (value == 'logout') {
+                ref.read(authProvider.notifier).logout();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Text(
+                  'Cerrar sesión',
+                  style: TextStyle(
+                    fontFamily: AppTypography.familyRoboto,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
+        centerTitle: true,
         title: Text('Seleccionar Proyecto', style: textTheme.headlineLarge),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Sólo admin y stage1 pueden crear
-          if (user != null &&
-              (user.role == UserRole.admin || user.role == UserRole.stage1)) {
-            context.go('${Routes.stage1}/new');
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Sólo admin o Stage1 pueden crear proyectos'),
-                backgroundColor: Colors.red,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.smallLarge),
+          child: SizedBox(
+            width: double.infinity,
+            height: 60,
+            child: ElevatedButton.icon(
+              label: Text('Crear proyecto', style: textTheme.headlineLarge),
+              icon: const Icon(
+                Icons.add_outlined,
+                color: Color(0xFF3A2B1F),
+                size: 30,
               ),
-            );
-          }
-        },
-        child: const Icon(Icons.add_outlined),
+              onPressed: () {
+                // Sólo admin y stage1 pueden crear
+                if (user != null &&
+                    (user.role == UserRole.admin ||
+                        user.role == UserRole.stage1)) {
+                  context.go('${Routes.stage1}/new');
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Sólo admin o Stage1 pueden crear proyectos',
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ),
       ),
       body: (error != null)
           ? Center(
@@ -103,15 +138,21 @@ class ProjectSelectorPage extends ConsumerWidget {
                             Text(
                               DateFormat.yMd().format(p.date),
                               style: textTheme.bodyLarge?.copyWith(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.xSmall),
-                        const Divider(),
+                        const Divider(thickness: 4, color: Colors.black),
                         const SizedBox(height: AppSpacing.xSmall),
                         Row(
                           children: [
-                            Icon(Icons.storage, size: 20.0),
+                            Icon(
+                              Icons.storage,
+                              size: 20.0,
+                              color: AppColors.weight,
+                            ),
                             const SizedBox(width: AppSpacing.xSmall),
                             Text('Gaveras', style: textTheme.headlineMedium),
                           ],
@@ -121,43 +162,39 @@ class ProjectSelectorPage extends ConsumerWidget {
                           p.gaveras.length,
                           (index) => Row(
                             children: [
-                              Text(
-                                '• Cantidad: ${p.gaveras[index].quantity} - Peso ${p.gaveras[index].referenceWeight} g',
-                                style: textTheme.bodyLarge,
+                              Expanded(
+                                child: Text(
+                                  '• Cantidad: ${p.gaveras[index].quantity} - Peso ${p.gaveras[index].referenceWeight} g',
+                                  style: textTheme.bodyLarge,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(height: AppSpacing.xSmall),
-                        Row(
-                          children: [
-                            Icon(Icons.shopping_basket, size: 20),
-                            const SizedBox(width: AppSpacing.xSmall),
-                            Text(
-                              'Canastillas:',
-                              style: textTheme.headlineMedium,
-                            ),
-                            const SizedBox(width: AppSpacing.xSmall),
-                            Text('${p.basketsQuantity}'),
-                          ],
+                        CustomRichText(
+                          firstText: 'Canastillas: ',
+                          secondText: '${p.basketsQuantity}',
+                          icon: Icons.shopping_basket,
+                          iconColor: AppColors.register,
                         ),
-                        SizedBox(height: AppSpacing.xSmall),
 
                         SizedBox(height: AppSpacing.xSmall),
-                        Row(
-                          children: [
-                            Icon(Icons.phone, size: 20),
-                            const SizedBox(width: AppSpacing.xSmall),
-                            Text('Contacto:', style: textTheme.headlineMedium),
-                            const SizedBox(width: AppSpacing.xSmall),
-                            Text(p.phone),
-                          ],
+
+                        CustomRichText(
+                          firstText: 'Contacto: ',
+                          secondText: p.phone,
+                          icon: Icons.phone,
                         ),
                       ],
                     ),
                     onTap: () {
                       if (user?.role == UserRole.admin) {
-                        _showAdminStageSelector(context, p.id);
+                        context.go(
+                          '${Routes.projects}${Routes.stages}/${p.id}',
+                        );
                       } else {
                         final route = _routeForRole(user!.role);
                         context.go('$route/${p.id}');
@@ -184,98 +221,6 @@ class ProjectSelectorPage extends ConsumerWidget {
         return Routes.stage5;
       default:
         return Routes.projects;
-    }
-  }
-
-  void _showAdminStageSelector(BuildContext context, String projectId) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      builder: (_) => DraggableScrollableSheet(
-        expand: false,
-        initialChildSize: 1.0,
-        minChildSize: 1.0,
-        maxChildSize: 1.0,
-        builder: (context, scrollController) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
-              ),
-            ),
-            child: ListView(
-              controller: scrollController,
-              padding: const EdgeInsets.symmetric(
-                vertical: AppSpacing.smallLarge,
-              ),
-              children: [
-                SizedBox(height: AppSpacing.mediumLarge),
-                for (var stage = 1; stage <= 5; stage++)
-                  Padding(
-                    padding: const EdgeInsets.all(AppSpacing.smallLarge),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 226, 230, 231),
-                        borderRadius: BorderRadius.circular(AppRadius.large),
-                      ),
-                      child: ListTile(
-                        contentPadding: EdgeInsetsGeometry.all(
-                          AppSpacing.small,
-                        ),
-                        dense: true,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            16,
-                          ), // Bordes redondeados
-                        ),
-                        leading: Icon(_iconForStage(stage), size: 30),
-                        title: Text(
-                          _stageName(stage),
-                          style: TextTheme.of(context).headlineMedium,
-                        ),
-                        onTap: () => context.go('${byStage(stage)}/$projectId'),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  IconData _iconForStage(int stage) {
-    switch (stage) {
-      case 1:
-        return AppIcons.deliversSupplies;
-      case 2:
-        return AppIcons.collect;
-      case 3:
-        return AppIcons.weighing;
-      case 4:
-        return AppIcons.pickUpSupplies;
-      case 5:
-        return AppIcons.summarize;
-      default:
-        return Icons.help;
-    }
-  }
-
-  String _stageName(int stage) {
-    switch (stage) {
-      case 1:
-        return 'Entrega';
-      case 2:
-        return 'Cargue';
-      case 3:
-        return 'Pesado';
-      case 4:
-        return 'Recogida molienda';
-      case 5:
-        return 'Liquidación';
-      default:
-        return 'No encontrado';
     }
   }
 }

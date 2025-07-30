@@ -38,7 +38,7 @@ class Stage3Page extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pesaje: ${project.name}', style: textTheme.headlineMedium),
+        title: Text('Pesaje: ${project.name}', style: textTheme.headlineLarge),
         leading: BackButton(onPressed: () => context.go(Routes.projects)),
       ),
       body: ListView.separated(
@@ -77,11 +77,15 @@ class Stage3Page extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Text(
-                        'Registrado en Molienda',
-                        style: textTheme.headlineMedium,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'Registrado en Molienda',
+                          style: textTheme.headlineLarge,
+                        ),
                       ),
                     ),
+                    Divider(thickness: 4, color: Colors.black),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.calendar_month,
@@ -91,60 +95,75 @@ class Stage3Page extends ConsumerWidget {
 
                     const SizedBox(height: AppSpacing.xSmall),
                     CustomRichText(
-                      icon: Icons.shopping_basket,
-                      firstText: 'Canastillas enviadas: ',
-                      secondText: totalBaskets.toString(),
+                      icon: Icons.inventory_2,
+                      iconColor: AppColors.secondaryDarkPanela,
+                      firstText: 'Enviadas: ',
+                      secondText: '$totalBaskets Canastillas',
                     ),
                     const SizedBox(height: AppSpacing.xSmall),
                     CustomRichText(
                       icon: Icons.scale,
+                      iconColor: AppColors.weight,
                       firstText: 'Peso canastilla: ',
                       secondText: '${group.realWeight.toStringAsFixed(2)} kg',
                     ),
                     const SizedBox(height: AppSpacing.xSmall),
                     CustomRichText(
-                      icon: Icons.scale,
+                      icon: Icons.bar_chart,
+                      iconColor: AppColors.register,
                       firstText: 'Peso total esperado: ',
                       secondText: '${totalRefkg.toStringAsFixed(2)} kg',
                     ),
                     const SizedBox(height: AppSpacing.small),
                     Center(
-                      child: Text(
-                        'Registrado en bodega',
-                        style: textTheme.headlineMedium,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'Registrado en bodega',
+                          style: textTheme.headlineLarge,
+                        ),
                       ),
                     ),
+                    Divider(thickness: 4, color: Colors.black),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
-                      icon: Icons.shopping_basket,
-                      firstText: 'Canastillas registradas: ',
-                      secondText: regCount.toString(),
+                      icon: Icons.all_inbox_rounded,
+                      iconColor: AppColors.register,
+                      firstText: 'Registradas: ',
+                      secondText: '$regCount Canastillas',
                     ),
 
                     const SizedBox(height: AppSpacing.xSmall),
                     CustomRichText(
-                      icon: Icons.shopping_basket,
+                      icon: Icons.check_box,
+                      iconColor: AppColors.accepted,
                       firstText: 'Peso total registrado: ',
                       secondText: '${regWeight.toStringAsFixed(2)} kg',
                     ),
 
                     const SizedBox(height: AppSpacing.small),
                     Center(
-                      child: Text(
-                        'Canastillas y Peso faltante',
-                        style: textTheme.headlineMedium,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'Canastillas y Peso faltante',
+                          style: textTheme.headlineLarge,
+                        ),
                       ),
                     ),
+                    Divider(thickness: 4, color: Colors.black),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
-                      icon: Icons.shopping_basket,
+                      icon: Icons.priority_high,
+                      iconColor: AppColors.error,
                       firstText: 'Faltan canastillas: ',
                       secondText: missingCount.toString(),
                     ),
 
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
-                      icon: Icons.scale,
+                      icon: Icons.warning,
+                      iconColor: AppColors.alert,
                       firstText: 'Peso faltante: ',
                       secondText: '${missingWeight.toStringAsFixed(2)}kg',
                     ),

@@ -28,10 +28,8 @@ class Stage52FormPage extends ConsumerWidget {
     final textTheme = TextTheme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Nuevo registro de panela',
-          style: textTheme.headlineMedium,
-        ),
+        centerTitle: true,
+        title: Text('Nuevo registro de panela', style: textTheme.headlineLarge),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(

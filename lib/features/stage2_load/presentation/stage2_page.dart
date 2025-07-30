@@ -50,7 +50,8 @@ class Stage2Page extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cargues ${project.name}', style: textTheme.headlineMedium),
+        title: Text('Cargues ${project.name}', style: textTheme.headlineLarge),
+        centerTitle: true,
         leading: BackButton(onPressed: () => context.go(Routes.projects)),
       ),
       body: loads.isEmpty
@@ -135,6 +136,7 @@ class Stage2Page extends ConsumerWidget {
                         const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(
                           icon: Icons.shopping_basket,
+                          iconColor: AppColors.register,
                           firstText: 'Canastillas: ',
                           secondText: load.baskets.count.toString(),
                         ),
@@ -142,6 +144,7 @@ class Stage2Page extends ConsumerWidget {
                         const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(
                           icon: Icons.scale,
+                          iconColor: AppColors.weight,
                           firstText: 'Peso: ',
                           secondText:
                               '${load.baskets.realWeight.toStringAsFixed(2)} kg',
@@ -150,6 +153,7 @@ class Stage2Page extends ConsumerWidget {
                         const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(
                           icon: Icons.storage_outlined,
+                          iconColor: AppColors.weight,
                           firstText: 'Gavera: ',
                           secondText: '${load.baskets.referenceWeight} g',
                         ),
@@ -159,19 +163,32 @@ class Stage2Page extends ConsumerWidget {
                 );
               },
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add),
-        label: Text('Nuevo cargue'),
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => Padding(
-              padding: MediaQuery.viewInsetsOf(context),
-              child: Stage2LoadForm(isNew: true, project: project),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.smallLarge),
+          child: SizedBox(
+            width: double.infinity,
+            height: 60,
+            child: ElevatedButton.icon(
+              label: Text('Nuevo cargue', style: textTheme.headlineLarge),
+              icon: const Icon(
+                Icons.add_outlined,
+                color: AppColors.textDark,
+                size: 30,
+              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => Padding(
+                    padding: MediaQuery.viewInsetsOf(context),
+                    child: Stage2LoadForm(isNew: true, project: project),
+                  ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

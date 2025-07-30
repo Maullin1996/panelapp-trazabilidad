@@ -35,7 +35,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Gavera', style: textTheme.headlineSmall),
+          Text('Gavera', style: textTheme.headlineLarge),
           SizedBox(height: AppSpacing.small),
           // 1) Selector de gaveraWeight
           Container(
@@ -49,8 +49,11 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   spreadRadius: 1,
                 ),
               ],
-              borderRadius: BorderRadius.circular(26),
-              border: Border.all(color: AppColors.inputBorder, width: 2),
+              borderRadius: BorderRadius.circular(AppRadius.small),
+              border: Border.all(
+                color: AppColors.secondaryDarkPanela,
+                width: 2,
+              ),
             ),
             child: FormBuilderDropdown<double>(
               padding: EdgeInsets.symmetric(
@@ -73,7 +76,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
-          Text('Peso de panela (kg)', style: textTheme.headlineSmall),
+          Text('Peso de panela (kg)', style: textTheme.headlineLarge),
           SizedBox(height: AppSpacing.small),
           // 2) Peso de panela
           AppFormTextFild(
@@ -87,7 +90,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
-          Text('Unidades de panela', style: textTheme.headlineSmall),
+          Text('Unidades de panela', style: textTheme.headlineLarge),
           SizedBox(height: AppSpacing.small),
           // 3) Unidades
           AppFormTextFild(
@@ -101,7 +104,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
-          Text('Calidad', style: textTheme.headlineSmall),
+          Text('Calidad', style: textTheme.headlineLarge),
           SizedBox(height: AppSpacing.small),
           // 4) Calidad
           Container(
@@ -115,8 +118,11 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   spreadRadius: 1,
                 ),
               ],
-              borderRadius: BorderRadius.circular(26),
-              border: Border.all(color: AppColors.inputBorder, width: 2),
+              borderRadius: BorderRadius.circular(AppRadius.small),
+              border: Border.all(
+                color: AppColors.secondaryDarkPanela,
+                width: 2,
+              ),
             ),
             child: FormBuilderDropdown<String>(
               name: 'quality',
@@ -140,7 +146,9 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
 
           const SizedBox(height: AppSpacing.mediumLarge),
           // 5) Foto
-          Center(
+          SizedBox(
+            width: double.infinity,
+            height: 60,
             child: ElevatedButton.icon(
               onPressed: () async {
                 final path = await ref
@@ -150,8 +158,12 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   setState(() => _photoPath = path);
                 }
               },
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Tomar foto'),
+              icon: const Icon(
+                Icons.camera_alt,
+                color: AppColors.textDark,
+                size: 30,
+              ),
+              label: Text('Tomar foto', style: textTheme.headlineLarge),
             ),
           ),
           if (_photoPath != null) ...[
@@ -163,30 +175,34 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
 
           const SizedBox(height: AppSpacing.smallMedium),
           Center(
-            child: ElevatedButton(
-              onPressed: formState.status == Stage52FormStatus.submitting
-                  ? null
-                  : () {
-                      if (!(_formKey.currentState?.saveAndValidate() ??
-                          false)) {
-                        return;
-                      }
-                      final v = _formKey.currentState!.value;
-                      final record = Stage52RecordData(
-                        id: _uuid.v4(),
-                        projectId: widget.projectId,
-                        date: DateTime.now(),
-                        gaveraWeight: v['gaveras'] as double,
-                        panelaWeight: double.parse(v['panelaWeight']),
-                        unitCount: int.parse(v['unitCount']),
-                        quality: BasketQuality.values.firstWhere(
-                          (q) => q.name == v['quality'],
-                        ),
-                        photoPath: _photoPath ?? '',
-                      );
-                      formNotifier.submit(data: record);
-                    },
-              child: const Text('Guardar registro'),
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton(
+                onPressed: formState.status == Stage52FormStatus.submitting
+                    ? null
+                    : () {
+                        if (!(_formKey.currentState?.saveAndValidate() ??
+                            false)) {
+                          return;
+                        }
+                        final v = _formKey.currentState!.value;
+                        final record = Stage52RecordData(
+                          id: _uuid.v4(),
+                          projectId: widget.projectId,
+                          date: DateTime.now(),
+                          gaveraWeight: v['gaveras'] as double,
+                          panelaWeight: double.parse(v['panelaWeight']),
+                          unitCount: int.parse(v['unitCount']),
+                          quality: BasketQuality.values.firstWhere(
+                            (q) => q.name == v['quality'],
+                          ),
+                          photoPath: _photoPath ?? '',
+                        );
+                        formNotifier.submit(data: record);
+                      },
+                child: Text('Guardar registro', style: textTheme.headlineLarge),
+              ),
             ),
           ),
 

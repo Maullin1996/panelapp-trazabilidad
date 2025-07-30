@@ -10,9 +10,6 @@ import '../../features/auth/providers/auth_provider.dart';
 String? authRedirect(Ref ref, GoRouterState state) {
   final auth = ref.read(authProvider);
   final path = state.uri.path;
-  print(
-    '🔄 authRedirect → path: $path, authStatus: ${auth.authStatus}, role: ${auth.user?.role}',
-  );
 
   if (auth.authStatus == AuthStatus.checking) {
     return path != '/splash' ? '/splash' : null;

@@ -60,6 +60,7 @@ class Stage3FormPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
           isNew ? 'Registrar pesaje' : 'Editar pesaje',
           style: textTheme.headlineLarge,

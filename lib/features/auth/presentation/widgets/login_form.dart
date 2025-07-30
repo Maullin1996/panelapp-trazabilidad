@@ -76,20 +76,27 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           formState.isSubmitting
               ? Center(child: const CircularProgressIndicator())
               : Center(
-                  child: ElevatedButton(
-                    onPressed: formState.isValid
-                        ? () async {
-                            if (_fbkey.currentState?.saveAndValidate() ??
-                                false) {
-                              await authNotifier.login(
-                                email: formState.email,
-                                password: formState.password,
-                              );
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: formState.isValid
+                          ? () async {
+                              if (_fbkey.currentState?.saveAndValidate() ??
+                                  false) {
+                                await authNotifier.login(
+                                  email: formState.email,
+                                  password: formState.password,
+                                );
+                              }
                             }
-                          }
-                        : null,
+                          : null,
 
-                    child: const Text('Iniciar sesión'),
+                      child: Text(
+                        'Iniciar sesión',
+                        style: textTheme.headlineLarge,
+                      ),
+                    ),
                   ),
                 ),
         ],

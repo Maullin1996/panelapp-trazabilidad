@@ -8,7 +8,7 @@ class AuthParams {
 
   const AuthParams({
     this.user,
-    this.authStatus = AuthStatus.notAuthenticated,
+    this.authStatus = AuthStatus.checking,
     this.errorMessage,
   });
 

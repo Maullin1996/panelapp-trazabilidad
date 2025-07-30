@@ -46,89 +46,118 @@ class Stage3PageSummary extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resumen pesaje', style: textTheme.headlineMedium),
+        title: Text('Pesaje', style: textTheme.headlineLarge),
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.smallMedium),
+        padding: const EdgeInsets.only(bottom: AppSpacing.smallMedium),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.smallLarge),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(project.name, style: textTheme.headlineMedium),
-                  ),
-                  const SizedBox(height: AppSpacing.medium),
-
-                  Center(
-                    child: Text(
-                      'Registrado en molienda',
-                      style: textTheme.headlineMedium,
+            Column(
+              children: [
+                CustomCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.small),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            'Registrado en molienda',
+                            style: textTheme.headlineLarge,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.small),
+                        CustomRichText(
+                          icon: Icons.calendar_month,
+                          firstText: 'Fecha cargue: ',
+                          secondText: DateFormat.yMd().format(load2.date),
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
+                        CustomRichText(
+                          icon: Icons.bar_chart,
+                          iconColor: AppColors.register,
+                          firstText: 'Peso esperado: ',
+                          secondText: '${totalRefKg.toStringAsFixed(2)} kg',
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.calendar_month,
-                    firstText: 'Fecha cargue: ',
-                    secondText: DateFormat.yMd().format(load2.date),
-                  ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomRichText(
-                    icon: Icons.scale,
-                    firstText: 'Peso esperado: ',
-                    secondText: '${totalRefKg.toStringAsFixed(2)} kg',
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  Center(
-                    child: Text(
-                      'Registrado en bodega',
-                      style: textTheme.headlineMedium,
+                ),
+
+                const SizedBox(height: AppSpacing.small),
+                CustomCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.small),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            'Registrado en bodega',
+                            style: textTheme.headlineLarge,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.small),
+                        CustomRichText(
+                          icon: Icons.all_inbox_rounded,
+                          iconColor: AppColors.register,
+                          firstText: 'Registradas: ',
+                          secondText: '$regCount Canastillas',
+                        ),
+
+                        const SizedBox(height: AppSpacing.xSmall),
+                        CustomRichText(
+                          icon: Icons.check_box,
+                          iconColor: AppColors.accepted,
+                          firstText: 'Peso registrado: ',
+                          secondText: '${regWeight.toStringAsFixed(2)} kg',
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.shopping_basket,
-                    firstText: 'Canastillas registradas: ',
-                    secondText: regCount.toString(),
-                  ),
+                ),
 
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomRichText(
-                    icon: Icons.scale,
-                    firstText: 'Peso registrado: ',
-                    secondText: '${regWeight.toStringAsFixed(2)} kg',
-                  ),
+                const SizedBox(height: AppSpacing.small),
+                CustomCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.small),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            'Faltantes',
+                            style: textTheme.headlineLarge,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.small),
+                        CustomRichText(
+                          icon: Icons.priority_high,
+                          iconColor: AppColors.error,
+                          firstText: 'Faltan: ',
+                          secondText: '$missingCount Canastillas',
+                        ),
 
-                  const SizedBox(height: AppSpacing.small),
-                  Center(
-                    child: Text('Faltantes', style: textTheme.headlineMedium),
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.shopping_basket,
-                    firstText: 'Faltan canastillas: ',
-                    secondText: missingCount.toString(),
-                  ),
-
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomRichText(
-                    icon: Icons.scale,
-                    firstText: 'Peso faltante: ',
-                    secondText: '${missingWeight.toStringAsFixed(2)} kg',
-                  ),
-                  const SizedBox(height: AppSpacing.medium),
-
-                  Center(
-                    child: Text(
-                      'Detalle por canastilla',
-                      style: textTheme.headlineMedium,
+                        const SizedBox(height: AppSpacing.xSmall),
+                        CustomRichText(
+                          icon: Icons.warning,
+                          iconColor: AppColors.alert,
+                          firstText: 'Peso faltante: ',
+                          secondText: '${missingWeight.toStringAsFixed(2)} kg',
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: AppSpacing.medium),
+
+                Center(
+                  child: Text(
+                    'Detalle por canastilla',
+                    style: textTheme.headlineLarge,
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: AppSpacing.smallLarge),
@@ -144,19 +173,21 @@ class Stage3PageSummary extends ConsumerWidget {
                       Center(
                         child: Text(
                           'Canastilla #${b.sequence + 1}',
-                          style: textTheme.headlineMedium,
+                          style: textTheme.headlineLarge,
                         ),
                       ),
                       const SizedBox(height: AppSpacing.xSmall),
                       CustomRichText(
                         icon: Icons.scale,
+                        iconColor: AppColors.weight,
                         firstText: 'Peso registrado: ',
                         secondText: '${b.realWeight.toStringAsFixed(2)} kg',
                       ),
 
                       const SizedBox(height: AppSpacing.xSmall),
                       CustomRichText(
-                        icon: Icons.scale,
+                        icon: Icons.warning,
+                        iconColor: AppColors.alert,
                         firstText: 'Peso faltante: ',
                         secondText:
                             '${(load2.baskets.realWeight - b.realWeight).toStringAsFixed(2)} kg',
@@ -165,6 +196,7 @@ class Stage3PageSummary extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.xSmall),
                       CustomRichText(
                         icon: Icons.verified,
+                        iconColor: AppColors.accepted,
                         firstText: 'Calidad: ',
                         secondText: b.quality.name.toUpperCase(),
                       ),
@@ -172,17 +204,21 @@ class Stage3PageSummary extends ConsumerWidget {
                       const SizedBox(height: AppSpacing.xSmall),
                       if (b.photoPath.isNotEmpty)
                         (b.photoPath.startsWith('http'))
-                            ? Image.network(
-                                b.photoPath,
-                                width: 300,
-                                height: 300,
-                                fit: BoxFit.cover,
+                            ? Center(
+                                child: Image.network(
+                                  b.photoPath,
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
                               )
-                            : Image.file(
-                                File(b.photoPath),
-                                width: double.infinity,
-                                height: 200,
-                                fit: BoxFit.cover,
+                            : Center(
+                                child: Image.file(
+                                  File(b.photoPath),
+                                  width: 200,
+                                  height: 200,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                     ],
                   ),
