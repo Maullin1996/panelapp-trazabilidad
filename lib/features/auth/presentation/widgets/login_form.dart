@@ -50,7 +50,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           SizedBox(height: AppSpacing.small),
           AppFormTextFild(
             name: 'email',
-            label: 'Correo electrónico',
             hintText: 'correo@dominio.com',
             keyboardType: TextInputType.emailAddress,
             validator: FormBuilderValidators.compose([
@@ -64,7 +63,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           SizedBox(height: AppSpacing.small),
           AppFormTextFild(
             name: 'password',
-            label: 'Contraseña',
             obscureText: true,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),

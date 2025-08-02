@@ -26,7 +26,7 @@ abstract class Stage1FormData with _$Stage1FormData {
 @freezed
 abstract class GaveraData with _$GaveraData {
   const factory GaveraData({
-    required int quantity,
+    @Default(0) int quantity,
     required double referenceWeight,
   }) = _GaveraData;
 

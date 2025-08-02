@@ -5,7 +5,7 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 
 class AppFormTextFild extends StatelessWidget {
   final String name;
-  final String label;
+
   final String? initialValue;
   final String? hintText;
   final bool obscureText;
@@ -18,7 +18,7 @@ class AppFormTextFild extends StatelessWidget {
   const AppFormTextFild({
     super.key,
     required this.name,
-    required this.label,
+
     this.initialValue,
     this.hintText,
     this.obscureText = false,

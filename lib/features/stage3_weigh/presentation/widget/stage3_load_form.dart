@@ -121,7 +121,6 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       const SizedBox(height: 8),
                       AppFormTextFild(
                         name: 'realWeight_$index',
-                        label: 'Peso real (kg)',
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 16),
@@ -212,57 +211,63 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
             ),
             const SizedBox(height: AppSpacing.medium),
             SafeArea(
-              child: SizedBox(
-                height: 60,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: formState.status == Stage3FormStatus.submitting
-                      ? null
-                      : () async {
-                          if (!(_formKey.currentState?.saveAndValidate() ??
-                              false)) {
-                            return;
-                          }
-                          final values = _formKey.currentState!.value;
-                          final baskets = <BasketWeighData>[];
-                          for (final i in _indices) {
-                            final raw = values['realWeight_$i'] as String?;
-                            final qual = values['quality_$i'] as String?;
-                            if (raw != null &&
-                                raw.isNotEmpty &&
-                                qual != null &&
-                                qual.isNotEmpty) {
-                              baskets.add(
-                                BasketWeighData(
-                                  id:
-                                      widget.initialData?.baskets[i].id ??
-                                      uuid.v4(),
-                                  sequence: i,
-                                  referenceWeight: _refWeightPerBasket,
-                                  realWeight: double.parse(raw),
-                                  quality: BasketQuality.values.firstWhere(
-                                    (q) => q.name == qual,
-                                  ),
-                                  photoPath: _photoPaths[i] ?? '',
-                                ),
-                              );
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: AppSpacing.small,
+                  right: AppRadius.small,
+                ),
+                child: SizedBox(
+                  height: 60,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: formState.status == Stage3FormStatus.submitting
+                        ? null
+                        : () async {
+                            if (!(_formKey.currentState?.saveAndValidate() ??
+                                false)) {
+                              return;
                             }
-                          }
-                          final formData = Stage3FormData(
-                            id: widget.initialData?.id ?? uuid.v4(),
-                            projectId: widget.project.id,
-                            stage2LoadId: widget.load2.id,
-                            date: widget.initialData?.date ?? DateTime.now(),
-                            baskets: baskets,
-                          );
-                          formNotifier.submit(formData, isNew: widget.isNew);
-                        },
-                  child: formState.status == Stage3FormStatus.submitting
-                      ? const CircularProgressIndicator()
-                      : Text(
-                          widget.isNew ? 'Register' : 'Actualizar',
-                          style: textTheme.headlineLarge,
-                        ),
+                            final values = _formKey.currentState!.value;
+                            final baskets = <BasketWeighData>[];
+                            for (final i in _indices) {
+                              final raw = values['realWeight_$i'] as String?;
+                              final qual = values['quality_$i'] as String?;
+                              if (raw != null &&
+                                  raw.isNotEmpty &&
+                                  qual != null &&
+                                  qual.isNotEmpty) {
+                                baskets.add(
+                                  BasketWeighData(
+                                    id:
+                                        widget.initialData?.baskets[i].id ??
+                                        uuid.v4(),
+                                    sequence: i,
+                                    referenceWeight: _refWeightPerBasket,
+                                    realWeight: double.parse(raw),
+                                    quality: BasketQuality.values.firstWhere(
+                                      (q) => q.name == qual,
+                                    ),
+                                    photoPath: _photoPaths[i] ?? '',
+                                  ),
+                                );
+                              }
+                            }
+                            final formData = Stage3FormData(
+                              id: widget.initialData?.id ?? uuid.v4(),
+                              projectId: widget.project.id,
+                              stage2LoadId: widget.load2.id,
+                              date: widget.initialData?.date ?? DateTime.now(),
+                              baskets: baskets,
+                            );
+                            formNotifier.submit(formData, isNew: widget.isNew);
+                          },
+                    child: formState.status == Stage3FormStatus.submitting
+                        ? const CircularProgressIndicator()
+                        : Text(
+                            widget.isNew ? 'Register' : 'Actualizar',
+                            style: textTheme.headlineLarge,
+                          ),
+                  ),
                 ),
               ),
             ),

@@ -39,7 +39,7 @@ Map<String, dynamic> _$Stage1FormDataToJson(_Stage1FormData instance) =>
     };
 
 _GaveraData _$GaveraDataFromJson(Map<String, dynamic> json) => _GaveraData(
-  quantity: (json['quantity'] as num).toInt(),
+  quantity: (json['quantity'] as num?)?.toInt() ?? 0,
   referenceWeight: (json['referenceWeight'] as num).toDouble(),
 );
 

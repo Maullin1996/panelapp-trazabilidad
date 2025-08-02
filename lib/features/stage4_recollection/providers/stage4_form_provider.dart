@@ -1,4 +1,4 @@
-import 'package:registro_panela/features/stage4_recollection/domin/stage4_form_data.dart';
+import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_load_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

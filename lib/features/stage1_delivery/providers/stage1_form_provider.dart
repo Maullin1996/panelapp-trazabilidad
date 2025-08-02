@@ -1,6 +1,6 @@
 import 'package:registro_panela/core/storage/application/storage_providers.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_usecases_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage1_form_provider.g.dart';
@@ -16,7 +16,9 @@ class Stage1Form extends _$Stage1Form {
     state = state.copyWith(status: Stage1FormStatus.submitting);
 
     try {
-      if (data.photoPath != null && data.photoPath!.isNotEmpty) {
+      if (data.photoPath != null &&
+          data.photoPath!.isNotEmpty &&
+          !data.photoPath!.startsWith('http')) {
         final uploadImage = ref.read(uploadImageProvider);
         final downloadUrl = await uploadImage(
           path: 'stage1_photos/${data.id}.jpg',
@@ -27,9 +29,14 @@ class Stage1Form extends _$Stage1Form {
       if (isNew) {
         final createUseCase = ref.read(createStage1DataProvider);
         await createUseCase(data);
+
+        final notifier = ref.read(stage1ProjectsProvider.notifier);
+        notifier.refresh();
       } else {
         final updateUseCase = ref.read(updateStage1DataProvider);
         await updateUseCase(data);
+        final notifier = ref.read(stage1ProjectsProvider.notifier);
+        notifier.refresh();
       }
 
       state = state.copyWith(status: Stage1FormStatus.success);

@@ -509,10 +509,10 @@ return $default(_that.quantity,_that.referenceWeight);case _:
 @JsonSerializable()
 
 class _GaveraData implements GaveraData {
-  const _GaveraData({required this.quantity, required this.referenceWeight});
+  const _GaveraData({this.quantity = 0, required this.referenceWeight});
   factory _GaveraData.fromJson(Map<String, dynamic> json) => _$GaveraDataFromJson(json);
 
-@override final  int quantity;
+@override@JsonKey() final  int quantity;
 @override final  double referenceWeight;
 
 /// Create a copy of GaveraData

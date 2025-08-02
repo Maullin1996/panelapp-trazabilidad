@@ -187,6 +187,7 @@ class Stage3Page extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (dcontext) => AlertDialog(
+        backgroundColor: AppColors.cardBackground,
         title: Text('¿Qué deseas hacer?', style: textTheme.headlineMedium),
         actions: [
           if (entry != null)

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registro_panela/features/stage4_recollection/domin/stage4_form_data.dart';
+import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 
 part 'stage4_ui_state.freezed.dart';
 

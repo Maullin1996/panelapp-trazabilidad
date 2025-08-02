@@ -81,7 +81,6 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           // 2) Peso de panela
           AppFormTextFild(
             name: 'panelaWeight',
-            label: 'Peso de panela (kg)',
             keyboardType: TextInputType.number,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),
@@ -95,7 +94,6 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           // 3) Unidades
           AppFormTextFild(
             name: 'unitCount',
-            label: 'Unidades de panela',
             keyboardType: TextInputType.number,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),

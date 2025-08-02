@@ -114,7 +114,6 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                             ),
                             AppFormTextFild(
                               name: 'basketsCount',
-                              label: 'Cantidad de canastillas',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
@@ -133,7 +132,6 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                             Text('Peso (kg)', style: textTheme.headlineMedium),
                             AppFormTextFild(
                               name: 'basketWeight',
-                              label: 'Peso de referencia (kg)',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),

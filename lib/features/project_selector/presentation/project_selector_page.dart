@@ -38,6 +38,7 @@ class ProjectSelectorPage extends ConsumerWidget {
         actions: [
           PopupMenuButton<String>(
             position: PopupMenuPosition.under,
+            color: AppColors.cardBackground,
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {
               if (value == 'logout') {

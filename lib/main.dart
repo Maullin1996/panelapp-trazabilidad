@@ -19,6 +19,7 @@ class MainApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Registro Panela',
       routerConfig: router,
+      debugShowCheckedModeBanner: false,
       theme: AppThemes.lightTheme,
     );
   }

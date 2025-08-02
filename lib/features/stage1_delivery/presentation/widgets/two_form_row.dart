@@ -31,7 +31,6 @@ class TwoFormsRow extends StatelessWidget {
               SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: nameFirst,
-                label: labeFirst,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
                   FormBuilderValidators.numeric(),
@@ -50,7 +49,6 @@ class TwoFormsRow extends StatelessWidget {
               SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: nameSecond,
-                label: labeSecond,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
                   FormBuilderValidators.numeric(),

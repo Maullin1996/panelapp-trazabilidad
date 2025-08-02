@@ -4,14 +4,14 @@ import 'package:registro_panela/shared/utils/spacing.dart';
 class CustomRichText extends StatelessWidget {
   final String firstText;
   final String secondText;
-  final IconData icon;
+  final IconData? icon;
   final Color? iconColor;
   const CustomRichText({
     super.key,
     this.iconColor,
     required this.firstText,
     required this.secondText,
-    required this.icon,
+    this.icon,
   });
 
   @override
@@ -20,7 +20,7 @@ class CustomRichText extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: iconColor),
+        if (icon != null) Icon(icon, size: 20, color: iconColor),
         const SizedBox(width: AppSpacing.xSmall),
         Expanded(
           child: RichText(

@@ -86,6 +86,7 @@ class Stage2Page extends ConsumerWidget {
                     showDialog(
                       context: context,
                       builder: (dctx) => AlertDialog(
+                        backgroundColor: AppColors.cardBackground,
                         title: Text(
                           '¿Editar este cargue?',
                           style: textTheme.headlineMedium,
@@ -102,6 +103,7 @@ class Stage2Page extends ConsumerWidget {
                             onPressed: () {
                               Navigator.pop(dctx);
                               showModalBottomSheet(
+                                backgroundColor: AppColors.cardBackground,
                                 context: context,
                                 isScrollControlled: true,
                                 builder: (_) => Padding(
@@ -179,6 +181,7 @@ class Stage2Page extends ConsumerWidget {
               onPressed: () {
                 showModalBottomSheet(
                   context: context,
+                  backgroundColor: AppColors.cardBackground,
                   isScrollControlled: true,
                   builder: (context) => Padding(
                     padding: MediaQuery.viewInsetsOf(context),

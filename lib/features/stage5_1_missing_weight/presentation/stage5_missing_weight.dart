@@ -168,7 +168,6 @@ class __FormTotalToPayState extends ConsumerState<_FormTotalToPay> {
             const SizedBox(height: AppSpacing.xSmall),
             AppFormTextFild(
               name: 'pricePerKilo',
-              label: 'Valor por kilo:',
               keyboardType: TextInputType.number,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
@@ -186,7 +185,6 @@ class __FormTotalToPayState extends ConsumerState<_FormTotalToPay> {
             const SizedBox(height: AppSpacing.xSmall),
             AppFormTextFild(
               name: 'installment',
-              label: 'Se realizaron abonos:',
               keyboardType: TextInputType.number,
               inputFormatters: [MoneyInputFormatter()],
               valueTransformer: (text) {

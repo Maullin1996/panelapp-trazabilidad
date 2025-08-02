@@ -111,7 +111,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: 'name',
-                label: 'Nombre molienda',
                 validator: FormBuilderValidators.required(),
               ),
               const SizedBox(height: 12),
@@ -139,7 +138,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                             SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
                               name: 'gaverasCantidad_$index',
-                              label: 'Cantidad (Gavera ${index + 1})',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
@@ -162,7 +160,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                             SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
                               name: 'gaverasPeso_$index',
-                              label: 'Peso referencia (g)',
                               validator: FormBuilderValidators.compose([
                                 FormBuilderValidators.required(),
                                 FormBuilderValidators.numeric(),
@@ -191,7 +188,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: 'basketsQuantity',
-                label: 'Cantidad canastillas',
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
                   FormBuilderValidators.integer(),
@@ -218,7 +214,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: 'phone',
-                label: 'Teléfono',
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(),
                   FormBuilderValidators.numeric(),

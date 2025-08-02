@@ -7,7 +7,6 @@ import 'package:registro_panela/features/stage2_load/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/widget/stage3_load_form.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
-import 'package:registro_panela/shared/utils/spacing.dart';
 
 class Stage3FormPage extends ConsumerWidget {
   final String projectId;
@@ -67,19 +66,11 @@ class Stage3FormPage extends ConsumerWidget {
         ),
         leading: BackButton(onPressed: () => context.pop()),
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.small,
-          AppSpacing.smallLarge,
-          AppSpacing.small,
-          AppSpacing.medium,
-        ),
-        child: Stage3LoadForm(
-          project: project,
-          load2: load2!,
-          isNew: isNew,
-          initialData: initialData,
-        ),
+      body: Stage3LoadForm(
+        project: project,
+        load2: load2!,
+        isNew: isNew,
+        initialData: initialData,
       ),
     );
   }
