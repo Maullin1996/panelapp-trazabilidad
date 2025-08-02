@@ -1,7 +1,7 @@
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_ui_state.dart';
-import 'package:registro_panela/features/stage4_recollection/providers/stage4_load_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/providers/sync_stage4_data_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage4_ui_provider.g.dart';
@@ -11,7 +11,7 @@ class Stage4Ui extends _$Stage4Ui {
   @override
   Stage4UiState build(String projectId) {
     final entries = ref
-        .watch(stage4LoadProvider)
+        .watch(syncStage4DataProvider)
         .where((e) => e.projectId == projectId)
         .toList();
 

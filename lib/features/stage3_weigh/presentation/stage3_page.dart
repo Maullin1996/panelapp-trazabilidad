@@ -85,7 +85,7 @@ class Stage3Page extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Divider(thickness: 4, color: Colors.black),
+                    Divider(thickness: 2),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.calendar_month,
@@ -124,7 +124,7 @@ class Stage3Page extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Divider(thickness: 4, color: Colors.black),
+                    Divider(thickness: 2),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.all_inbox_rounded,
@@ -151,7 +151,7 @@ class Stage3Page extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Divider(thickness: 4, color: Colors.black),
+                    Divider(thickness: 2),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.priority_high,
@@ -190,22 +190,30 @@ class Stage3Page extends ConsumerWidget {
         backgroundColor: AppColors.cardBackground,
         title: Text('¿Qué deseas hacer?', style: textTheme.headlineMedium),
         actions: [
-          if (entry != null)
-            TextButton(
-              onPressed: () {
-                context.pop(dcontext);
-                context.push(
-                  '${Routes.stage3}/${project.id}/${load2.id}/summary',
-                );
-              },
-              child: Text('Ver resumen', style: textTheme.bodyLarge),
-            ),
-          TextButton(
-            onPressed: () {
-              context.pop(dcontext);
-              context.push('${Routes.stage3}/$projectId/${load2.id}/form');
-            },
-            child: Text('Continuar formulario', style: textTheme.bodyLarge),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if (entry != null)
+                TextButton(
+                  onPressed: () {
+                    context.pop(dcontext);
+                    context.push(
+                      '${Routes.stage3}/${project.id}/${load2.id}/summary',
+                    );
+                  },
+                  child: Text('Ver resumen', style: textTheme.headlineSmall),
+                ),
+              TextButton(
+                onPressed: () {
+                  context.pop(dcontext);
+                  context.push('${Routes.stage3}/$projectId/${load2.id}/form');
+                },
+                child: Text(
+                  'Continuar formulario',
+                  style: textTheme.headlineSmall,
+                ),
+              ),
+            ],
           ),
         ],
       ),

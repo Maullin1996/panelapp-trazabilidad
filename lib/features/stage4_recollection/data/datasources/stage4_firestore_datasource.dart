@@ -14,4 +14,11 @@ class Stage4FirestoreDatasource {
   Future<void> update(Stage4FormModel model) async {
     await _firestore.collection('stage4').doc(model.id).set(model.toJson());
   }
+
+  Future<List<Stage4FormModel>> getAll() async {
+    final querySnapShot = await _firestore.collection('stage4').get();
+    return querySnapShot.docs
+        .map((doc) => Stage4FormModel.fromJson(doc.data()))
+        .toList();
+  }
 }

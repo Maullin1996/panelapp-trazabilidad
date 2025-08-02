@@ -145,7 +145,7 @@ class ProjectSelectorPage extends ConsumerWidget {
                           ],
                         ),
                         const SizedBox(height: AppSpacing.xSmall),
-                        const Divider(thickness: 4, color: Colors.black),
+                        const Divider(thickness: 2),
                         const SizedBox(height: AppSpacing.xSmall),
                         Row(
                           children: [

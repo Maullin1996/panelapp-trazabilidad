@@ -1,5 +1,6 @@
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_load_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/providers/stage4_usecases_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage4_form_provider.g.dart';
@@ -33,13 +34,16 @@ class Stage4Form extends _$Stage4Form {
 
   Future<void> submit(Stage4FormData data, {required bool isNew}) async {
     state = state.copyWith(status: Stage4FormStatus.submitting);
+    final notifier = ref.read(stage4LoadProvider.notifier);
     try {
-      await Future.delayed(const Duration(milliseconds: 300));
-      final repo = ref.read(stage4LoadProvider.notifier);
       if (isNew) {
-        repo.add(data);
+        final createUseCase = ref.read(createStage4DataProvider);
+        await createUseCase(data);
+        notifier.refresh();
       } else {
-        repo.update(data);
+        final updateUseCase = ref.read(updateStage4DataProvider);
+        await updateUseCase(data);
+        notifier.refresh();
       }
       state = state.copyWith(status: Stage4FormStatus.success, data: data);
     } catch (e) {

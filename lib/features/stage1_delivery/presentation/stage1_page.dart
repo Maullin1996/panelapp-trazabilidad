@@ -30,28 +30,31 @@ class Stage1Page extends ConsumerWidget {
     final project = isNew
         ? null
         : ref.watch(stage1ProjectByIdProvider(projectId));
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          project == null ? 'Nuevo proyecto' : 'Modificar ${project.name}',
-          style: textTheme.headlineLarge,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            project == null ? 'Nuevo proyecto' : 'Modificar ${project.name}',
+            style: textTheme.headlineLarge,
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_rounded),
+            onPressed: () => context.go(Routes.projects),
+          ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
-          onPressed: () => context.go(Routes.projects),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              AppSpacing.small,
-              AppSpacing.smallLarge,
-              AppSpacing.small,
-              AppSpacing.medium,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.small,
+                AppSpacing.smallLarge,
+                AppSpacing.small,
+                AppSpacing.medium,
+              ),
+              child: Stage1LoadForm(initialData: project, isNew: isNew),
             ),
-            child: Stage1LoadForm(initialData: project, isNew: isNew),
           ),
         ),
       ),

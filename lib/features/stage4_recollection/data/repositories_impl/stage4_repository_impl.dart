@@ -19,4 +19,10 @@ class Stage4RepositoryImpl implements Stage4Repository {
     final model = Stage4FormModel.fromEntity(data);
     return datasource.update(model);
   }
+
+  @override
+  Future<List<Stage4FormData>> getAll() async {
+    final models = await datasource.getAll();
+    return models.map((model) => model.toEntity()).toList();
+  }
 }

@@ -57,20 +57,23 @@ class Stage3FormPage extends ConsumerWidget {
 
     final textTheme = TextTheme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          isNew ? 'Registrar pesaje' : 'Editar pesaje',
-          style: textTheme.headlineLarge,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            isNew ? 'Registrar pesaje' : 'Editar pesaje',
+            style: textTheme.headlineLarge,
+          ),
+          leading: BackButton(onPressed: () => context.pop()),
         ),
-        leading: BackButton(onPressed: () => context.pop()),
-      ),
-      body: Stage3LoadForm(
-        project: project,
-        load2: load2!,
-        isNew: isNew,
-        initialData: initialData,
+        body: Stage3LoadForm(
+          project: project,
+          load2: load2!,
+          isNew: isNew,
+          initialData: initialData,
+        ),
       ),
     );
   }
