@@ -6,7 +6,7 @@ part of 'stage52_form_status.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage52FormHash() => r'5b92331a16e3ff7316ad1658742ae93f79edb1e3';
+String _$stage52FormHash() => r'c79a6b4059fca96df126c748cc4293e66021b89a';
 
 /// See also [Stage52Form].
 @ProviderFor(Stage52Form)

@@ -11,6 +11,7 @@ import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_prov
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
+import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage3LoadForm extends ConsumerStatefulWidget {
@@ -126,43 +127,17 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       const SizedBox(height: 16),
                       Text('Calidad', style: textTheme.headlineMedium),
                       const SizedBox(height: 8),
-
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              offset: const Offset(1, 1),
-                              color: Colors.black.withAlpha(50),
-                              blurRadius: 2,
-                              spreadRadius: 1,
+                      CustomFromDropdown<String>(
+                        name: 'quality_$index',
+                        items: BasketQuality.values.map((e) {
+                          return DropdownMenuItem(
+                            value: e.name,
+                            child: Text(
+                              e.name.toUpperCase(),
+                              style: textTheme.bodyLarge,
                             ),
-                          ],
-                          borderRadius: BorderRadius.circular(AppRadius.small),
-                          border: Border.all(
-                            color: AppColors.secondaryDarkPanela,
-                            width: 2,
-                          ),
-                        ),
-                        child: FormBuilderDropdown<String>(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: AppSpacing.small,
-                            vertical: AppSpacing.small,
-                          ),
-                          name: 'quality_$index',
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          items: BasketQuality.values.map((e) {
-                            return DropdownMenuItem(
-                              value: e.name,
-                              child: Text(
-                                e.name.toUpperCase(),
-                                style: textTheme.bodyLarge,
-                              ),
-                            );
-                          }).toList(),
-                        ),
+                          );
+                        }).toList(),
                       ),
                       const SizedBox(height: AppSpacing.medium),
                       Center(

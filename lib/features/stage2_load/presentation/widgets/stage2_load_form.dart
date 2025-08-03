@@ -7,6 +7,7 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/providers/stage2_load_form_provider.dart';
+import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage2LoadForm extends ConsumerStatefulWidget {
@@ -61,44 +62,22 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                 style: textTheme.headlineMedium,
               ),
               SizedBox(height: AppSpacing.small),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(1, 1),
-                      color: Colors.black.withAlpha(50),
-                      blurRadius: 2,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(AppRadius.small),
-                  border: Border.all(
-                    color: AppColors.secondaryDarkPanela,
-                    width: 2,
-                  ),
-                ),
-                child: FormBuilderDropdown<double>(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppSpacing.small,
-                    vertical: AppSpacing.small,
-                  ),
-                  name: 'referenceWeight',
-                  decoration: const InputDecoration(border: InputBorder.none),
-                  items: widget.project.gaveras
-                      .map(
-                        (g) => DropdownMenuItem(
-                          value: g.referenceWeight,
-                          child: Text(
-                            '${g.referenceWeight} g',
-                            style: textTheme.bodyLarge,
-                          ),
+              CustomFromDropdown<double>(
+                name: 'referenceWeight',
+                items: widget.project.gaveras
+                    .map(
+                      (g) => DropdownMenuItem(
+                        value: g.referenceWeight,
+                        child: Text(
+                          '${g.referenceWeight} g',
+                          style: textTheme.bodyLarge,
                         ),
-                      )
-                      .toList(),
-                  validator: FormBuilderValidators.required(),
-                ),
+                      ),
+                    )
+                    .toList(),
+                validator: FormBuilderValidators.required(),
               ),
+
               const SizedBox(height: 16),
               Column(
                 children: [

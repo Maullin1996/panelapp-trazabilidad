@@ -26,19 +26,25 @@ class Stage52FormPage extends ConsumerWidget {
       }
     });
     final textTheme = TextTheme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Nuevo registro de panela', style: textTheme.headlineLarge),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.smallLarge,
-          AppSpacing.smallLarge,
-          AppSpacing.smallLarge,
-          AppSpacing.large,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'Nuevo registro de panela',
+            style: textTheme.headlineLarge,
+          ),
         ),
-        child: Stage52LoadForm(projectId: projectId),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.smallLarge,
+            AppSpacing.smallLarge,
+            AppSpacing.smallLarge,
+            AppSpacing.large,
+          ),
+          child: Stage52LoadForm(projectId: projectId),
+        ),
       ),
     );
   }

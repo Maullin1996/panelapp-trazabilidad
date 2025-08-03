@@ -6,7 +6,7 @@ part of 'stage4_ui_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage4UiHash() => r'29ac163ee6e50531376c1036cc96a71085b8360d';
+String _$stage4UiHash() => r'4c82f260c6b20a66583e4675f8b2d82a2ca58af8';
 
 /// Copied from Dart SDK
 class _SystemHash {

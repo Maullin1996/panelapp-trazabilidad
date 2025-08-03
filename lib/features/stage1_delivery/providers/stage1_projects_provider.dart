@@ -18,7 +18,7 @@ class Stage1Projects extends _$Stage1Projects {
 
   void addProjectOptimistic(Stage1FormData project) {
     state.whenData((projects) {
-      state = AsyncData([...projects, project]);
+      state = AsyncData([project, ...projects]);
     });
   }
 

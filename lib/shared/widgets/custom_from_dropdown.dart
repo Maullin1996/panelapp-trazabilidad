@@ -3,10 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:registro_panela/shared/utils/tokens.dart';
 
-class CustomFromDropdown extends StatelessWidget {
+class CustomFromDropdown<T> extends StatelessWidget {
   final String name;
-  final List<DropdownMenuItem> items;
-  final String? Function(String?)? validator;
+  final List<DropdownMenuItem<T>> items;
+  final String? Function(T?)? validator;
   const CustomFromDropdown({
     super.key,
     required this.name,
@@ -27,10 +27,11 @@ class CustomFromDropdown extends StatelessWidget {
             spreadRadius: 1,
           ),
         ],
-        borderRadius: BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(AppRadius.small),
         border: Border.all(color: AppColors.secondaryDarkPanela, width: 2),
       ),
       child: FormBuilderDropdown(
+        dropdownColor: Colors.white,
         padding: EdgeInsets.symmetric(
           horizontal: AppSpacing.small,
           vertical: AppSpacing.small,
@@ -38,6 +39,7 @@ class CustomFromDropdown extends StatelessWidget {
         name: name,
         items: items,
         decoration: const InputDecoration(border: InputBorder.none),
+        validator: validator,
       ),
     );
   }

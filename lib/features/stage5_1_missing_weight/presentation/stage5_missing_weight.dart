@@ -7,8 +7,7 @@ import 'package:registro_panela/features/stage5_1_missing_weight/presentation/he
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/providers/global_missing_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/providers/stage5_price_form_state_provider.dart';
-import 'package:registro_panela/shared/utils/colors.dart';
-import 'package:registro_panela/shared/utils/spacing.dart';
+import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
@@ -22,110 +21,112 @@ class Stage5MissingWeight extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final summary3 = ref.watch(stage3GlobalSummaryProvider(projectId));
     final textTheme = TextTheme.of(context);
-
-    return SingleChildScrollView(
-      padding: EdgeInsets.only(bottom: AppSpacing.medium),
-      child: Column(
-        children: [
-          CustomCard(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.small),
-              child: Column(
-                children: [
-                  Text(
-                    'Total registrado en moliendas',
-                    maxLines: 2,
-                    style: textTheme.headlineLarge,
-                  ),
-                  const SizedBox(height: AppSpacing.smallLarge),
-                  CustomRichText(
-                    icon: Icons.shopping_basket,
-                    iconColor: AppColors.register,
-                    firstText: 'Canastillas esperadas: ',
-                    secondText: '${summary3.totalExpectedCount}',
-                  ),
-                  CustomRichText(
-                    icon: Icons.scale,
-                    iconColor: AppColors.weight,
-                    firstText: 'Peso esperado: ',
-                    secondText:
-                        '${summary3.totalExpectedWeight.toStringAsFixed(2)} kg',
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: AppSpacing.smallLarge),
-          CustomCard(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.small),
-              child: Column(
-                children: [
-                  Text(
-                    'Total registrado en bodega',
-                    style: textTheme.headlineLarge,
-                  ),
-                  const SizedBox(height: AppSpacing.smallLarge),
-                  CustomRichText(
-                    icon: Icons.all_inbox_rounded,
-                    iconColor: AppColors.register,
-                    firstText: 'Registradas: ',
-                    secondText: '${summary3.totalRegisteredCount} Canastillas',
-                  ),
-                  CustomRichText(
-                    icon: Icons.check_box,
-                    iconColor: AppColors.accepted,
-                    firstText: 'Peso registrado: ',
-                    secondText:
-                        '${summary3.totalRegisteredWeight.toStringAsFixed(2)} kg',
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          if (summary3.totalMissingCount != 0 ||
-              summary3.totalMissingWeight != 0)
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(bottom: AppSpacing.medium),
+        child: Column(
+          children: [
             CustomCard(
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.small),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Text(
-                        'Total Faltante',
-                        style: textTheme.headlineLarge,
-                      ),
+                    Text(
+                      'Total registrado en moliendas',
+                      maxLines: 2,
+                      style: textTheme.headlineLarge,
                     ),
                     const SizedBox(height: AppSpacing.smallLarge),
-
-                    if (summary3.totalMissingCount != 0)
-                      CustomRichText(
-                        firstText: 'Faltan: ',
-                        secondText: '${summary3.totalMissingCount} Canastillas',
-                        icon: Icons.priority_high,
-                        iconColor: AppColors.error,
-                      ),
-                    if (summary3.totalMissingWeight != 0)
-                      CustomRichText(
-                        firstText: 'Peso Faltante: ',
-                        secondText:
-                            '${summary3.totalMissingWeight.toStringAsFixed(2)} kg',
-                        icon: Icons.warning,
-                        iconColor: AppColors.alert,
-                      ),
+                    CustomRichText(
+                      icon: Icons.shopping_basket,
+                      iconColor: AppColors.register,
+                      firstText: 'Canastillas esperadas: ',
+                      secondText: '${summary3.totalExpectedCount}',
+                    ),
+                    CustomRichText(
+                      icon: Icons.scale,
+                      iconColor: AppColors.weight,
+                      firstText: 'Peso esperado: ',
+                      secondText:
+                          '${summary3.totalExpectedWeight.toStringAsFixed(2)} kg',
+                    ),
                   ],
                 ),
               ),
             ),
-          const SizedBox(height: AppSpacing.smallMedium),
-          _FormTotalToPay(
-            projectId: projectId,
-            totalRegisteredWeight: summary3.totalRegisteredWeight,
-          ),
-        ],
+            CustomCard(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.small),
+                child: Column(
+                  children: [
+                    Text(
+                      'Total registrado en bodega',
+                      style: textTheme.headlineLarge,
+                    ),
+                    const SizedBox(height: AppSpacing.smallLarge),
+                    CustomRichText(
+                      icon: Icons.all_inbox_rounded,
+                      iconColor: AppColors.register,
+                      firstText: 'Registradas: ',
+                      secondText:
+                          '${summary3.totalRegisteredCount} Canastillas',
+                    ),
+                    CustomRichText(
+                      icon: Icons.check_box,
+                      iconColor: AppColors.accepted,
+                      firstText: 'Peso registrado: ',
+                      secondText:
+                          '${summary3.totalRegisteredWeight.toStringAsFixed(2)} kg',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            if (summary3.totalMissingCount != 0 ||
+                summary3.totalMissingWeight != 0)
+              CustomCard(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.small),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          'Total Faltante',
+                          style: textTheme.headlineLarge,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.smallLarge),
+
+                      if (summary3.totalMissingCount != 0)
+                        CustomRichText(
+                          firstText: 'Faltan: ',
+                          secondText:
+                              '${summary3.totalMissingCount} Canastillas',
+                          icon: Icons.priority_high,
+                          iconColor: AppColors.error,
+                        ),
+                      if (summary3.totalMissingWeight != 0)
+                        CustomRichText(
+                          firstText: 'Peso Faltante: ',
+                          secondText:
+                              '${summary3.totalMissingWeight.toStringAsFixed(2)} kg',
+                          icon: Icons.warning,
+                          iconColor: AppColors.alert,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: AppSpacing.smallMedium),
+            _FormTotalToPay(
+              projectId: projectId,
+              totalRegisteredWeight: summary3.totalRegisteredWeight,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -196,10 +197,23 @@ class __FormTotalToPayState extends ConsumerState<_FormTotalToPay> {
             if (formState.data != null)
               Column(
                 children: [
-                  CustomRichText(
-                    icon: Icons.money_off,
-                    firstText: 'Valor total: ',
-                    secondText: '\$ ${moneyFormat(formState.totalToPay)}',
+                  RichText(
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Valor total: ',
+                          style: textTheme.headlineLarge,
+                        ),
+                        TextSpan(
+                          text: '\$ ${moneyFormat(formState.totalToPay)}',
+                          style: textTheme.bodyLarge?.copyWith(
+                            fontSize: AppTypography.h2,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.medium),
                 ],

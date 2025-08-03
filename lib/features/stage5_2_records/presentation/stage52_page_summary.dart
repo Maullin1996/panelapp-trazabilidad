@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_load_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
 
@@ -19,7 +19,7 @@ class Stage52SummaryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final record = ref
-        .watch(stage52LoadProvider)
+        .watch(syncStage52LoadsProvider)
         .firstWhere((r) => r.id == recordId);
 
     final textTheme = TextTheme.of(context);
@@ -39,7 +39,10 @@ class Stage52SummaryPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (record.photoPath.isNotEmpty) Image.file(File(record.photoPath)),
+            if (record.photoPath.isNotEmpty)
+              record.photoPath.startsWith('http')
+                  ? Image.network(record.photoPath)
+                  : Image.file(File(record.photoPath)),
             const SizedBox(height: AppSpacing.smallLarge),
             CustomRichText(
               icon: Icons.calendar_month,

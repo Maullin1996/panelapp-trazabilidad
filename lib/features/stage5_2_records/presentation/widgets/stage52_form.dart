@@ -5,10 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/stage52_record_data.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/providers/stage52_form_status.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
+import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage52LoadForm extends ConsumerStatefulWidget {
@@ -38,41 +39,17 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           Text('Gavera', style: textTheme.headlineLarge),
           SizedBox(height: AppSpacing.small),
           // 1) Selector de gaveraWeight
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(1, 1),
-                  color: Colors.black.withAlpha(50),
-                  blurRadius: 2,
-                  spreadRadius: 1,
-                ),
-              ],
-              borderRadius: BorderRadius.circular(AppRadius.small),
-              border: Border.all(
-                color: AppColors.secondaryDarkPanela,
-                width: 2,
-              ),
-            ),
-            child: FormBuilderDropdown<double>(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.small,
-                vertical: AppSpacing.small,
-              ),
-              name: 'gaveras',
-              decoration: const InputDecoration(border: InputBorder.none),
-              style: textTheme.bodyLarge,
-              items: project.gaveras
-                  .map(
-                    (g) => DropdownMenuItem(
-                      value: g.referenceWeight,
-                      child: Text('${g.referenceWeight} g'),
-                    ),
-                  )
-                  .toList(),
-              validator: FormBuilderValidators.required(),
-            ),
+          CustomFromDropdown<double>(
+            name: 'gaveras',
+            items: project.gaveras
+                .map(
+                  (g) => DropdownMenuItem(
+                    value: g.referenceWeight,
+                    child: Text('${g.referenceWeight} g'),
+                  ),
+                )
+                .toList(),
+            validator: FormBuilderValidators.required(),
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
@@ -105,41 +82,17 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           Text('Calidad', style: textTheme.headlineLarge),
           SizedBox(height: AppSpacing.small),
           // 4) Calidad
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  offset: const Offset(1, 1),
-                  color: Colors.black.withAlpha(50),
-                  blurRadius: 2,
-                  spreadRadius: 1,
-                ),
-              ],
-              borderRadius: BorderRadius.circular(AppRadius.small),
-              border: Border.all(
-                color: AppColors.secondaryDarkPanela,
-                width: 2,
-              ),
-            ),
-            child: FormBuilderDropdown<String>(
-              name: 'quality',
-              decoration: const InputDecoration(border: InputBorder.none),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.small,
-                vertical: AppSpacing.small,
-              ),
-              style: textTheme.bodyLarge,
-              items: BasketQuality.values
-                  .map(
-                    (q) => DropdownMenuItem(
-                      value: q.name,
-                      child: Text(q.name.toUpperCase()),
-                    ),
-                  )
-                  .toList(),
-              validator: FormBuilderValidators.required(),
-            ),
+          CustomFromDropdown(
+            name: 'quality',
+            items: BasketQuality.values
+                .map(
+                  (q) => DropdownMenuItem(
+                    value: q.name,
+                    child: Text(q.name.toUpperCase()),
+                  ),
+                )
+                .toList(),
+            validator: FormBuilderValidators.required(),
           ),
 
           const SizedBox(height: AppSpacing.mediumLarge),

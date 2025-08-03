@@ -6,7 +6,7 @@ part of 'stage4_load_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage4LoadHash() => r'1d4b0b913ce7c90a2f795312908f67959e6d393c';
+String _$stage4LoadHash() => r'3783a152e1049823e83b478df9de9941aa023ba1';
 
 /// See also [Stage4Load].
 @ProviderFor(Stage4Load)
