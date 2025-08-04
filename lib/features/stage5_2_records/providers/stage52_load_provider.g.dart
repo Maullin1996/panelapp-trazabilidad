@@ -6,7 +6,7 @@ part of 'stage52_load_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage52LoadHash() => r'5ab68f6945506accf81ae27021d3c515fab646f7';
+String _$stage52LoadHash() => r'7ae5109448064c5df892c01e687cd6166f3d632e';
 
 /// See also [Stage52Load].
 @ProviderFor(Stage52Load)

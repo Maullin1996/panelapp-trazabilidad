@@ -6,7 +6,7 @@ part of 'stage5_price_form_state_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage5PriceFormHash() => r'436b1843afe65d21250133f9ea4c4fc676de17d3';
+String _$stage5PriceFormHash() => r'03c87739e342f664ad588c381f577d8d44a2db50';
 
 /// See also [Stage5PriceForm].
 @ProviderFor(Stage5PriceForm)

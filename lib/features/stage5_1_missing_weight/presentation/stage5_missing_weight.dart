@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
+
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_ui_provider.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/domain/stage5_price_form.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/missing_gavera.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/widgets/form_total_to_pay.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/providers/global_missing_provider.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/providers/stage5_price_form_state_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/providers/stage51_notifier_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/providers/stage51_usecases_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/providers/sync_stage51_payments_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
-import 'package:uuid/uuid.dart';
 
-class Stage5MissingWeight extends ConsumerWidget {
+class Stage5MissingWeight extends ConsumerStatefulWidget {
   final String projectId;
   const Stage5MissingWeight({super.key, required this.projectId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final summary3 = ref.watch(stage3GlobalSummaryProvider(projectId));
+  ConsumerState<Stage5MissingWeight> createState() =>
+      _Stage5MissingWeightState();
+}
 
-    final project = ref.watch(stage1ProjectByIdProvider(projectId))!;
+class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
+  bool editInstallment = false;
+  @override
+  Widget build(BuildContext context) {
+    final summary3 = ref.watch(stage3GlobalSummaryProvider(widget.projectId));
 
-    final returns = ref.watch(stage4UiProvider(projectId));
+    final project = ref.watch(stage1ProjectByIdProvider(widget.projectId))!;
+
+    final returns = ref.watch(stage4UiProvider(widget.projectId));
 
     final textTheme = TextTheme.of(context);
 
@@ -34,7 +41,7 @@ class Stage5MissingWeight extends ConsumerWidget {
     final missingPreservativesJars =
         project.preservativesJars - returns.returnedPreservativesJars;
 
-    final missingGaveras = <_MissingGavera>[];
+    final missingGaveras = <MissingGavera>[];
     for (
       int i = 0;
       i < project.gaveras.length && i < returns.returnedGaveras.length;
@@ -45,11 +52,14 @@ class Stage5MissingWeight extends ConsumerWidget {
       final diff = sent.quantity - ret.quantity;
       if (diff != 0) {
         missingGaveras.add(
-          _MissingGavera(count: diff, referenceWeight: ret.referenceWeight),
+          MissingGavera(count: diff, referenceWeight: ret.referenceWeight),
         );
       }
     }
+
     final hasMissingGaveras = missingGaveras.isNotEmpty;
+
+    final installments = ref.watch(syncStage51PaymentsProvider);
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -176,9 +186,83 @@ class Stage5MissingWeight extends ConsumerWidget {
                   ),
                 ),
               ),
-            const SizedBox(height: AppSpacing.smallMedium),
-            _FormTotalToPay(
-              projectId: projectId,
+            if (installments.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: AppSpacing.smallLarge,
+                      top: AppSpacing.smallMedium,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            'Abonos realizados',
+                            style: textTheme.headlineLarge,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() => editInstallment = !editInstallment);
+                          },
+                          icon: Icon(
+                            editInstallment ? Icons.cancel : Icons.edit,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  CustomCard(
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.all(AppSpacing.smallLarge),
+                      child: Column(
+                        children: [
+                          ...installments.map(
+                            (e) => Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    '${DateFormat.yMd().format(e.date)}:',
+                                    style: textTheme.headlineMedium,
+                                  ),
+                                ),
+                                Text(
+                                  '\$ ${moneyFormat(e.amount)}',
+                                  style: textTheme.bodyLarge,
+                                ),
+                                if (editInstallment)
+                                  IconButton(
+                                    onPressed: () async {
+                                      final deleteUseCase = ref.read(
+                                        deleteStage51DataProvider,
+                                      );
+                                      await deleteUseCase(e.id);
+                                      ref
+                                          .read(
+                                            stage51NotifierProvider.notifier,
+                                          )
+                                          .refresh();
+                                    },
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: AppColors.error,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            FormTotalToPay(
+              projectId: widget.projectId,
               totalRegisteredWeight: summary3.totalRegisteredWeight,
             ),
           ],
@@ -186,137 +270,4 @@ class Stage5MissingWeight extends ConsumerWidget {
       ),
     );
   }
-}
-
-class _FormTotalToPay extends ConsumerStatefulWidget {
-  final double totalRegisteredWeight;
-  final String projectId;
-  const _FormTotalToPay({
-    this.totalRegisteredWeight = 0,
-    required this.projectId,
-  });
-
-  @override
-  ConsumerState<_FormTotalToPay> createState() => __FormTotalToPayState();
-}
-
-class __FormTotalToPayState extends ConsumerState<_FormTotalToPay> {
-  final _formKey = GlobalKey<FormBuilderState>();
-  final uuid = Uuid();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = TextTheme.of(context);
-    final formState = ref.watch(stage5PriceFormProvider);
-    final formNotifier = ref.read(stage5PriceFormProvider.notifier);
-
-    return FormBuilder(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.small),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Text('Total a pagar', style: textTheme.headlineLarge),
-            ),
-            const SizedBox(height: AppSpacing.smallMedium),
-            Text('Valor por kilo', style: textTheme.headlineMedium),
-            const SizedBox(height: AppSpacing.xSmall),
-            AppFormTextFild(
-              name: 'pricePerKilo',
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-                FormBuilderValidators.min(1),
-              ]),
-              inputFormatters: [MoneyInputFormatter()],
-              valueTransformer: (text) {
-                if (text == null) return null;
-                return text.replaceAll(RegExp(r'[^0-9]'), '');
-              },
-            ),
-            const SizedBox(height: AppSpacing.smallMedium),
-            Text('Se realizaron abonos', style: textTheme.headlineMedium),
-            const SizedBox(height: AppSpacing.xSmall),
-            AppFormTextFild(
-              name: 'installment',
-              keyboardType: TextInputType.number,
-              inputFormatters: [MoneyInputFormatter()],
-              valueTransformer: (text) {
-                if (text == null) return null;
-                return text.replaceAll(RegExp(r'[^0-9]'), '');
-              },
-            ),
-            const SizedBox(height: AppSpacing.medium),
-            if (formState.data != null)
-              Column(
-                children: [
-                  RichText(
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Valor total: ',
-                          style: textTheme.headlineLarge,
-                        ),
-                        TextSpan(
-                          text: '\$ ${moneyFormat(formState.totalToPay)}',
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontSize: AppTypography.h2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.medium),
-                ],
-              ),
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton(
-                onPressed: formState.status == Stage5PriceFormStatus.submitting
-                    ? null
-                    : () {
-                        if (!(_formKey.currentState?.saveAndValidate() ??
-                            false)) {
-                          return;
-                        }
-
-                        final values = _formKey.currentState!.value;
-
-                        final data = Stage5PriceFormData(
-                          id: uuid.v4(),
-                          projectId: widget.projectId,
-                          date: DateTime.now(),
-                          pricePerKilo:
-                              double.tryParse(values['pricePerKilo'] ?? '0') ??
-                              0.0,
-                          installment:
-                              double.tryParse(values['installment'] ?? '0') ??
-                              0.0,
-                        );
-                        formNotifier.submit(
-                          projectId: widget.projectId,
-                          data: data,
-                          totalRegisteredWeight: widget.totalRegisteredWeight,
-                        );
-                      },
-                child: Text('Calcular', style: textTheme.headlineLarge),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MissingGavera {
-  final int count;
-  final double referenceWeight;
-  _MissingGavera({required this.count, required this.referenceWeight});
 }
