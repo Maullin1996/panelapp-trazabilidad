@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
 class Stage52SummaryPage extends ConsumerWidget {
   final String projectId;
@@ -40,9 +39,10 @@ class Stage52SummaryPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (record.photoPath.isNotEmpty)
-              record.photoPath.startsWith('http')
-                  ? Image.network(record.photoPath)
-                  : Image.file(File(record.photoPath)),
+              StageImageWidget(
+                imagePath: record.photoPath,
+                fit: BoxFit.contain,
+              ),
             const SizedBox(height: AppSpacing.smallLarge),
             CustomRichText(
               icon: Icons.calendar_month,

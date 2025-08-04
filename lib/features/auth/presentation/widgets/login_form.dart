@@ -19,6 +19,7 @@ class LoginForm extends ConsumerStatefulWidget {
 
 class _LoginFormState extends ConsumerState<LoginForm> {
   final _fbkey = GlobalKey<FormBuilderState>();
+  bool obscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +64,22 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           SizedBox(height: AppSpacing.small),
           AppFormTextFild(
             name: 'password',
-            obscureText: true,
+            obscureText: obscure,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),
               FormBuilderValidators.minLength(6),
             ]),
             onChanged: (v) => formNotifier.onPasswordChanged(v ?? ''),
+            iconButton: IconButton(
+              onPressed: () {
+                setState(() {
+                  obscure = !obscure;
+                });
+              },
+              icon: Icon(
+                obscure ? Icons.remove_red_eye_outlined : Icons.remove_red_eye,
+              ),
+            ),
           ),
           const SizedBox(height: AppSpacing.mediumLarge),
           formState.isSubmitting

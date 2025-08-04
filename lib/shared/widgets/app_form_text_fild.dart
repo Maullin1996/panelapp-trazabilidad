@@ -14,11 +14,12 @@ class AppFormTextFild extends StatelessWidget {
   final void Function(String?)? onChanged;
   final List<TextInputFormatter>? inputFormatters;
   final Function(String?)? valueTransformer;
+  final Widget? iconButton;
 
   const AppFormTextFild({
     super.key,
     required this.name,
-
+    this.iconButton,
     this.initialValue,
     this.hintText,
     this.obscureText = false,
@@ -52,6 +53,7 @@ class AppFormTextFild extends StatelessWidget {
       child: FormBuilderTextField(
         name: name,
         decoration: InputDecoration(
+          suffixIcon: iconButton,
           hintText: hintText,
           border: InputBorder.none,
         ),

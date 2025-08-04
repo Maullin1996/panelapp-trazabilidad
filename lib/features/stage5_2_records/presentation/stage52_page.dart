@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +6,7 @@ import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
 class Stage52Page extends ConsumerWidget {
   final String projectId;
@@ -20,19 +19,57 @@ class Stage52Page extends ConsumerWidget {
         .where((r) => r.projectId == projectId)
         .toList();
 
+    final textTheme = TextTheme.of(context);
+
     return Scaffold(
-      body: ListView.separated(
+      body: ListView.builder(
         padding: const EdgeInsets.only(bottom: AppSpacing.large),
         itemCount: records.length,
-        separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.small),
         itemBuilder: (_, i) {
           final r = records[i];
-          return GestureDetector(
-            onTap: () => context.push(
-              '${Routes.stage5}/'
-              '$projectId/records/${r.id}/summary',
-            ),
-            child: CustomCard(
+          return CustomCard(
+            child: InkWell(
+              onTap: () => showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  backgroundColor: AppColors.cardBackground,
+                  title: Text(
+                    '¿Qué quieres hacer?',
+                    style: textTheme.headlineMedium,
+                  ),
+                  actions: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.push(
+                              '${Routes.stage5}/$projectId/records/${r.id}/summary',
+                            );
+                          },
+                          child: Text(
+                            'Ver resumen',
+                            style: textTheme.headlineSmall,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.push(
+                              '${Routes.stage5}/$projectId/records/${r.id}/edit',
+                            );
+                          },
+                          child: Text(
+                            'Editar registro',
+                            style: textTheme.headlineSmall,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xSmall),
                 child: Row(
@@ -73,13 +110,12 @@ class Stage52Page extends ConsumerWidget {
                       ),
                     ),
                     if (r.photoPath.isNotEmpty)
-                      r.photoPath.startsWith('http')
-                          ? Image.network(r.photoPath, width: 100, height: 150)
-                          : Image.file(
-                              File(r.photoPath),
-                              width: 100,
-                              height: 150,
-                            ),
+                      StageImageWidget(
+                        imagePath: r.photoPath,
+                        width: 100,
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
                   ],
                 ),
               ),

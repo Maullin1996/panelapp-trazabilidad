@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/providers/stage4_ui_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/stage5_price_form.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
@@ -20,7 +22,35 @@ class Stage5MissingWeight extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final summary3 = ref.watch(stage3GlobalSummaryProvider(projectId));
+
+    final project = ref.watch(stage1ProjectByIdProvider(projectId))!;
+
+    final returns = ref.watch(stage4UiProvider(projectId));
+
     final textTheme = TextTheme.of(context);
+
+    final missingLimeJars = project.limeJars - returns.returnedLimeJars;
+
+    final missingPreservativesJars =
+        project.preservativesJars - returns.returnedPreservativesJars;
+
+    final missingGaveras = <_MissingGavera>[];
+    for (
+      int i = 0;
+      i < project.gaveras.length && i < returns.returnedGaveras.length;
+      i++
+    ) {
+      final sent = project.gaveras[i];
+      final ret = returns.returnedGaveras[i];
+      final diff = sent.quantity - ret.quantity;
+      if (diff != 0) {
+        missingGaveras.add(
+          _MissingGavera(count: diff, referenceWeight: ret.referenceWeight),
+        );
+      }
+    }
+    final hasMissingGaveras = missingGaveras.isNotEmpty;
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SingleChildScrollView(
@@ -85,7 +115,10 @@ class Stage5MissingWeight extends ConsumerWidget {
             ),
 
             if (summary3.totalMissingCount != 0 ||
-                summary3.totalMissingWeight != 0)
+                summary3.totalMissingWeight != 0 ||
+                missingLimeJars != 0 ||
+                missingPreservativesJars != 0 ||
+                hasMissingGaveras)
               CustomCard(
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.small),
@@ -99,7 +132,30 @@ class Stage5MissingWeight extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.smallLarge),
-
+                      ...missingGaveras.map((m) {
+                        return CustomRichText(
+                          icon: Icons.storage,
+                          iconColor: AppColors.weight,
+                          firstText: 'Falta: ',
+                          secondText:
+                              '${m.count} gaveras de ${m.referenceWeight}g',
+                        );
+                      }),
+                      if (missingPreservativesJars != 0)
+                        CustomRichText(
+                          firstText: 'Falta: ',
+                          secondText:
+                              '$missingPreservativesJars Tarros conservantes',
+                          icon: Icons.local_drink_rounded,
+                          iconColor: AppColors.accepted,
+                        ),
+                      if (missingLimeJars != 0)
+                        CustomRichText(
+                          firstText: 'Falta: ',
+                          secondText: '$missingLimeJars Tarros cal',
+                          icon: Icons.local_drink_rounded,
+                          iconColor: AppColors.accentLightPanela,
+                        ),
                       if (summary3.totalMissingCount != 0)
                         CustomRichText(
                           firstText: 'Faltan: ',
@@ -257,4 +313,10 @@ class __FormTotalToPayState extends ConsumerState<_FormTotalToPay> {
       ),
     );
   }
+}
+
+class _MissingGavera {
+  final int count;
+  final double referenceWeight;
+  _MissingGavera({required this.count, required this.referenceWeight});
 }

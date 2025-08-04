@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:registro_panela/features/stage5_summary/providers/stage5_global_summary_provider.dart';
 import 'package:registro_panela/features/stage5_summary/providers/stage5_summary_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
+import 'package:registro_panela/shared/widgets/custom_card.dart';
 
 class Stage5Summary extends ConsumerWidget {
   final String projectId;
@@ -23,95 +24,123 @@ class Stage5Summary extends ConsumerWidget {
             ),
           )
         : Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Resumen de cargues',
-                style: textTheme.headlineMedium,
-              ),
-            ),
             body: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.small,
-                AppSpacing.small,
-                AppSpacing.small,
-                AppSpacing.smallMedium,
-              ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // POR DÍA
-                  SingleChildScrollView(
-                    scrollDirection: Axis
-                        .horizontal, // habilita scroll si se sale de pantalla
-                    child: DataTable(
-                      columns: [
-                        DataColumn(
-                          label: Text('Fecha', style: textTheme.headlineSmall),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Canastillas',
-                            style: textTheme.headlineSmall,
+                  // TOTAL GLOBAL
+                  CustomCard(
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Text(
+                            'Resumen general',
+                            style: textTheme.headlineLarge,
                           ),
                         ),
-                        DataColumn(
-                          label: Text(
-                            'Peso real (kg)',
-                            style: textTheme.headlineSmall,
-                          ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Gavera (g)',
-                            style: textTheme.headlineSmall,
-                          ),
-                        ),
-                      ],
-                      rows: summaryByDay.expand((day) {
-                        final fecha = DateFormat.yMd().format(day.date);
-                        return day.items.map((it) {
-                          return DataRow(
-                            cells: [
-                              DataCell(Text(fecha, style: textTheme.bodyLarge)),
-                              DataCell(
-                                Text(
-                                  '${it.totalCount}',
-                                  style: textTheme.bodyLarge,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  it.realWeight.toStringAsFixed(0),
-                                  style: textTheme.bodyLarge,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  it.gaveraWeight.toStringAsFixed(0),
-                                  style: textTheme.bodyLarge,
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: AppSpacing.xSmall),
+                        ...globalSummary.map((it) {
+                          return Center(
+                            child: Text(
+                              '• ${it.totalCount} canastillas de ${it.realWeight.toStringAsFixed(0)} kg – gavera ${it.gaveraWeight.toStringAsFixed(0)}',
+                              style: textTheme.bodyLarge,
+                            ),
                           );
-                        });
-                      }).toList(),
+                        }),
+                      ],
                     ),
                   ),
-
-                  // TOTAL GLOBAL
                   const SizedBox(height: AppSpacing.smallLarge),
                   Center(
                     child: Text(
-                      'Total canastillas',
-                      style: textTheme.headlineMedium,
+                      'Resumen Diario',
+                      style: textTheme.headlineLarge,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  ...globalSummary.map((it) {
-                    return Center(
-                      child: Text(
-                        '${it.totalCount} canastillas de ${it.realWeight.toStringAsFixed(0)} kg – gavera ${it.gaveraWeight.toStringAsFixed(0)}',
-                        style: textTheme.bodyLarge,
+                  const SizedBox(height: AppSpacing.smallLarge),
+                  ...summaryByDay.map((summary) {
+                    final formattedDate = DateFormat(
+                      'EEEE d',
+                      'es',
+                    ).format(summary.date);
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: AppSpacing.small,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.smallLarge,
+                            ),
+                            child: Text(
+                              formattedDate,
+                              style: textTheme.headlineLarge,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xSmall),
+                          CustomCard(
+                            child: Column(
+                              children: summary.items.map((e) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: AppSpacing.xSmall,
+                                    horizontal: AppSpacing.xSmall,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Canastillas:',
+                                            style: textTheme.headlineMedium,
+                                          ),
+                                          Text(
+                                            '${e.totalCount}',
+                                            style: textTheme.bodyLarge,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Peso:',
+                                            style: textTheme.headlineMedium,
+                                          ),
+                                          Text(
+                                            '${e.realWeight.toStringAsFixed(1)} kg',
+                                            style: textTheme.bodyLarge,
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Gavera usada:',
+                                            style: textTheme.headlineMedium,
+                                          ),
+                                          Text(
+                                            '${e.gaveraWeight} g',
+                                            style: textTheme.bodyLarge,
+                                          ),
+                                        ],
+                                      ),
+                                      const Divider(height: 24),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }),

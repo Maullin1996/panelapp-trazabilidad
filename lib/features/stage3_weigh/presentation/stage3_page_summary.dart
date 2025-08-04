@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +8,7 @@ import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
 class Stage3PageSummary extends ConsumerWidget {
   final String projectId;
@@ -203,23 +202,14 @@ class Stage3PageSummary extends ConsumerWidget {
 
                       const SizedBox(height: AppSpacing.xSmall),
                       if (b.photoPath.isNotEmpty)
-                        (b.photoPath.startsWith('http'))
-                            ? Center(
-                                child: Image.network(
-                                  b.photoPath,
-                                  width: 200,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : Center(
-                                child: Image.file(
-                                  File(b.photoPath),
-                                  width: 200,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                        Center(
+                          child: StageImageWidget(
+                            imagePath: b.photoPath,
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                     ],
                   ),
                 ),

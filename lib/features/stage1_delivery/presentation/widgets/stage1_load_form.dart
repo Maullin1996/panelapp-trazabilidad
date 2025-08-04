@@ -1,15 +1,15 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:registro_panela/core/services/compress_file.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_form_provider.dart';
+import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage1LoadForm extends ConsumerStatefulWidget {
@@ -24,14 +24,14 @@ class Stage1LoadForm extends ConsumerStatefulWidget {
 class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   late final GlobalKey<FormBuilderState> _formKey;
   late final List<int> _gaveras;
-  String? _fotoPath;
+  String? _photoPath;
 
   @override
   void initState() {
     super.initState();
     _formKey = GlobalKey<FormBuilderState>();
     _gaveras = widget.initialData?.gaveras.asMap().keys.toList() ?? [0];
-    _fotoPath = widget.initialData?.photoPath;
+    _photoPath = widget.initialData?.photoPath;
   }
 
   void _addGavera() {
@@ -44,16 +44,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     setState(() {
       _gaveras.remove(index);
     });
-  }
-
-  Future<void> _onPickImage() async {
-    final imagePickerService = ref.read(imagePickerServiceProvider);
-    final pickedPath = await imagePickerService.pickImage(fromCamera: true);
-    if (pickedPath != null) {
-      setState(() {
-        _fotoPath = pickedPath;
-      });
-    }
   }
 
   @override
@@ -218,7 +208,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   FormBuilderValidators.required(),
                   FormBuilderValidators.numeric(),
                   FormBuilderValidators.maxLength(10),
-                  FormBuilderValidators.minLength(10),
+                  FormBuilderValidators.minLength(7),
                 ]),
                 keyboardType: TextInputType.phone,
               ),
@@ -228,7 +218,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   width: double.infinity,
                   height: 60,
                   child: ElevatedButton.icon(
-                    onPressed: _onPickImage,
+                    onPressed: () => _onPickImage(textTheme),
                     icon: const Icon(
                       Icons.camera_alt,
                       size: 30,
@@ -238,24 +228,17 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   ),
                 ),
               ),
-              if (_fotoPath != null)
+              if (_photoPath != null)
                 Column(
                   children: [
                     const SizedBox(height: AppSpacing.smallLarge),
                     Center(
-                      child: _fotoPath!.startsWith('http')
-                          ? Image.network(
-                              _fotoPath!,
-                              width: 300,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.file(
-                              File(_fotoPath!),
-                              width: 300,
-                              height: 300,
-                              fit: BoxFit.cover,
-                            ),
+                      child: StageImageWidget(
+                        imagePath: _photoPath!,
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ],
                 ),
@@ -311,7 +294,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                               limeJars: int.parse(values['limeJars']),
                               phone: values['phone'],
                               date: initial?.date ?? DateTime.now(),
-                              photoPath: _fotoPath,
+                              photoPath: _photoPath,
                             );
                             formNotifier.submit(data, isNew: isNew);
                           },
@@ -326,5 +309,72 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
         ),
       ],
     );
+  }
+
+  void _onPickImage(TextTheme textTheme) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Seleccionar origen de imagen',
+          style: textTheme.headlineMedium,
+        ),
+        actions: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextButton.icon(
+                icon: const Icon(
+                  Icons.camera_alt,
+                  color: AppColors.textDark,
+                  size: 30,
+                ),
+                label: Text('Cámara', style: textTheme.headlineMedium),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _pickFromCamera();
+                },
+              ),
+              TextButton.icon(
+                icon: const Icon(
+                  Icons.photo_library,
+                  color: AppColors.textDark,
+                  size: 30,
+                ),
+                label: Text('Galería', style: textTheme.headlineMedium),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _pickFromGallery();
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pickFromCamera() async {
+    final path = await ref
+        .read(imagePickerServiceProvider)
+        .pickImage(fromCamera: true);
+    if (path != null) {
+      final compressedPath = await compressFile(path);
+      if (compressedPath != null) {
+        setState(() => _photoPath = compressedPath);
+      }
+    }
+  }
+
+  Future<void> _pickFromGallery() async {
+    final path = await ref
+        .read(imagePickerServiceProvider)
+        .pickImage(fromCamera: false);
+    if (path != null) {
+      final compressedPath = await compressFile(path);
+      if (compressedPath != null) {
+        setState(() => _photoPath = compressedPath);
+      }
+    }
   }
 }

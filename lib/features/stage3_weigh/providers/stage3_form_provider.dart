@@ -62,7 +62,7 @@ class Stage3Form extends _$Stage3Form {
     final futures = data.baskets.map((b) async {
       final local = b.photoPath;
 
-      if (local.isNotEmpty && !local.startsWith('https://')) {
+      if (local.isNotEmpty && !local.startsWith('https')) {
         final storagePath = 'stage3/${data.projectId}/${data.id}/${b.id}.jpg';
         final downloadUrl = await uploadImage(
           path: storagePath,
