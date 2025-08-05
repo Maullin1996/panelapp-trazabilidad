@@ -61,17 +61,17 @@ class Stage2Page extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  SizedBox(height: 16),
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: AppSpacing.small),
                   Text('Ocurrió un error al cargar los proyectos'),
-                  SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.xSmall),
                   Text(error, style: TextStyle(color: Colors.grey)),
-                  SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.smallLarge),
                   ElevatedButton.icon(
                     onPressed: () =>
                         ref.read(stage2LoadProvider.notifier).refresh(),
-                    icon: Icon(Icons.refresh),
-                    label: Text('Reintentar'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reintentar'),
                   ),
                 ],
               ),

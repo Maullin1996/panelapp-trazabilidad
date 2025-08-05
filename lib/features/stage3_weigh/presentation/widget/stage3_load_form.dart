@@ -97,7 +97,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
               itemBuilder: (BuildContext context, int index) {
                 return CustomCard(
                   child: Container(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(AppSpacing.smallLarge),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -107,16 +107,16 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             style: textTheme.headlineLarge,
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.smallLarge),
                         Text('Peso real (kg)', style: textTheme.headlineMedium),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.xSmall),
                         AppFormTextFild(
                           name: 'realWeight_$index',
                           keyboardType: TextInputType.number,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSpacing.smallLarge),
                         Text('Calidad', style: textTheme.headlineMedium),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.xSmall),
                         CustomFromDropdown<String>(
                           name: 'quality_$index',
                           items: BasketQuality.values.map((e) {

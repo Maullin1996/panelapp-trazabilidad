@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -25,8 +26,12 @@ class Stage3PageSummary extends ConsumerWidget {
     final load2 = ref.watch(stage2LoadsByIdProvider(load2Id))!;
     final entry3 = ref
         .watch(syncStage3ProjectsProvider)
-        .where((p) => p.projectId == project.id)
-        .first;
+        .firstWhereOrNull(
+          (p) => p.projectId == project.id && p.stage2LoadId == load2.id,
+        );
+    if (entry3 == null) {
+      return const Scaffold(body: Center(child: Text('Resumen no disponible')));
+    }
     // 2) Cálculos de totales
     final group = load2.baskets;
     final totalBaskets = group.count;
@@ -49,7 +54,7 @@ class Stage3PageSummary extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.smallMedium),
+        padding: const EdgeInsets.only(bottom: AppSpacing.mediumSmall),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

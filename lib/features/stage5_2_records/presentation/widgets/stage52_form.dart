@@ -59,7 +59,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Gavera', style: textTheme.headlineLarge),
-          SizedBox(height: AppSpacing.small),
+          const SizedBox(height: AppSpacing.small),
           // 1) Selector de gaveraWeight
           CustomFromDropdown<double>(
             name: 'gaveras',
@@ -76,7 +76,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
 
           const SizedBox(height: AppSpacing.smallLarge),
           Text('Peso de panela (kg)', style: textTheme.headlineLarge),
-          SizedBox(height: AppSpacing.small),
+          const SizedBox(height: AppSpacing.small),
           // 2) Peso de panela
           AppFormTextFild(
             name: 'panelaWeight',
@@ -89,7 +89,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
 
           const SizedBox(height: AppSpacing.smallLarge),
           Text('Unidades de panela', style: textTheme.headlineLarge),
-          SizedBox(height: AppSpacing.small),
+          const SizedBox(height: AppSpacing.small),
           // 3) Unidades
           AppFormTextFild(
             name: 'unitCount',
@@ -102,7 +102,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
 
           const SizedBox(height: AppSpacing.smallLarge),
           Text('Calidad', style: textTheme.headlineLarge),
-          SizedBox(height: AppSpacing.small),
+          const SizedBox(height: AppSpacing.small),
           // 4) Calidad
           CustomFromDropdown(
             name: 'quality',
@@ -146,7 +146,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
             ),
           ],
 
-          const SizedBox(height: AppSpacing.smallMedium),
+          const SizedBox(height: AppSpacing.mediumSmall),
           Center(
             child: SizedBox(
               width: double.infinity,

@@ -28,7 +28,7 @@ class TwoFormsRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(labeFirst, style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
+              const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: nameFirst,
                 validator: FormBuilderValidators.compose([
@@ -41,12 +41,12 @@ class TwoFormsRow extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.small),
         Expanded(
           child: Column(
             children: [
               Text(labeSecond, style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
+              const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: nameSecond,
                 validator: FormBuilderValidators.compose([

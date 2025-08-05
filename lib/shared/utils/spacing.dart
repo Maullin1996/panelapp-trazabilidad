@@ -9,7 +9,7 @@ abstract class AppSpacing {
   static const double smallLarge = 18.0;
 
   /// Medium-small spacing. Ideal for spacing between inline elements.
-  static const double smallMedium = 24.0;
+  static const double mediumSmall = 24.0;
 
   /// Standard medium spacing. Often used for section padding.
   static const double medium = 34.0;

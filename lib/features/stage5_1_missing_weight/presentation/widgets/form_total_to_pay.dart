@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/providers/sync_stage51_payments_provider.dart';
@@ -88,11 +87,21 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                             child: AppFormTextFild(
                               name: 'amount',
                               keyboardType: TextInputType.number,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                                FormBuilderValidators.numeric(),
-                                FormBuilderValidators.min(1),
-                              ]),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Requerido';
+                                }
+                                final digitsOnly = value.replaceAll(
+                                  RegExp(r'[^0-9]'),
+                                  '',
+                                );
+                                final parsed = double.tryParse(digitsOnly);
+                                if (parsed == null) {
+                                  return 'Debe ser un número válido';
+                                }
+                                if (parsed < 1) return 'Debe ser mayor que 0';
+                                return null;
+                              },
                               inputFormatters: [MoneyInputFormatter()],
                               valueTransformer: (text) {
                                 if (text == null) return null;
@@ -142,11 +151,18 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                 child: AppFormTextFild(
                   name: 'pricePerKilo',
                   keyboardType: TextInputType.number,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                    FormBuilderValidators.numeric(),
-                    FormBuilderValidators.min(1),
-                  ]),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Requerido';
+                    }
+                    final digitsOnly = value.replaceAll(RegExp(r'[^0-9]'), '');
+                    final parsed = double.tryParse(digitsOnly);
+                    if (parsed == null) {
+                      return 'Debe ser un número válido';
+                    }
+                    if (parsed < 1) return 'Debe ser mayor que 0';
+                    return null;
+                  },
                   inputFormatters: [MoneyInputFormatter()],
                   valueTransformer: (text) {
                     if (text == null) return null;
@@ -189,7 +205,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Resumen de factura', style: textTheme.headlineLarge),
-                const SizedBox(height: AppSpacing.smallMedium),
+                const SizedBox(height: AppSpacing.mediumSmall),
                 CustomRichText(
                   icon: Icons.line_weight,
                   iconColor: AppColors.weight,
@@ -228,29 +244,3 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
     );
   }
 }
-
-
-// if (formState.data != null)
-          //   Column(
-          //     children: [
-          //       RichText(
-          //         maxLines: 2,
-          //         overflow: TextOverflow.ellipsis,
-          //         text: TextSpan(
-          //           children: [
-          //             TextSpan(
-          //               text: 'Valor total: ',
-          //               style: textTheme.headlineLarge,
-          //             ),
-          //             TextSpan(
-          //               text: '\$ ${moneyFormat(formState.totalToPay)}',
-          //               style: textTheme.bodyLarge?.copyWith(
-          //                 fontSize: AppTypography.h2,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //       const SizedBox(height: AppSpacing.medium),
-          //     ],
-          //   ),

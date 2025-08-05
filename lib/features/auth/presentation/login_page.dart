@@ -13,9 +13,9 @@ class LoginPage extends StatelessWidget {
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               vertical: AppSpacing.medium,
-              horizontal: AppSpacing.smallMedium,
+              horizontal: AppSpacing.mediumSmall,
             ),
             child: Column(
               children: [
@@ -26,8 +26,8 @@ class LoginPage extends StatelessWidget {
                     context,
                   ).headlineLarge?.copyWith(fontSize: AppTypography.h1),
                 ),
-                SizedBox(height: AppSpacing.medium),
-                LoginForm(),
+                const SizedBox(height: AppSpacing.medium),
+                const LoginForm(),
               ],
             ),
           ),

@@ -56,10 +56,18 @@ class ProjectSelectorPage extends ConsumerWidget {
                   ),
                 ),
               ),
+              const PopupMenuItem(
+                child: Text(
+                  'Imprimir',
+                  style: TextStyle(
+                    fontFamily: AppTypography.familyRoboto,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
-        centerTitle: true,
         title: Text('Seleccionar Proyecto', style: textTheme.headlineLarge),
       ),
       bottomNavigationBar: SafeArea(
@@ -103,15 +111,15 @@ class ProjectSelectorPage extends ConsumerWidget {
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Colors.red),
                   SizedBox(height: 16),
-                  Text('Ocurrió un error al cargar los proyectos'),
+                  const Text('Ocurrió un error al cargar los proyectos'),
                   SizedBox(height: 8),
-                  Text(error, style: TextStyle(color: Colors.grey)),
+                  Text(error, style: const TextStyle(color: Colors.grey)),
                   SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () =>
                         ref.read(stage1ProjectsProvider.notifier).refresh(),
-                    icon: Icon(Icons.refresh),
-                    label: Text('Reintentar'),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Reintentar'),
                   ),
                 ],
               ),
@@ -149,7 +157,7 @@ class ProjectSelectorPage extends ConsumerWidget {
                         const SizedBox(height: AppSpacing.xSmall),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.storage,
                               size: 20.0,
                               color: AppColors.weight,
@@ -174,7 +182,7 @@ class ProjectSelectorPage extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: AppSpacing.xSmall),
+                        const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(
                           firstText: 'Canastillas: ',
                           secondText: '${p.basketsQuantity}',
@@ -182,7 +190,7 @@ class ProjectSelectorPage extends ConsumerWidget {
                           iconColor: AppColors.register,
                         ),
 
-                        SizedBox(height: AppSpacing.xSmall),
+                        const SizedBox(height: AppSpacing.xSmall),
 
                         CustomRichText(
                           firstText: 'Contacto: ',

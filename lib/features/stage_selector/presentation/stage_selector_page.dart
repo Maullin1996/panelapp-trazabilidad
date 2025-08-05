@@ -13,7 +13,6 @@ class StageSelectorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.go(Routes.projects)),
-        centerTitle: true,
         title: Text('Seleccionar Etapa', style: textTheme.headlineLarge),
       ),
       body: SafeArea(
@@ -32,8 +31,10 @@ class StageSelectorPage extends StatelessWidget {
                       _stageSubtitle(stage),
                       style: textTheme.bodyMedium,
                     ),
-                    trailing: Icon(Icons.arrow_forward_ios_sharp),
-                    contentPadding: EdgeInsetsGeometry.all(AppSpacing.small),
+                    trailing: const Icon(Icons.arrow_forward_ios_sharp),
+                    contentPadding: const EdgeInsetsGeometry.all(
+                      AppSpacing.small,
+                    ),
                     dense: true,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(

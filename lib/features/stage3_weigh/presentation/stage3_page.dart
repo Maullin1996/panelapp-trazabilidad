@@ -85,7 +85,7 @@ class Stage3Page extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Divider(thickness: 2),
+                    const Divider(thickness: 2),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.calendar_month,
@@ -124,7 +124,7 @@ class Stage3Page extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Divider(thickness: 2),
+                    const Divider(thickness: 2),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.all_inbox_rounded,
@@ -151,7 +151,7 @@ class Stage3Page extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    Divider(thickness: 2),
+                    const Divider(thickness: 2),
                     const SizedBox(height: AppSpacing.small),
                     CustomRichText(
                       icon: Icons.priority_high,
@@ -198,7 +198,7 @@ class Stage3Page extends ConsumerWidget {
                   onPressed: () {
                     context.pop(dcontext);
                     context.push(
-                      '${Routes.stage3}/${project.id}/${load2.id}/summary',
+                      '${Routes.stage3}/$projectId/${load2.id}/summary',
                     );
                   },
                   child: Text('Ver resumen', style: textTheme.headlineSmall),

@@ -14,6 +14,7 @@ class MoneyInputFormatter extends TextInputFormatter {
     if (digits.isEmpty) return newValue.copyWith(text: '');
     // 2) Formatear
     final formatted = _formatter.format(int.parse(digits));
+    print(formatted);
     // 3) Mantener el cursor al final
     return TextEditingValue(
       text: formatted,

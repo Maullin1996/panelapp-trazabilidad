@@ -67,7 +67,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SingleChildScrollView(
-        padding: EdgeInsets.only(bottom: AppSpacing.medium),
+        padding: const EdgeInsets.only(bottom: AppSpacing.medium),
         child: Column(
           children: [
             CustomCard(
@@ -196,7 +196,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                   Padding(
                     padding: const EdgeInsets.only(
                       left: AppSpacing.smallLarge,
-                      top: AppSpacing.smallMedium,
+                      top: AppSpacing.mediumSmall,
                     ),
                     child: Row(
                       children: [
@@ -221,7 +221,9 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                   ),
                   CustomCard(
                     child: Padding(
-                      padding: EdgeInsetsGeometry.all(AppSpacing.smallLarge),
+                      padding: const EdgeInsetsGeometry.all(
+                        AppSpacing.smallLarge,
+                      ),
                       child: Column(
                         children: [
                           ...installments.map(
@@ -250,7 +252,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                                           )
                                           .refresh();
                                     },
-                                    icon: Icon(
+                                    icon: const Icon(
                                       Icons.delete,
                                       color: AppColors.error,
                                     ),

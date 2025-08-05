@@ -23,9 +23,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     try {
       // Verificar auth
       await ref.read(authProvider.notifier).checkAuthStatus();
-    } catch (e) {
-      print('Initialization error: $e');
-    }
+    } catch (_) {}
   }
 
   @override
@@ -43,7 +41,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.agriculture, size: 80, color: AppColors.textDark),
+              const Icon(
+                Icons.agriculture,
+                size: 80,
+                color: AppColors.textDark,
+              ),
               const SizedBox(height: 24),
               Text('Registro Panela', style: textTheme.headlineLarge),
               const SizedBox(height: 40),

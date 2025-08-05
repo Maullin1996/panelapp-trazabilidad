@@ -49,7 +49,10 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.mediumSmall,
+          horizontal: AppSpacing.smallLarge,
+        ),
         child: FormBuilder(
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -61,7 +64,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                 'Peso de referencia de la gavera',
                 style: textTheme.headlineMedium,
               ),
-              SizedBox(height: AppSpacing.small),
+              const SizedBox(height: AppSpacing.small),
               CustomFromDropdown<double>(
                 name: 'referenceWeight',
                 items: widget.project.gaveras
@@ -78,7 +81,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                 validator: FormBuilderValidators.required(),
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.smallLarge),
               Column(
                 children: [
                   Row(
@@ -103,7 +106,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                           ],
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: AppSpacing.smallLarge),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +128,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.mediumSmall),
               SizedBox(
                 width: double.infinity,
                 height: 60,
@@ -158,7 +161,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                       : Text('Guardar cargue', style: textTheme.headlineLarge),
                 ),
               ),
-              SizedBox(height: AppSpacing.medium),
+              const SizedBox(height: AppSpacing.medium),
             ],
           ),
         ),

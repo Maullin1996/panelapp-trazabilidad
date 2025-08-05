@@ -61,7 +61,6 @@ class Stage3FormPage extends ConsumerWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title: Text(
             isNew ? 'Registrar pesaje' : 'Editar pesaje',
             style: textTheme.headlineLarge,

@@ -34,20 +34,19 @@ class Stage1Page extends ConsumerWidget {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title: Text(
             project == null ? 'Nuevo proyecto' : 'Modificar ${project.name}',
             style: textTheme.headlineLarge,
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back_rounded),
+            icon: const Icon(Icons.arrow_back_rounded),
             onPressed: () => context.go(Routes.projects),
           ),
         ),
         body: SingleChildScrollView(
           child: SafeArea(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(
+              padding: const EdgeInsets.fromLTRB(
                 AppSpacing.small,
                 AppSpacing.smallLarge,
                 AppSpacing.small,

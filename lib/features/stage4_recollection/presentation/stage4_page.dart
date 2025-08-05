@@ -56,8 +56,8 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                     style: textTheme.headlineMedium,
                   ),
                 ),
-                SizedBox(height: AppSpacing.smallLarge),
-                CircularProgressIndicator(color: AppColors.textDark),
+                const SizedBox(height: AppSpacing.smallLarge),
+                const CircularProgressIndicator(color: AppColors.textDark),
               ],
             ),
           )
@@ -145,12 +145,15 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.storage, color: AppColors.weight),
-                              SizedBox(width: AppSpacing.small),
+                              const Icon(
+                                Icons.storage,
+                                color: AppColors.weight,
+                              ),
+                              const SizedBox(width: AppSpacing.small),
                               Text('Gaveras', style: textTheme.headlineLarge),
                             ],
                           ),
-                          SizedBox(height: AppSpacing.smallLarge),
+                          const SizedBox(height: AppSpacing.smallLarge),
                           ...List.generate(project.gaveras.length, (index) {
                             final info = project.gaveras[index];
                             final ret = returns.returnedGaveras[index].quantity;
@@ -160,7 +163,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                                   firstText: '• Gavera con peso de:  ',
                                   secondText: '${info.referenceWeight} g',
                                 ),
-                                SizedBox(height: AppSpacing.xSmall),
+                                const SizedBox(height: AppSpacing.xSmall),
                                 CustomRichText(
                                   firstText: '      Suminitradas:  ',
                                   secondText: '${info.quantity}',
@@ -179,7 +182,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                                         )
                                       : const SizedBox.shrink(),
                                 ),
-                                SizedBox(height: AppSpacing.small),
+                                const SizedBox(height: AppSpacing.small),
                               ],
                             );
                           }),

@@ -84,14 +84,14 @@ class Stage52Page extends ConsumerWidget {
                             firstText: 'Unidades de panela: ',
                             secondText: r.unitCount.toString(),
                           ),
-                          SizedBox(height: AppSpacing.xSmall),
+                          const SizedBox(height: AppSpacing.xSmall),
                           CustomRichText(
                             icon: Icons.scale,
                             iconColor: AppColors.weight,
                             firstText: 'Peso paquete: ',
                             secondText: '${r.gaveraWeight.toStringAsFixed(0)}g',
                           ),
-                          SizedBox(height: AppSpacing.xSmall),
+                          const SizedBox(height: AppSpacing.xSmall),
                           CustomRichText(
                             icon: Icons.storage_outlined,
                             iconColor: AppColors.weight,
@@ -99,7 +99,7 @@ class Stage52Page extends ConsumerWidget {
                             secondText:
                                 '${r.panelaWeight.toStringAsFixed(2)} kg',
                           ),
-                          SizedBox(height: AppSpacing.xSmall),
+                          const SizedBox(height: AppSpacing.xSmall),
                           CustomRichText(
                             icon: Icons.verified,
                             iconColor: AppColors.accepted,

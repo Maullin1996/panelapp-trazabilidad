@@ -69,7 +69,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                 state.errorMessage ?? 'Error al guardar',
                 style: const TextStyle(color: Colors.red),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
             ],
           ),
         FormBuilder(
@@ -98,12 +98,12 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Nombre molienda', style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
+              const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: 'name',
                 validator: FormBuilderValidators.required(),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.small),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -117,7 +117,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               ),
               ..._gaveras.map(
                 (index) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xSmall),
                   child: Row(
                     children: [
                       Expanded(
@@ -125,7 +125,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('Cantidad', style: textTheme.headlineSmall),
-                            SizedBox(height: AppSpacing.small),
+                            const SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
                               name: 'gaverasCantidad_$index',
                               keyboardType: TextInputType.number,
@@ -138,7 +138,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.xSmall),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,7 +147,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                               'Peso gavera (g)',
                               style: textTheme.headlineSmall,
                             ),
-                            SizedBox(height: AppSpacing.small),
+                            const SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
                               name: 'gaverasPeso_$index',
                               validator: FormBuilderValidators.compose([
@@ -173,9 +173,9 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.smallLarge),
               Text('Cantidad de canastillas', style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
+              const SizedBox(height: AppSpacing.smallLarge),
               AppFormTextFild(
                 name: 'basketsQuantity',
                 validator: FormBuilderValidators.compose([
@@ -185,23 +185,23 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                 ]),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.smallLarge),
               TwoFormsRow(
                 nameFirst: 'preservativesWeight',
                 labeFirst: 'Conservantes (kg)',
                 labeSecond: 'Cantidad Tarros',
                 nameSecond: 'preservativesJars',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.smallLarge),
               TwoFormsRow(
                 nameFirst: 'limeWeight',
                 labeFirst: 'Cal (kg)',
                 labeSecond: 'Cantidad Tarros',
                 nameSecond: 'limeJars',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.smallLarge),
               Text('Teléfono', style: textTheme.headlineMedium),
-              SizedBox(height: AppSpacing.small),
+              const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
                 name: 'phone',
                 validator: FormBuilderValidators.compose([

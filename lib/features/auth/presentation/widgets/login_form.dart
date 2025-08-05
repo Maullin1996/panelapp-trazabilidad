@@ -48,7 +48,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Usuario:', style: textTheme.headlineLarge),
-          SizedBox(height: AppSpacing.small),
+          const SizedBox(height: AppSpacing.small),
           AppFormTextFild(
             name: 'email',
             hintText: 'correo@dominio.com',
@@ -61,7 +61,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           const SizedBox(height: AppSpacing.medium),
           Text('Contraseña:', style: textTheme.headlineLarge),
-          SizedBox(height: AppSpacing.small),
+          const SizedBox(height: AppSpacing.small),
           AppFormTextFild(
             name: 'password',
             obscureText: obscure,
