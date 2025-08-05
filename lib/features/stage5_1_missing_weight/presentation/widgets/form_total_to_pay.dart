@@ -39,7 +39,10 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
     final textTheme = TextTheme.of(context);
     final formState = ref.watch(stage5PriceFormProvider);
     final formNotifier = ref.read(stage5PriceFormProvider.notifier);
-    final installments = ref.watch(syncStage51PaymentsProvider);
+    final allInstallments = ref.watch(syncStage51PaymentsProvider);
+    final installments = allInstallments
+        .where((e) => e.projectId == widget.projectId)
+        .toList();
     final totalInstallments = installments.fold<double>(
       0.0,
       (sum, e) => sum + e.amount,

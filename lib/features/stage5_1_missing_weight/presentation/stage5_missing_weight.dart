@@ -59,7 +59,10 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
 
     final hasMissingGaveras = missingGaveras.isNotEmpty;
 
-    final installments = ref.watch(syncStage51PaymentsProvider);
+    final allInstallments = ref.watch(syncStage51PaymentsProvider);
+    final installments = allInstallments
+        .where((e) => e.projectId == widget.projectId)
+        .toList();
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
