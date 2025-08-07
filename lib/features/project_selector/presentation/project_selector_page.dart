@@ -11,11 +11,19 @@ import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
-class ProjectSelectorPage extends ConsumerWidget {
+class ProjectSelectorPage extends ConsumerStatefulWidget {
   const ProjectSelectorPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProjectSelectorPage> createState() =>
+      _ProjectSelectorPageState();
+}
+
+class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
+  Set<int> isSelected = {};
+
+  @override
+  Widget build(BuildContext context) {
     ref.listen<AuthParams>(authProvider, (previous, next) {
       if (previous?.authStatus != next.authStatus) {
         if (next.authStatus == AuthStatus.notAuthenticated) {
@@ -41,6 +49,18 @@ class ProjectSelectorPage extends ConsumerWidget {
             color: AppColors.cardBackground,
             icon: const Icon(Icons.more_vert),
             onSelected: (value) {
+              switch (value) {
+                case 'logout':
+                  ref.read(authProvider.notifier).logout();
+                  return;
+                case 'print':
+                  setState(() {
+                    isSelected.clear();
+                  });
+
+                  return;
+              }
+
               if (value == 'logout') {
                 ref.read(authProvider.notifier).logout();
               }
@@ -56,15 +76,17 @@ class ProjectSelectorPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              const PopupMenuItem(
-                child: Text(
-                  'Imprimir',
-                  style: TextStyle(
-                    fontFamily: AppTypography.familyRoboto,
-                    fontSize: 20,
+              if (isSelected.isNotEmpty)
+                const PopupMenuItem<String>(
+                  value: 'print',
+                  child: Text(
+                    'Imprimir',
+                    style: TextStyle(
+                      fontFamily: AppTypography.familyRoboto,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ],
@@ -127,11 +149,17 @@ class ProjectSelectorPage extends ConsumerWidget {
           : (projects.isEmpty)
           ? const Center(child: Text('No hay proyectos disponibles.'))
           : ListView.builder(
-              padding: const EdgeInsets.only(bottom: AppSpacing.large),
+              padding: const EdgeInsets.only(
+                bottom: AppSpacing.large,
+                top: AppSpacing.smallLarge,
+              ),
               itemCount: projects.length,
               itemBuilder: (context, i) {
                 final p = projects[i];
                 return CustomCard(
+                  isSelected: isSelected.contains(i)
+                      ? AppColors.selectedColor
+                      : AppColors.cardBackground,
                   child: ListTile(
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,6 +235,20 @@ class ProjectSelectorPage extends ConsumerWidget {
                       } else {
                         final route = _routeForRole(user!.role);
                         context.go('$route/${p.id}');
+                      }
+                      setState(() {
+                        isSelected.clear();
+                      });
+                    },
+                    onLongPress: () {
+                      if (isSelected.contains(i)) {
+                        setState(() {
+                          isSelected.remove(i);
+                        });
+                      } else {
+                        setState(() {
+                          isSelected.add(i);
+                        });
                       }
                     },
                   ),

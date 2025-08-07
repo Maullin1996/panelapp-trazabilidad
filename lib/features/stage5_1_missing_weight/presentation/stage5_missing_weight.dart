@@ -26,6 +26,15 @@ class Stage5MissingWeight extends ConsumerStatefulWidget {
 
 class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
   bool editInstallment = false;
+
+  final scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final summary3 = ref.watch(stage3GlobalSummaryProvider(widget.projectId));
@@ -67,7 +76,11 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.medium),
+        controller: scrollController,
+        padding: const EdgeInsets.only(
+          bottom: AppSpacing.medium,
+          top: AppSpacing.small,
+        ),
         child: Column(
           children: [
             CustomCard(
@@ -269,6 +282,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
             FormTotalToPay(
               projectId: widget.projectId,
               totalRegisteredWeight: summary3.totalRegisteredWeight,
+              controller: scrollController,
             ),
           ],
         ),

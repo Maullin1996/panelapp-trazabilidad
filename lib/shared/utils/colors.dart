@@ -28,6 +28,10 @@ class AppColors {
     0xFFFCF8F0,
   ); // Blanco Roto / Crema Claro para tarjetas
 
+  static final Color selectedColor = AppColors.primaryPanelaBrown.withValues(
+    alpha: 0.15,
+  );
+
   static const Color error = Color.fromARGB(255, 146, 43, 11);
   static const Color alert = Color.fromARGB(255, 196, 139, 17);
   static const Color accepted = Color.fromARGB(255, 60, 128, 5);

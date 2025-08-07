@@ -25,6 +25,7 @@ class Stage5Summary extends ConsumerWidget {
           )
         : Scaffold(
             body: SingleChildScrollView(
+              padding: EdgeInsets.only(top: AppSpacing.small),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -57,10 +58,10 @@ class Stage5Summary extends ConsumerWidget {
                       style: textTheme.headlineLarge,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.smallLarge),
+                  const SizedBox(height: AppSpacing.small),
                   ...summaryByDay.map((summary) {
                     final formattedDate = DateFormat(
-                      'EEEE d',
+                      "EEEE d 'de' MMMM",
                       'es',
                     ).format(summary.date);
 

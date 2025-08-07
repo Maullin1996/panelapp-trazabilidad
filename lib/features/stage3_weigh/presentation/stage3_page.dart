@@ -42,10 +42,13 @@ class Stage3Page extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.go(Routes.projects)),
       ),
       body: ListView.separated(
-        padding: const EdgeInsets.only(bottom: AppSpacing.medium),
+        padding: const EdgeInsets.only(
+          bottom: AppSpacing.medium,
+          top: AppSpacing.smallLarge,
+        ),
         itemCount: loads2.length,
         separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(height: AppSpacing.small);
+          return const SizedBox(height: AppSpacing.xSmall);
         },
         itemBuilder: (BuildContext context, int index) {
           double sum = 0.0;

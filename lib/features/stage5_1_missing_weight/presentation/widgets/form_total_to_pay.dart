@@ -16,10 +16,12 @@ import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 class FormTotalToPay extends ConsumerStatefulWidget {
   final double totalRegisteredWeight;
   final String projectId;
+  final ScrollController controller;
   const FormTotalToPay({
     super.key,
     this.totalRegisteredWeight = 0,
     required this.projectId,
+    required this.controller,
   });
 
   @override
@@ -190,6 +192,12 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                           setState(() {
                             _pricePerKilo = price;
                           });
+
+                          widget.controller.animateTo(
+                            widget.controller.offset + 200,
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeOut,
+                          );
                         },
                   child: Text('Calcular', style: textTheme.headlineLarge),
                 ),

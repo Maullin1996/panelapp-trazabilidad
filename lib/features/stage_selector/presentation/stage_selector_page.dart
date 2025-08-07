@@ -20,7 +20,11 @@ class StageSelectorPage extends StatelessWidget {
           children: [
             for (var stage = 1; stage <= 5; stage++)
               Padding(
-                padding: const EdgeInsets.all(AppSpacing.smallLarge),
+                padding: const EdgeInsets.only(
+                  left: AppSpacing.smallLarge,
+                  right: AppSpacing.smallLarge,
+                  bottom: AppSpacing.small,
+                ),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(0xFFFCF8F0),

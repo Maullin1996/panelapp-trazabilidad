@@ -48,7 +48,6 @@ class Auth extends _$Auth {
 
   Future<void> checkAuthStatus() async {
     if (state.authStatus == AuthStatus.authenticated && state.user != null) {
-      print('🔒 Ya autenticado, no se verifica de nuevo');
       return;
     }
 

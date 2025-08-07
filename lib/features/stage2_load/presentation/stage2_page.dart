@@ -77,7 +77,10 @@ class Stage2Page extends ConsumerWidget {
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.only(bottom: AppSpacing.medium),
+              padding: const EdgeInsets.only(
+                bottom: AppSpacing.medium,
+                top: AppSpacing.small,
+              ),
               itemCount: loads.length,
               itemBuilder: (BuildContext context, int index) {
                 final load = loads[index];

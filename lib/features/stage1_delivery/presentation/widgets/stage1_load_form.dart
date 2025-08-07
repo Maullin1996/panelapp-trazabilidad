@@ -9,6 +9,7 @@ import 'package:registro_panela/features/stage1_delivery/presentation/widgets/tw
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_form_provider.dart';
+import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -355,13 +356,24 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   }
 
   Future<void> _pickFromCamera() async {
-    final path = await ref
-        .read(imagePickerServiceProvider)
-        .pickImage(fromCamera: true);
-    if (path != null) {
-      final compressedPath = await compressFile(path);
-      if (compressedPath != null) {
-        setState(() => _photoPath = compressedPath);
+    // final path = await ref
+    //     .read(imagePickerServiceProvider)
+    //     .pickImage(fromCamera: true);
+    // if (path != null) {
+    //   final compressedPath = await compressFile(path);
+    //   if (compressedPath != null) {
+    //     setState(() => _photoPath = compressedPath);
+    //   }
+    // }
+    final imagePath = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const CameraPreviewScreen()),
+    );
+
+    if (imagePath != null) {
+      final compressed = await compressFile(imagePath);
+      if (compressed != null) {
+        setState(() => _photoPath = compressed);
       }
     }
   }

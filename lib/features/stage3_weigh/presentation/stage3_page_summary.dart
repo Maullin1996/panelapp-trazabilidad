@@ -54,42 +54,41 @@ class Stage3PageSummary extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: AppSpacing.mediumSmall),
+        padding: const EdgeInsets.only(
+          bottom: AppSpacing.mediumLarge,
+          top: AppSpacing.smallLarge,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
               children: [
                 CustomCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.small),
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            'Registrado en molienda',
-                            style: textTheme.headlineLarge,
-                          ),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Registrado en molienda',
+                          style: textTheme.headlineLarge,
                         ),
-                        const SizedBox(height: AppSpacing.small),
-                        CustomRichText(
-                          icon: Icons.calendar_month,
-                          firstText: 'Fecha cargue: ',
-                          secondText: DateFormat.yMd().format(load2.date),
-                        ),
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          icon: Icons.bar_chart,
-                          iconColor: AppColors.register,
-                          firstText: 'Peso esperado: ',
-                          secondText: '${totalRefKg.toStringAsFixed(2)} kg',
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: AppSpacing.small),
+                      CustomRichText(
+                        icon: Icons.calendar_month,
+                        firstText: 'Fecha cargue: ',
+                        secondText: DateFormat.yMd().format(load2.date),
+                      ),
+                      const SizedBox(height: AppSpacing.xSmall),
+                      CustomRichText(
+                        icon: Icons.bar_chart,
+                        iconColor: AppColors.register,
+                        firstText: 'Peso esperado: ',
+                        secondText: '${totalRefKg.toStringAsFixed(2)} kg',
+                      ),
+                    ],
                   ),
                 ),
 
-                const SizedBox(height: AppSpacing.small),
                 CustomCard(
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.small),
@@ -121,7 +120,6 @@ class Stage3PageSummary extends ConsumerWidget {
                   ),
                 ),
 
-                const SizedBox(height: AppSpacing.small),
                 CustomCard(
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.small),
@@ -153,7 +151,7 @@ class Stage3PageSummary extends ConsumerWidget {
                   ),
                 ),
 
-                const SizedBox(height: AppSpacing.medium),
+                const SizedBox(height: AppSpacing.small),
 
                 Center(
                   child: Text(

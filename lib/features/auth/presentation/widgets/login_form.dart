@@ -77,7 +77,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 });
               },
               icon: Icon(
-                obscure ? Icons.remove_red_eye_outlined : Icons.remove_red_eye,
+                obscure
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
               ),
             ),
           ),
