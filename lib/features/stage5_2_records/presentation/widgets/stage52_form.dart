@@ -9,6 +9,8 @@ import 'package:registro_panela/features/stage5_2_records/domain/entities/stage5
 import 'package:registro_panela/features/stage5_2_records/providers/stage52_form_status.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
+import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
+import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:uuid/uuid.dart';
@@ -190,39 +192,57 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: AppColors.backgroundCrema,
         title: Text(
           'Seleccionar origen de imagen',
           style: textTheme.headlineMedium,
         ),
         actions: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.camera_alt,
-                  color: AppColors.textDark,
-                  size: 30,
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+              _pickFromCamera();
+            },
+            child: CustomCard(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xSmall),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.camera_alt,
+                      color: AppColors.textDark,
+                      size: 30,
+                    ),
+                    SizedBox(width: AppSpacing.small),
+                    Text('Cámara', style: textTheme.headlineMedium),
+                  ],
                 ),
-                label: Text('Cámara', style: textTheme.headlineMedium),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickFromCamera();
-                },
               ),
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.photo_library,
-                  color: AppColors.textDark,
-                  size: 30,
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+              _pickFromGallery();
+            },
+            child: CustomCard(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.xSmall),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.photo_library,
+                      color: AppColors.textDark,
+                      size: 30,
+                    ),
+                    SizedBox(width: AppSpacing.small),
+                    Text('Galería', style: textTheme.headlineMedium),
+                  ],
                 ),
-                label: Text('Galería', style: textTheme.headlineMedium),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickFromGallery();
-                },
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -230,13 +250,15 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
   }
 
   Future<void> _pickFromCamera() async {
-    final path = await ref
-        .read(imagePickerServiceProvider)
-        .pickImage(fromCamera: true);
-    if (path != null) {
-      final compressedPath = await compressFile(path);
-      if (compressedPath != null) {
-        setState(() => _photoPath = compressedPath);
+    final imagePath = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const CameraPreviewScreen()),
+    );
+
+    if (imagePath != null) {
+      final compressed = await compressFile(imagePath);
+      if (compressed != null) {
+        setState(() => _photoPath = compressed);
       }
     }
   }

@@ -11,6 +11,8 @@ import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
+import 'package:registro_panela/features/project_selector/helpers/generate_and_share_pdf.dart';
+
 class ProjectSelectorPage extends ConsumerStatefulWidget {
   const ProjectSelectorPage({super.key});
 
@@ -48,12 +50,14 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             position: PopupMenuPosition.under,
             color: AppColors.cardBackground,
             icon: const Icon(Icons.more_vert),
-            onSelected: (value) {
+            onSelected: (value) async {
               switch (value) {
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
                   return;
                 case 'print':
+                  final selectedProject = projects[isSelected.first];
+                  await generateAndSharePdf(selectedProject);
                   setState(() {
                     isSelected.clear();
                   });

@@ -11,6 +11,7 @@ import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_form_provider.dart';
 import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
+import 'package:registro_panela/shared/widgets/widgets.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage1LoadForm extends ConsumerStatefulWidget {
@@ -316,37 +317,59 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
+        backgroundColor: AppColors.backgroundCrema,
         title: Text(
           'Seleccionar origen de imagen',
           style: textTheme.headlineMedium,
         ),
         actions: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.camera_alt,
-                  color: AppColors.textDark,
-                  size: 30,
-                ),
-                label: Text('Cámara', style: textTheme.headlineMedium),
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   Navigator.of(context).pop();
                   _pickFromCamera();
                 },
-              ),
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.photo_library,
-                  color: AppColors.textDark,
-                  size: 30,
+                child: CustomCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.xSmall),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.camera_alt,
+                          color: AppColors.textDark,
+                          size: 30,
+                        ),
+                        SizedBox(width: AppSpacing.small),
+                        Text('Cámara', style: textTheme.headlineMedium),
+                      ],
+                    ),
+                  ),
                 ),
-                label: Text('Galería', style: textTheme.headlineMedium),
-                onPressed: () {
+              ),
+              GestureDetector(
+                onTap: () {
                   Navigator.of(context).pop();
                   _pickFromGallery();
                 },
+                child: CustomCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppSpacing.xSmall),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.photo_library,
+                          color: AppColors.textDark,
+                          size: 30,
+                        ),
+                        SizedBox(width: AppSpacing.small),
+                        Text('Galería', style: textTheme.headlineMedium),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -356,15 +379,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   }
 
   Future<void> _pickFromCamera() async {
-    // final path = await ref
-    //     .read(imagePickerServiceProvider)
-    //     .pickImage(fromCamera: true);
-    // if (path != null) {
-    //   final compressedPath = await compressFile(path);
-    //   if (compressedPath != null) {
-    //     setState(() => _photoPath = compressedPath);
-    //   }
-    // }
     final imagePath = await Navigator.push<String>(
       context,
       MaterialPageRoute(builder: (context) => const CameraPreviewScreen()),
