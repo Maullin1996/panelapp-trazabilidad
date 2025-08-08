@@ -12,11 +12,15 @@ class StageSelectorPage extends StatelessWidget {
     final textTheme = TextTheme.of(context);
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go(Routes.projects)),
+        leading: BackButton(onPressed: () => context.pop()),
         title: Text('Seleccionar Etapa', style: textTheme.headlineLarge),
       ),
       body: SafeArea(
         child: ListView(
+          padding: EdgeInsets.only(
+            top: AppSpacing.small,
+            bottom: AppSpacing.medium,
+          ),
           children: [
             for (var stage = 1; stage <= 5; stage++)
               Padding(
@@ -51,7 +55,7 @@ class StageSelectorPage extends StatelessWidget {
                       _stageName(stage),
                       style: textTheme.headlineLarge,
                     ),
-                    onTap: () => context.go('${byStage(stage)}/$projectId'),
+                    onTap: () => context.push('${byStage(stage)}/$projectId'),
                   ),
                 ),
               ),

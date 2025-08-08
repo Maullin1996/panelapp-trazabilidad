@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
 import 'package:registro_panela/features/stage2_load/providers/providers.dart';
@@ -52,7 +51,7 @@ class Stage2Page extends ConsumerWidget {
       appBar: AppBar(
         title: Text('Cargues ${project.name}', style: textTheme.headlineLarge),
         centerTitle: true,
-        leading: BackButton(onPressed: () => context.go(Routes.projects)),
+        leading: BackButton(onPressed: () => context.pop()),
       ),
       body: loads.isEmpty
           ? const Center(child: Text('Aún no hay cargues registrados'))

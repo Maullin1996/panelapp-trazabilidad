@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
@@ -205,12 +206,18 @@ class Stage3PageSummary extends ConsumerWidget {
 
                       const SizedBox(height: AppSpacing.xSmall),
                       if (b.photoPath.isNotEmpty)
-                        Center(
-                          child: StageImageWidget(
-                            imagePath: b.photoPath,
-                            width: 200,
-                            height: 200,
-                            fit: BoxFit.cover,
+                        GestureDetector(
+                          onTap: () => context.push(
+                            Routes.imageViewer,
+                            extra: b.photoPath,
+                          ),
+                          child: Center(
+                            child: StageImageWidget(
+                              imagePath: b.photoPath,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                     ],

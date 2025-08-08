@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/stage5_missing_weight.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/stage52_page.dart';
@@ -34,7 +33,7 @@ class _Stage5PageState extends ConsumerState<Stage5Page> {
     return Scaffold(
       appBar: AppBar(
         title: Text(project.name, style: textTheme.headlineLarge),
-        leading: BackButton(onPressed: () => context.go(Routes.projects)),
+        leading: BackButton(onPressed: () => context.pop()),
       ),
       body: screens[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

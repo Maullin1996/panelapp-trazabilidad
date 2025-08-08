@@ -114,7 +114,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                 if (user != null &&
                     (user.role == UserRole.admin ||
                         user.role == UserRole.stage1)) {
-                  context.go('${Routes.stage1}/new');
+                  context.push('${Routes.stage1}/new');
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -233,12 +233,12 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                     ),
                     onTap: () {
                       if (user?.role == UserRole.admin) {
-                        context.go(
+                        context.push(
                           '${Routes.projects}${Routes.stages}/${p.id}',
                         );
                       } else {
                         final route = _routeForRole(user!.role);
-                        context.go('$route/${p.id}');
+                        context.push('$route/${p.id}');
                       }
                       setState(() {
                         isSelected.clear();

@@ -4,6 +4,7 @@ import 'package:registro_panela/core/router/auth_redirect.dart';
 import 'package:registro_panela/core/router/go_router_notifier.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/presentation/login_page.dart';
+import 'package:registro_panela/features/image_view/presentation/image_viewer.dart';
 import 'package:registro_panela/features/project_selector/presentation/project_selector_page.dart';
 import 'package:registro_panela/features/splash/splash_screen.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/stage1_page.dart';
@@ -168,6 +169,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       GoRoute(path: Routes.splash, builder: (_, __) => const SplashScreen()),
+      GoRoute(
+        path: Routes.imageViewer,
+        builder: (_, state) {
+          final String image = state.extra as String;
+          return ImageViewer(image: image);
+        },
+      ),
     ],
   );
 });

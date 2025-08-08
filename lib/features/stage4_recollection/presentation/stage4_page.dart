@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_form_provider.dart';
@@ -124,9 +123,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                 ),
               ),
               appBar: AppBar(
-                leading: BackButton(
-                  onPressed: () => context.go(Routes.projects),
-                ),
+                leading: BackButton(onPressed: () => context.pop()),
                 title: Text(project.name, style: textTheme.headlineLarge),
               ),
               body: SingleChildScrollView(

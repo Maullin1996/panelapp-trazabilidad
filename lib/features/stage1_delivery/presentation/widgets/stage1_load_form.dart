@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
+import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/core/services/compress_file.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_form_provider.dart';
 import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
@@ -234,12 +235,16 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                 Column(
                   children: [
                     const SizedBox(height: AppSpacing.smallLarge),
-                    Center(
-                      child: StageImageWidget(
-                        imagePath: _photoPath!,
-                        width: 300,
-                        height: 300,
-                        fit: BoxFit.cover,
+                    GestureDetector(
+                      onTap: () =>
+                          context.push(Routes.imageViewer, extra: _photoPath),
+                      child: Center(
+                        child: StageImageWidget(
+                          imagePath: _photoPath!,
+                          width: 300,
+                          height: 300,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ],

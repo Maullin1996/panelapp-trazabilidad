@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/stage1_load_form.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -17,7 +16,7 @@ class Stage1Page extends ConsumerWidget {
     ref.listen<Stage1FormState>(stage1FormProvider, (prev, next) {
       if (prev?.status == Stage1FormStatus.submitting &&
           next.status == Stage1FormStatus.success) {
-        context.go(Routes.projects);
+        context.pop();
       }
       if (next.status == Stage1FormStatus.error) {
         ScaffoldMessenger.of(
@@ -40,7 +39,7 @@ class Stage1Page extends ConsumerWidget {
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () => context.go(Routes.projects),
+            onPressed: () => context.pop(),
           ),
         ),
         body: SingleChildScrollView(

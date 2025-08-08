@@ -32,40 +32,69 @@ class Stage52Page extends ConsumerWidget {
               onTap: () => showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
-                  backgroundColor: AppColors.cardBackground,
-                  title: Text(
-                    '¿Qué quieres hacer?',
-                    style: textTheme.headlineMedium,
+                  backgroundColor: AppColors.backgroundCrema,
+                  title: Center(
+                    child: Text(
+                      '¿Qué quieres hacer?',
+                      style: textTheme.headlineMedium,
+                    ),
                   ),
                   actions: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            context.push(
-                              '${Routes.stage5}/$projectId/records/${r.id}/summary',
-                            );
-                          },
-                          child: Text(
-                            'Ver resumen',
-                            style: textTheme.headlineSmall,
+                    GestureDetector(
+                      onTap: () {
+                        context.pop();
+                        context.push(
+                          '${Routes.stage5}/$projectId/records/${r.id}/summary',
+                        );
+                      },
+                      child: CustomCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpacing.xSmall),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.article,
+                                color: AppColors.textDark,
+                                size: 30,
+                              ),
+                              SizedBox(width: AppSpacing.xSmall),
+                              Text(
+                                'Ver resumen',
+                                style: textTheme.headlineSmall,
+                              ),
+                            ],
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            context.push(
-                              '${Routes.stage5}/$projectId/records/${r.id}/edit',
-                            );
-                          },
-                          child: Text(
-                            'Editar registro',
-                            style: textTheme.headlineSmall,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        context.pop();
+                        context.push(
+                          '${Routes.stage5}/$projectId/records/${r.id}/edit',
+                        );
+                      },
+                      child: CustomCard(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpacing.xSmall),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                color: AppColors.textDark,
+                                size: 30,
+                              ),
+                              SizedBox(width: AppSpacing.xSmall),
+                              Text(
+                                'Editar registro',
+                                style: textTheme.headlineSmall,
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
