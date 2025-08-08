@@ -51,8 +51,6 @@ class Auth extends _$Auth {
       return;
     }
 
-    await Future.delayed(const Duration(milliseconds: 1000));
-
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {

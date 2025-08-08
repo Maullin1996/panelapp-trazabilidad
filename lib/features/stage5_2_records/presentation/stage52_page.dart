@@ -59,9 +59,13 @@ class Stage52Page extends ConsumerWidget {
                                 size: 30,
                               ),
                               SizedBox(width: AppSpacing.xSmall),
-                              Text(
-                                'Ver resumen',
-                                style: textTheme.headlineSmall,
+                              Expanded(
+                                child: Text(
+                                  'Ver resumen',
+                                  style: textTheme.headlineSmall,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
@@ -87,9 +91,13 @@ class Stage52Page extends ConsumerWidget {
                                 size: 30,
                               ),
                               SizedBox(width: AppSpacing.xSmall),
-                              Text(
-                                'Editar registro',
-                                style: textTheme.headlineSmall,
+                              Expanded(
+                                child: Text(
+                                  'Editar registro',
+                                  style: textTheme.headlineSmall,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),

@@ -79,7 +79,11 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                         style: textTheme.headlineLarge,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
+                      if (!activeForm) {
+                        setState(() => activeForm = true);
+                        return;
+                      }
                       if (activeForm) {
                         if (!(_formKey.currentState?.saveAndValidate() ??
                             false)) {

@@ -264,7 +264,14 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       size: 30,
                     ),
                     SizedBox(width: AppSpacing.small),
-                    Text('Cámara', style: textTheme.headlineMedium),
+                    Expanded(
+                      child: Text(
+                        'Cámara',
+                        style: textTheme.headlineMedium,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -287,7 +294,14 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                       size: 30,
                     ),
                     SizedBox(width: AppSpacing.small),
-                    Text('Galería', style: textTheme.headlineMedium),
+                    Expanded(
+                      child: Text(
+                        'Galería',
+                        style: textTheme.headlineMedium,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
               ),

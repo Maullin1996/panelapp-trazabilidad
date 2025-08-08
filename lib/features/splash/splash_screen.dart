@@ -16,14 +16,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    // Dispara pero no bloquees la UI
     _initialize();
   }
 
   Future<void> _initialize() async {
-    try {
-      // Verificar auth
-      await ref.read(authProvider.notifier).checkAuthStatus();
-    } catch (_) {}
+    await Future.delayed(Duration(milliseconds: 1000));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(authProvider.notifier).checkAuthStatus();
+    });
   }
 
   @override
@@ -32,7 +33,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     final textTheme = TextTheme.of(context);
 
     ref.listen<AuthParams>(authProvider, (previous, next) {
-      if (next.authStatus != AuthStatus.checking) {}
+      if (next.authStatus != AuthStatus.checking) {
+        ref.read(authProvider.notifier).checkAuthStatus();
+      }
     });
 
     return Scaffold(

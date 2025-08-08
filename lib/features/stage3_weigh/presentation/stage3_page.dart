@@ -217,7 +217,14 @@ class Stage3Page extends ConsumerWidget {
                     children: [
                       Icon(Icons.article, color: AppColors.textDark, size: 30),
                       SizedBox(width: AppSpacing.xSmall),
-                      Text('Ver resumen', style: textTheme.headlineSmall),
+                      Expanded(
+                        child: Text(
+                          'Ver resumen',
+                          style: textTheme.headlineSmall,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -236,9 +243,13 @@ class Stage3Page extends ConsumerWidget {
                   children: [
                     Icon(Icons.assignment, color: AppColors.textDark, size: 30),
                     SizedBox(width: AppSpacing.xSmall),
-                    Text(
-                      'Continuar formulario',
-                      style: textTheme.headlineSmall,
+                    Expanded(
+                      child: Text(
+                        'Continuar formulario',
+                        style: textTheme.headlineSmall,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),

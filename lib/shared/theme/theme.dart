@@ -4,6 +4,12 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 abstract class AppThemes {
   /// Light theme configuration.
   static final ThemeData lightTheme = ThemeData(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
+        TargetPlatform.iOS: FadeUpwardsPageTransitionsBuilder(),
+      },
+    ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: AppColors.primaryPanelaBrown,
       selectedItemColor: AppColors.textDark,

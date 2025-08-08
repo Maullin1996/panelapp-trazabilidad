@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/auth_redirect.dart';
 import 'package:registro_panela/core/router/go_router_notifier.dart';
+import 'package:registro_panela/core/router/helper/transitions.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/presentation/login_page.dart';
 import 'package:registro_panela/features/image_view/presentation/image_viewer.dart';
@@ -33,14 +34,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'login',
         path: Routes.login,
-        builder: (_, __) => const LoginPage(),
+        pageBuilder: (_, state) => noTransitionPage(const LoginPage(), state),
       ),
       GoRoute(
         name: 'projects',
         path: Routes.projects,
-        builder: (_, __) => const ProjectSelectorPage(),
+        pageBuilder: (_, state) => fadePage(const ProjectSelectorPage(), state),
         routes: [
           GoRoute(
+            name: 'stageSelector',
             path: '${Routes.stages}/:projectId',
             builder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
@@ -168,7 +170,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      GoRoute(path: Routes.splash, builder: (_, __) => const SplashScreen()),
+      GoRoute(
+        path: Routes.splash,
+        pageBuilder: (_, state) =>
+            noTransitionPage(const SplashScreen(), state),
+      ),
       GoRoute(
         path: Routes.imageViewer,
         builder: (_, state) {
