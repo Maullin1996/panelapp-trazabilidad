@@ -4,6 +4,8 @@ import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads
 import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'inputs_math_provider.g.dart';
+
 class LoadSummary {
   final double totalRefkg;
   final int regCount;
@@ -41,7 +43,7 @@ LoadSummary loadSummary(Ref ref, String projectId, int index) {
   final regCount = entry?.baskets.length ?? 0;
   final regWeight = total;
   final missingCount = totalBaskets - regCount;
-  final missingWeight = totalRefkg - regWeight;
+  final missingWeight = clampZero(totalRefkg - regWeight);
 
   return LoadSummary(
     totalRefkg: totalRefkg,
@@ -51,3 +53,5 @@ LoadSummary loadSummary(Ref ref, String projectId, int index) {
     missingWeight: missingWeight,
   );
 }
+
+double clampZero(double x) => x < 0 ? 0 : x;

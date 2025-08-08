@@ -56,23 +56,62 @@ class Stage3Form extends _$Stage3Form {
     }
   }
 
-  Future<Stage3FormData> _uploadPhotos(Stage3FormData data) async {
+  Future<Stage3FormData> _uploadPhotos(
+    Stage3FormData data, {
+    int batchSize = 4, // <= súbelo/bájalo según red
+    int maxRetries = 2, // <= reintentos por foto
+    void Function(int done, int total)? onProgress, // opcional
+  }) async {
     final uploadImage = ref.read(uploadImageProvider);
 
-    final futures = data.baskets.map((b) async {
-      final local = b.photoPath;
+    // 1) Preparamos la lista de tareas (manteniendo orden por sequence)
+    final baskets = List<BasketWeighData>.from(data.baskets)
+      ..sort((a, b) => a.sequence.compareTo(b.sequence));
 
-      if (local.isNotEmpty && !local.startsWith('https')) {
-        final storagePath = 'stage3/${data.projectId}/${data.id}/${b.id}.jpg';
-        final downloadUrl = await uploadImage(
-          path: storagePath,
-          localFilePath: local,
-        );
-        return b.copyWith(photoPath: downloadUrl);
+    final total = baskets.length;
+    var done = 0;
+
+    Future<BasketWeighData> uploadOne(BasketWeighData b) async {
+      // Si ya es URL => saltar
+      final local = b.photoPath;
+      if (local.isEmpty || local.startsWith('http')) {
+        onProgress?.call(++done, total);
+        return b;
       }
-      return b;
-    });
-    final updatedBaskets = await Future.wait(futures);
-    return data.copyWith(baskets: updatedBaskets);
+
+      // Reintentos con backoff exponencial suave
+      int attempt = 0;
+      while (true) {
+        try {
+          final storagePath = 'stage3/${data.projectId}/${data.id}/${b.id}.jpg';
+          final downloadUrl = await uploadImage(
+            path: storagePath,
+            localFilePath: local,
+          );
+          onProgress?.call(++done, total);
+          return b.copyWith(photoPath: downloadUrl);
+        } catch (e) {
+          if (attempt >= maxRetries) rethrow;
+          final delayMs = 500 * (1 << attempt); // 500ms, 1s, 2s...
+          await Future.delayed(Duration(milliseconds: delayMs));
+          attempt++;
+        }
+      }
+    }
+
+    // 2) Ejecutamos en tandas (batchSize concurrentes por tanda)
+    final updated = <BasketWeighData>[];
+    for (var i = 0; i < baskets.length; i += batchSize) {
+      final end = (i + batchSize < baskets.length)
+          ? i + batchSize
+          : baskets.length;
+      final chunk = baskets.sublist(i, end);
+
+      final results = await Future.wait(chunk.map(uploadOne));
+      updated.addAll(results);
+    }
+
+    // 3) Devolvemos data con canastillas actualizadas
+    return data.copyWith(baskets: updated);
   }
 }

@@ -6,7 +6,7 @@ part of 'stage51_notifier_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage51NotifierHash() => r'e9322a0751042052d594c69cdc6cbf16d7e0e8e2';
+String _$stage51NotifierHash() => r'580c6c6cbe6b2bdd4c40690faabf18fb7a2a6cbd';
 
 /// See also [Stage51Notifier].
 @ProviderFor(Stage51Notifier)
