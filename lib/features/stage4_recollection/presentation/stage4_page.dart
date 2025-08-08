@@ -108,16 +108,32 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                           projectId: widget.projectId,
                           date: DateTime.now(),
                           returnedGaveras: gaveras,
-                          returnedBaskets: int.parse(
-                            vals['returnBaskets'] ?? '0',
+                          returnedBaskets: _readInt(vals['returnBaskets']),
+                          //  int.parse(
+                          //   vals['returnBaskets'] ?? '0',
+                          // ),
+                          returnedPreservativesJars: _readInt(
+                            vals['returnPreservativesJars'],
                           ),
-                          returnedPreservativesJars: int.parse(
-                            vals['returnPreservativesJars'] ?? '0',
-                          ),
-                          returnedLimeJars: int.parse(
-                            vals['returnLimeJars'] ?? '0',
-                          ),
+                          // int.parse(
+                          //   vals['returnPreservativesJars'] ?? '0',
+                          // ),
+                          returnedLimeJars: _readInt(vals['returnLimeJars']),
+                          // int.parse(
+                          //   vals['returnLimeJars'] ?? '0',
+                          // ),
                         );
+
+                        if (_isEmptySubmission(data)) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('No hay cambios para guardar'),
+                            ),
+                          );
+                          setState(() => activeForm = false);
+                          return;
+                        }
+
                         formNotifier.submit(data, isNew: true);
                       } else {
                         setState(() => activeForm = true);
@@ -219,6 +235,19 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
               ),
             ),
           );
+  }
+
+  bool _isEmptySubmission(Stage4FormData d) {
+    final allGaverasZero = d.returnedGaveras.every((g) => g.quantity == 0);
+    return allGaverasZero &&
+        d.returnedBaskets == 0 &&
+        d.returnedPreservativesJars == 0 &&
+        d.returnedLimeJars == 0;
+  }
+
+  int _readInt(dynamic v) {
+    final s = (v ?? '').toString().trim();
+    return int.tryParse(s) ?? 0;
   }
 
   Widget _buildSection({
