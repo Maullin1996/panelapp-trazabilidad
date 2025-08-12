@@ -15,7 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthenticatedUser {
 
- String get id; String get name; String get email; UserRole get role; String get token;
+/// ID único del usuario en el sistema (UUID o Firestore UID).
+ String get id;/// Nombre completo del usuario.
+ String get name;/// Correo electrónico registrado.
+ String get email;/// Rol asignado dentro del sistema (admin, stage1, stage2...).
+ UserRole get role;/// Token JWT o de sesión para autenticar peticiones al backend.
+ String get token;
 /// Create a copy of AuthenticatedUser
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -216,10 +221,15 @@ class _AuthenticatedUser implements AuthenticatedUser {
   const _AuthenticatedUser({required this.id, required this.name, required this.email, required this.role, required this.token});
   factory _AuthenticatedUser.fromJson(Map<String, dynamic> json) => _$AuthenticatedUserFromJson(json);
 
+/// ID único del usuario en el sistema (UUID o Firestore UID).
 @override final  String id;
+/// Nombre completo del usuario.
 @override final  String name;
+/// Correo electrónico registrado.
 @override final  String email;
+/// Rol asignado dentro del sistema (admin, stage1, stage2...).
 @override final  UserRole role;
+/// Token JWT o de sesión para autenticar peticiones al backend.
 @override final  String token;
 
 /// Create a copy of AuthenticatedUser

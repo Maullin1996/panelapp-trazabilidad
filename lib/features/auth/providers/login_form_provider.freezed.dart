@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginFormState {
 
- String get email; String get password; bool get isValid; bool get isSubmitting;
+ String get email; String get password; bool get isValid;// Formulario válido
+ bool get isSubmitting;
 /// Create a copy of LoginFormState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -215,6 +216,7 @@ class _LoginFormState implements LoginFormState {
 @override@JsonKey() final  String email;
 @override@JsonKey() final  String password;
 @override@JsonKey() final  bool isValid;
+// Formulario válido
 @override@JsonKey() final  bool isSubmitting;
 
 /// Create a copy of LoginFormState

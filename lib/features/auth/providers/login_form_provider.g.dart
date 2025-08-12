@@ -6,9 +6,11 @@ part of 'login_form_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loginFormHash() => r'98ba45bfe21588b316fed79817c6458a3c49df74';
+String _$loginFormHash() => r'ede412e6dca251127aa195c88fe9672e76cdac46';
 
-/// See also [LoginForm].
+/// Notifier para manejar el estado y validación del formulario de login.
+///
+/// Copied from [LoginForm].
 @ProviderFor(LoginForm)
 final loginFormProvider =
     AutoDisposeNotifierProvider<LoginForm, LoginFormState>.internal(

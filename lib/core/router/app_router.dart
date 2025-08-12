@@ -4,6 +4,7 @@ import 'package:registro_panela/core/router/auth_redirect.dart';
 import 'package:registro_panela/core/router/go_router_notifier.dart';
 import 'package:registro_panela/core/router/helper/transitions.dart';
 import 'package:registro_panela/core/router/routes.dart';
+import 'package:registro_panela/features/admin/presentation/administrative_page.dart';
 import 'package:registro_panela/features/auth/presentation/login_page.dart';
 import 'package:registro_panela/features/image_view/presentation/image_viewer.dart';
 import 'package:registro_panela/features/project_selector/presentation/project_selector_page.dart';
@@ -181,6 +182,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           final String image = state.extra as String;
           return ImageViewer(image: image);
         },
+      ),
+      GoRoute(
+        name: 'adminResetPassword',
+        path: '/admin/reset-password',
+        builder: (_, __) => const AdminResetPasswordPage(),
       ),
     ],
   );

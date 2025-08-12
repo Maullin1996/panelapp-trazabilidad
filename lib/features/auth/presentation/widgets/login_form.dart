@@ -10,6 +10,10 @@ import 'package:registro_panela/features/auth/providers/login_form_provider.dart
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 
+/// Formulario de inicio de sesión.
+///
+/// Usa `loginFormProvider` para manejar el estado de los campos y
+/// `authProvider` para ejecutar el login.
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
 
@@ -19,16 +23,18 @@ class LoginForm extends ConsumerStatefulWidget {
 
 class _LoginFormState extends ConsumerState<LoginForm> {
   final _fbkey = GlobalKey<FormBuilderState>();
-  bool obscure = true;
+  bool obscure = true; // Controla visibilidad de la contraseña
 
   @override
   Widget build(BuildContext context) {
+    // Escucha cambios de estado de autenticación
     ref.listen<AuthParams>(authProvider, (previous, next) {
       if (previous?.authStatus != next.authStatus) {
         if (next.authStatus == AuthStatus.authenticated) {
-          context.go('/splash');
+          context.go('/splash'); // Redirige si login exitoso
         } else if (next.authStatus == AuthStatus.notAuthenticated &&
             next.errorMessage?.isNotEmpty == true) {
+          // Muestra mensaje de error
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(next.errorMessage!)));
@@ -36,8 +42,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       }
     });
 
-    final TextTheme textTheme = TextTheme.of(context);
-
+    final textTheme = TextTheme.of(context);
     final formState = ref.watch(loginFormProvider);
     final formNotifier = ref.read(loginFormProvider.notifier);
     final authNotifier = ref.read(authProvider.notifier);
@@ -47,6 +52,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Campo usuario
           Text('Usuario:', style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.small),
           AppFormTextFild(
@@ -59,7 +65,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ]),
             onChanged: (v) => formNotifier.onEmailChanged(v ?? ''),
           ),
+
           const SizedBox(height: AppSpacing.medium),
+
+          // Campo contraseña
           Text('Contraseña:', style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.small),
           AppFormTextFild(
@@ -71,11 +80,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ]),
             onChanged: (v) => formNotifier.onPasswordChanged(v ?? ''),
             iconButton: IconButton(
-              onPressed: () {
-                setState(() {
-                  obscure = !obscure;
-                });
-              },
+              onPressed: () => setState(() => obscure = !obscure),
               icon: Icon(
                 obscure
                     ? Icons.visibility_outlined
@@ -83,9 +88,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ),
             ),
           ),
+
           const SizedBox(height: AppSpacing.mediumLarge),
+
+          // Botón de envío o indicador de carga
           formState.isSubmitting
-              ? Center(child: const CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : Center(
                   child: SizedBox(
                     width: double.infinity,
@@ -102,7 +110,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                               }
                             }
                           : null,
-
                       child: Text(
                         'Iniciar sesión',
                         style: textTheme.headlineLarge,

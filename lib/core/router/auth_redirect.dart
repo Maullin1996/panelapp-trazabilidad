@@ -45,6 +45,7 @@ String? _checkRolePermissions(AuthParams auth, GoRouterState state) {
     'stage5records': UserRole.stage5,
     'stage52form': UserRole.stage5,
     'stage52summary': UserRole.stage5,
+    'adminResetPassword': UserRole.admin,
   };
 
   final routeName = state.name;

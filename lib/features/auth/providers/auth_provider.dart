@@ -10,15 +10,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';
 
+/// Notifier de autenticación con Riverpod (keepAlive).
 @Riverpod(keepAlive: true)
 class Auth extends _$Auth {
   late final AuthRepository _authRepository;
+
+  /// Estado inicial: `checking` (validando sesión previa).
   @override
   AuthParams build() {
     _authRepository = ref.read(authRepositoryProvider);
     return const AuthParams();
   }
 
+  /// Login con email/clave. Actualiza [state] según resultado.
   Future<void> login({required String email, required String password}) async {
     state = state.copyWith(authStatus: AuthStatus.checking, errorMessage: '');
 
@@ -27,7 +31,6 @@ class Auth extends _$Auth {
         email: email,
         password: password,
       );
-
       state = state.copyWith(
         user: user,
         authStatus: AuthStatus.authenticated,
@@ -41,12 +44,15 @@ class Auth extends _$Auth {
     }
   }
 
+  /// Cierra sesión y limpia el estado.
   Future<void> logout() async {
     await _authRepository.signOut();
     state = const AuthParams(authStatus: AuthStatus.notAuthenticated);
   }
 
+  /// Verifica sesión al inicio (splash) o reingreso a la app.
   Future<void> checkAuthStatus() async {
+    // Si ya estamos autenticados, no rehacer la carga.
     if (state.authStatus == AuthStatus.authenticated && state.user != null) {
       return;
     }
@@ -62,7 +68,6 @@ class Auth extends _$Auth {
           .collection('users')
           .doc(uid)
           .get();
-
       if (!doc.exists) {
         state = const AuthParams(
           authStatus: AuthStatus.notAuthenticated,
@@ -73,7 +78,7 @@ class Auth extends _$Auth {
 
       final data = doc.data()!;
       final role = UserRole.values.firstWhere(
-        (user) => user.name == data['role'],
+        (it) => it.name == data['role'],
         orElse: () => UserRole.stage1,
       );
 

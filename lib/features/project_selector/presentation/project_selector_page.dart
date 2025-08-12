@@ -52,6 +52,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             icon: const Icon(Icons.more_vert),
             onSelected: (value) async {
               switch (value) {
+                case 'users':
+                  context.pushNamed('adminResetPassword');
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
                   return;
@@ -61,7 +63,6 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   setState(() {
                     isSelected.clear();
                   });
-
                   return;
               }
 
@@ -70,16 +71,18 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
               }
             },
             itemBuilder: (BuildContext context) => [
-              const PopupMenuItem<String>(
-                value: 'logout',
-                child: Text(
-                  'Cerrar sesión',
-                  style: TextStyle(
-                    fontFamily: AppTypography.familyRoboto,
-                    fontSize: 20,
+              if (user!.role == UserRole.admin)
+                const PopupMenuItem<String>(
+                  value: 'users',
+                  child: Text(
+                    'Usuarios',
+                    style: TextStyle(
+                      fontFamily: AppTypography.familyRoboto,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
-              ),
+
               if (isSelected.isNotEmpty)
                 const PopupMenuItem<String>(
                   value: 'print',
@@ -91,6 +94,16 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                     ),
                   ),
                 ),
+              const PopupMenuItem<String>(
+                value: 'logout',
+                child: Text(
+                  'Cerrar sesión',
+                  style: TextStyle(
+                    fontFamily: AppTypography.familyRoboto,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
             ],
           ),
         ],

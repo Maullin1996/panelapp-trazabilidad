@@ -16,6 +16,7 @@ class CustomFromDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double size = MediaQuery.sizeOf(context).width;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -31,6 +32,8 @@ class CustomFromDropdown<T> extends StatelessWidget {
         border: Border.all(color: AppColors.secondaryDarkPanela, width: 2),
       ),
       child: FormBuilderDropdown(
+        menuWidth: size * 0.95,
+        borderRadius: BorderRadius.all(Radius.circular(AppRadius.medium)),
         dropdownColor: Colors.white,
         padding: EdgeInsets.symmetric(
           horizontal: AppSpacing.small,

@@ -7,12 +7,10 @@ environment:
   sdk: ^3.8.1
 
 dependencies:
-  pdf: ^3.10.4
-  printing: ^5.11.0
-  share_plus: ^7.2.1
   cached_network_image: ^3.4.1
   camera: ^0.11.2
   cloud_firestore: ^5.6.12
+  cloud_functions: ^5.6.2
   collection: ^1.19.1
   equatable: ^2.0.7
   firebase_auth: ^5.7.0
@@ -31,7 +29,10 @@ dependencies:
   json_annotation: ^4.9.0
   path: ^1.9.1
   path_provider: ^2.1.5
+  pdf: ^3.10.4
+  printing: ^5.11.0
   riverpod_annotation: ^2.6.1
+  share_plus: ^7.2.1
   uuid: ^4.5.1
 
 dev_dependencies:

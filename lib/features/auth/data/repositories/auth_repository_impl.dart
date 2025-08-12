@@ -4,6 +4,7 @@ import 'package:registro_panela/features/auth/domin/entities/authenticated_user.
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
 import 'package:registro_panela/features/auth/domin/repositories/auth_repository.dart';
 
+/// Implementación de [AuthRepository] usando FirebaseAuth y Firestore.
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -14,6 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
+    // Autenticación con correo y contraseña
     final credential = await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
@@ -22,14 +24,19 @@ class AuthRepositoryImpl implements AuthRepository {
     final uid = credential.user?.uid;
     if (uid == null) throw Exception('Error al obtener UID del usuario');
 
+    // Obtiene datos adicionales del usuario en Firestore
     final doc = await _firestore.collection('users').doc(uid).get();
     if (!doc.exists) throw Exception('Usuario no encontrado en Firestore');
 
     final data = doc.data()!;
+
+    // Convierte el rol desde el string almacenado
     final role = UserRole.values.firstWhere(
       (user) => user.name == data['role'],
       orElse: () => throw Exception('Rol no reconocido: ${data['role']}'),
     );
+
+    // Retorna el usuario autenticado
     return AuthenticatedUser(
       id: uid,
       name: data['name'],
