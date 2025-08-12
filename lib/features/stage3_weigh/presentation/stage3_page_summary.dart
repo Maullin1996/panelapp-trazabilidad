@@ -45,7 +45,7 @@ class Stage3PageSummary extends ConsumerWidget {
     );
 
     final missingCount = totalBaskets - regCount;
-    final missingWeight = totalRefKg - regWeight;
+    final missingWeight = clampZero(totalRefKg - regWeight);
 
     final textTheme = TextTheme.of(context);
 
@@ -193,7 +193,7 @@ class Stage3PageSummary extends ConsumerWidget {
                         iconColor: AppColors.alert,
                         firstText: 'Peso faltante: ',
                         secondText:
-                            '${(load2.baskets.realWeight - b.realWeight).toStringAsFixed(2)} kg',
+                            '${(clampZero(load2.baskets.realWeight - b.realWeight)).toStringAsFixed(2)} kg',
                       ),
 
                       const SizedBox(height: AppSpacing.xSmall),

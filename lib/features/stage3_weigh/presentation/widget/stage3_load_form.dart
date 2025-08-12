@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/core/services/compress_file.dart';
@@ -6,6 +7,7 @@ import 'package:registro_panela/core/services/image_picker_service_provider.dart
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/helpers/comma_to_dot_formatter.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
@@ -114,6 +116,19 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         AppFormTextFild(
                           name: 'realWeight_$index',
                           keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'[0-9\.,]'),
+                            ),
+                            CommaToDotFormatter(),
+                          ],
+                          valueTransformer: (text) {
+                            final s = (text ?? '').toString().trim().replaceAll(
+                              ',',
+                              '.',
+                            );
+                            return double.tryParse(s);
+                          },
                         ),
                         const SizedBox(height: AppSpacing.smallLarge),
                         Text('Calidad', style: textTheme.headlineMedium),
@@ -194,26 +209,41 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         };
 
                         final baskets = <BasketWeighData>[];
+
                         for (final i in _indices) {
-                          final raw = values['realWeight_$i'] as String?;
-                          final qual = values['quality_$i'] as String?;
-                          if (raw?.isNotEmpty == true &&
-                              qual?.isNotEmpty == true) {
+                          final raw =
+                              values['realWeight_$i']; // puede ser num o String
+                          final qualStr = values['quality_$i'] as String?;
+
+                          double? realWeight;
+                          if (raw is num) {
+                            realWeight = raw.toDouble();
+                          } else if (raw is String) {
+                            realWeight = double.tryParse(
+                              raw.replaceAll(',', '.'),
+                            );
+                          }
+
+                          final hasWeight = realWeight != null;
+                          final hasQuality = (qualStr?.isNotEmpty == true);
+
+                          if (hasWeight && hasQuality) {
                             final prev = existingMap[i];
                             baskets.add(
                               BasketWeighData(
                                 id: prev?.id ?? uuid.v4(),
                                 sequence: i,
                                 referenceWeight: _refWeightPerBasket,
-                                realWeight: double.parse(raw!),
+                                realWeight: realWeight,
                                 quality: BasketQuality.values.firstWhere(
-                                  (q) => q.name == qual,
+                                  (q) => q.name == qualStr,
                                 ),
                                 photoPath: _photoPaths[i] ?? '',
                               ),
                             );
                           }
                         }
+
                         final formData = Stage3FormData(
                           id: widget.initialData?.id ?? uuid.v4(),
                           projectId: widget.project.id,
