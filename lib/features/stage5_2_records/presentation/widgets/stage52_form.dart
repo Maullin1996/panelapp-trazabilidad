@@ -73,7 +73,9 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   ),
                 )
                 .toList(),
-            validator: FormBuilderValidators.required(),
+            validator: FormBuilderValidators.required(
+              errorText: "Este campo es obligatorio",
+            ),
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
@@ -84,8 +86,13 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
             name: 'panelaWeight',
             keyboardType: TextInputType.number,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-              FormBuilderValidators.numeric(),
+              FormBuilderValidators.required(
+                errorText: "Este campo es obligatorio",
+              ),
+              FormBuilderValidators.numeric(
+                errorText:
+                    "Debe de ser un número y si es decimal debe se ser punto en vez de coma",
+              ),
             ]),
           ),
 
@@ -97,8 +104,12 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
             name: 'unitCount',
             keyboardType: TextInputType.number,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-              FormBuilderValidators.integer(),
+              FormBuilderValidators.required(
+                errorText: "Este campo es obligatorio",
+              ),
+              FormBuilderValidators.integer(
+                errorText: "Debe de ser un número entero",
+              ),
             ]),
           ),
 
@@ -116,7 +127,9 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   ),
                 )
                 .toList(),
-            validator: FormBuilderValidators.required(),
+            validator: FormBuilderValidators.required(
+              errorText: "Este campo es obligatorio",
+            ),
           ),
 
           const SizedBox(height: AppSpacing.mediumLarge),

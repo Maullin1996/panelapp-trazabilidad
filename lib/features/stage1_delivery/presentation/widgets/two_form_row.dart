@@ -30,10 +30,15 @@ class TwoFormsRow extends StatelessWidget {
               Text(labeFirst, style: textTheme.headlineMedium),
               const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
+                key: Key('stage1-load-form-$nameFirst-input'),
                 name: nameFirst,
                 validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.numeric(),
+                  FormBuilderValidators.required(
+                    errorText: "Este campo es obligatorio",
+                  ),
+                  FormBuilderValidators.numeric(
+                    errorText: "Debe de ser un valor númerico",
+                  ),
                   FormBuilderValidators.min(0),
                 ]),
                 keyboardType: TextInputType.number,
@@ -48,10 +53,15 @@ class TwoFormsRow extends StatelessWidget {
               Text(labeSecond, style: textTheme.headlineMedium),
               const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
+                key: Key('stage1-load-form-$nameSecond-input'),
                 name: nameSecond,
                 validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
-                  FormBuilderValidators.numeric(),
+                  FormBuilderValidators.required(
+                    errorText: "Este campo es obligatorio",
+                  ),
+                  FormBuilderValidators.numeric(
+                    errorText: "Debe de ser un valor númerico",
+                  ),
                   FormBuilderValidators.min(0),
                 ]),
                 keyboardType: TextInputType.number,

@@ -100,9 +100,14 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Nombre molienda', style: textTheme.headlineMedium),
+              Text(
+                key: Key('stage1_load_forma_name_text'),
+                'Nombre molienda',
+                style: textTheme.headlineMedium,
+              ),
               const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
+                key: Key('stage1-load-form-molienda-name-input'),
                 name: 'name',
                 validator: FormBuilderValidators.required(),
               ),
@@ -112,6 +117,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                 children: [
                   Text('Gaveras', style: textTheme.headlineMedium),
                   IconButton(
+                    key: Key('stage1-load-form-add-gaveras-button'),
                     icon: const Icon(Icons.add_circle, color: Colors.green),
                     onPressed: _addGavera,
                     tooltip: 'Agregar otra gavera',
@@ -130,11 +136,18 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                             Text('Cantidad', style: textTheme.headlineSmall),
                             const SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
+                              key: Key(
+                                'stage1-load-form-gavera-quantity-input$index',
+                              ),
                               name: 'gaverasCantidad_$index',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                                FormBuilderValidators.integer(),
+                                FormBuilderValidators.required(
+                                  errorText: "Debe de ser un valor númerico",
+                                ),
+                                FormBuilderValidators.integer(
+                                  errorText: "Debe ser un valor númerico",
+                                ),
                                 FormBuilderValidators.min(1),
                               ]),
                             ),
@@ -152,10 +165,17 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                             ),
                             const SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
+                              key: Key(
+                                'stage1-load-form-gavera-weight-input$index',
+                              ),
                               name: 'gaverasPeso_$index',
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                                FormBuilderValidators.numeric(),
+                                FormBuilderValidators.required(
+                                  errorText: "Debe de ser un valor númerico",
+                                ),
+                                FormBuilderValidators.numeric(
+                                  errorText: "Debe ser un valor númerico",
+                                ),
                                 FormBuilderValidators.min(1),
                               ]),
                               keyboardType: TextInputType.number,
@@ -165,6 +185,9 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                       ),
                       if (_gaveras.length > 1)
                         IconButton(
+                          key: Key(
+                            'stage1-load-form-remove-gaveras-button$index',
+                          ),
                           icon: const Icon(
                             Icons.remove_circle,
                             color: Colors.red,
@@ -180,9 +203,12 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               Text('Cantidad de canastillas', style: textTheme.headlineMedium),
               const SizedBox(height: AppSpacing.smallLarge),
               AppFormTextFild(
+                key: Key('stage1-load-form-baskets-quantity'),
                 name: 'basketsQuantity',
                 validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
+                  FormBuilderValidators.required(
+                    errorText: "Debe de ser un valor númerico",
+                  ),
                   FormBuilderValidators.integer(),
                   FormBuilderValidators.min(1),
                 ]),
@@ -206,9 +232,12 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               Text('Teléfono', style: textTheme.headlineMedium),
               const SizedBox(height: AppSpacing.small),
               AppFormTextFild(
+                key: Key('stage1-load-form-phone-input'),
                 name: 'phone',
                 validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(),
+                  FormBuilderValidators.required(
+                    errorText: "Debe de ser un valor númerico",
+                  ),
                   FormBuilderValidators.numeric(),
                   FormBuilderValidators.maxLength(10),
                   FormBuilderValidators.minLength(7),
@@ -221,6 +250,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   width: double.infinity,
                   height: 60,
                   child: ElevatedButton.icon(
+                    key: Key('stage1-load-form-photo-button'),
                     onPressed: () => _onPickImage(textTheme),
                     icon: const Icon(
                       Icons.camera_alt,
@@ -236,6 +266,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   children: [
                     const SizedBox(height: AppSpacing.smallLarge),
                     GestureDetector(
+                      key: Key('stage1-load-form-image'),
                       onTap: () =>
                           context.push(Routes.imageViewer, extra: _photoPath),
                       child: Center(
@@ -256,6 +287,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   width: double.infinity,
                   height: 60,
                   child: ElevatedButton(
+                    key: Key('stage1-load-form-summit-button'),
                     onPressed: state.status == Stage1FormStatus.submitting
                         ? null
                         : () async {
@@ -300,7 +332,8 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                               limeWeight: double.parse(values['limeWeight']),
                               limeJars: int.parse(values['limeJars']),
                               phone: values['phone'],
-                              date: initial?.date ?? DateTime.now(),
+                              date: initial?.date ?? DateTime.now()
+                                ..toIso8601String(),
                               photoPath: _photoPath,
                             );
                             formNotifier.submit(data, isNew: isNew);
@@ -336,6 +369,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   _pickFromCamera();
                 },
                 child: CustomCard(
+                  key: Key("stage1-load-form-camera-button"),
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.xSmall),
                     child: Row(

@@ -66,10 +66,12 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
               ),
               const SizedBox(height: AppSpacing.small),
               CustomFromDropdown<double>(
+                key: Key('stage2-load-form-refweight-input'),
                 name: 'referenceWeight',
                 items: widget.project.gaveras
                     .map(
                       (g) => DropdownMenuItem(
+                        key: Key('${g.referenceWeight}'),
                         value: g.referenceWeight,
                         child: Text(
                           '${g.referenceWeight} g',
@@ -78,7 +80,9 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                       ),
                     )
                     .toList(),
-                validator: FormBuilderValidators.required(),
+                validator: FormBuilderValidators.required(
+                  errorText: "Este campo es obligatorio",
+                ),
               ),
 
               const SizedBox(height: AppSpacing.smallLarge),
@@ -95,11 +99,16 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                               style: textTheme.headlineMedium,
                             ),
                             AppFormTextFild(
+                              key: Key('stage2-load-form-basketsCount-input'),
                               name: 'basketsCount',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                                FormBuilderValidators.integer(),
+                                FormBuilderValidators.required(
+                                  errorText: "Este campo es obligatorio",
+                                ),
+                                FormBuilderValidators.integer(
+                                  errorText: "Debe de ser un valor entero",
+                                ),
                                 FormBuilderValidators.min(1),
                               ]),
                             ),
@@ -113,11 +122,17 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                           children: [
                             Text('Peso (kg)', style: textTheme.headlineMedium),
                             AppFormTextFild(
+                              key: Key('stage2-load-form-basketWeight-input'),
                               name: 'basketWeight',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(),
-                                FormBuilderValidators.numeric(),
+                                FormBuilderValidators.required(
+                                  errorText: "Este campo es obligatorio",
+                                ),
+                                FormBuilderValidators.numeric(
+                                  errorText:
+                                      "debe ser un valor númerico y si es decimal debe de ser punto",
+                                ),
                                 FormBuilderValidators.min(1),
                               ]),
                             ),
@@ -133,6 +148,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
+                  key: Key('stage2-load-form-summit-button'),
                   onPressed: formState.status == Stage2FormStatus.submitting
                       ? null
                       : () {

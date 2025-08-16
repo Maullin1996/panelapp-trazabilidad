@@ -93,6 +93,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.medium),
                     child: IconButton(
+                      key: Key('camera-preview-screen-confirme-photo'),
                       onPressed: _confirmPhoto,
                       icon: Icon(Icons.check, size: 50),
                     ),
@@ -128,6 +129,7 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(AppSpacing.medium),
                     child: IconButton(
+                      key: Key('camera-preview-screen-take-photo'),
                       onPressed: _takePicture,
                       icon: Icon(Icons.camera, size: 50),
                     ),
@@ -138,8 +140,3 @@ class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
     );
   }
 }
-
-
-// final savedFile = await File(file.path).copy(imagePath);
-//       if (!mounted) return;
-//       Navigator.pop(context, savedFile.path);

@@ -39,6 +39,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
     });
 
     final projects = ref.watch(syncStage1ProjectsProvider);
+    final sorted = [...projects]..sort((a, b) => b.date.compareTo(a.date));
     final error = ref.watch(stage1ProjectsErrorProvider);
     final user = ref.watch(authProvider).user;
     final textTheme = TextTheme.of(context);
@@ -116,6 +117,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             width: double.infinity,
             height: 60,
             child: ElevatedButton.icon(
+              key: Key('project-selector-create-project-button'),
               label: Text('Crear proyecto', style: textTheme.headlineLarge),
               icon: const Icon(
                 Icons.add_outlined,
@@ -172,8 +174,9 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
               ),
               itemCount: projects.length,
               itemBuilder: (context, i) {
-                final p = projects[i];
+                final p = sorted[i];
                 return CustomCard(
+                  key: Key('project-selector-custom-card-${p.id}'),
                   isSelected: isSelected.contains(i)
                       ? AppColors.selectedColor
                       : AppColors.cardBackground,

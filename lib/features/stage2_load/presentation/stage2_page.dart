@@ -102,6 +102,7 @@ class Stage2Page extends ConsumerWidget {
                             ),
                           ),
                           TextButton(
+                            key: Key('stage2-page-edit-textbutton'),
                             onPressed: () {
                               Navigator.pop(dctx);
                               showModalBottomSheet(
@@ -128,6 +129,7 @@ class Stage2Page extends ConsumerWidget {
                     );
                   },
                   child: CustomCard(
+                    key: Key('stage2-page-load-custom-card-${load.id}'),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -147,11 +149,14 @@ class Stage2Page extends ConsumerWidget {
 
                         const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(
+                          key: Key(
+                            'stage2_page_${load.baskets.realWeight.toStringAsFixed(1)}-weight',
+                          ),
                           icon: Icons.scale,
                           iconColor: AppColors.weight,
                           firstText: 'Peso: ',
                           secondText:
-                              '${load.baskets.realWeight.toStringAsFixed(2)} kg',
+                              '${load.baskets.realWeight.toStringAsFixed(1)} kg',
                         ),
 
                         const SizedBox(height: AppSpacing.xSmall),
@@ -174,6 +179,7 @@ class Stage2Page extends ConsumerWidget {
             width: double.infinity,
             height: 60,
             child: ElevatedButton.icon(
+              key: Key('stage2-page-create-load-button'),
               label: Text('Nuevo cargue', style: textTheme.headlineLarge),
               icon: const Icon(
                 Icons.add_outlined,

@@ -56,6 +56,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           Text('Usuario:', style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.small),
           AppFormTextFild(
+            key: Key("login-email-input"),
             name: 'email',
             hintText: 'correo@dominio.com',
             keyboardType: TextInputType.emailAddress,
@@ -72,6 +73,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           Text('Contraseña:', style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.small),
           AppFormTextFild(
+            key: Key("login-password-input"),
             name: 'password',
             obscureText: obscure,
             validator: FormBuilderValidators.compose([
@@ -99,6 +101,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                     width: double.infinity,
                     height: 60,
                     child: ElevatedButton(
+                      key: Key('login-enter-button'),
                       onPressed: formState.isValid
                           ? () async {
                               if (_fbkey.currentState?.saveAndValidate() ??

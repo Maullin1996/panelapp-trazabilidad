@@ -28,6 +28,7 @@ class LoginPage extends StatelessWidget {
 
                 // Título de bienvenida
                 Text(
+                  key: Key('login-message'),
                   'Bienvenido',
                   style: TextTheme.of(
                     context,
