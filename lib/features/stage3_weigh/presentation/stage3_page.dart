@@ -72,6 +72,7 @@ class Stage3Page extends ConsumerWidget {
                         .firstWhereOrNull((e) => e.stage2LoadId == load2.id),
                   ),
                   child: CustomCard(
+                    key: Key('stage3-page-${load2.id}-custom-card'),
                     child: Padding(
                       padding: const EdgeInsets.all(AppSpacing.smallLarge),
                       child: Column(
@@ -204,6 +205,7 @@ class Stage3Page extends ConsumerWidget {
                 context.push('${Routes.stage3}/$projectId/${load2.id}/summary');
               },
               child: CustomCard(
+                key: Key('stage3-page-summery-button'),
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.xSmall),
                   child: Row(
@@ -230,6 +232,7 @@ class Stage3Page extends ConsumerWidget {
               context.push('${Routes.stage3}/$projectId/${load2.id}/form');
             },
             child: CustomCard(
+              key: Key('stage3-page-form-button'),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xSmall),
                 child: Row(

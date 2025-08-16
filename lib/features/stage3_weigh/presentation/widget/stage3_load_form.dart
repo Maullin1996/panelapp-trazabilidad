@@ -114,6 +114,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         Text('Peso real (kg)', style: textTheme.headlineMedium),
                         const SizedBox(height: AppSpacing.xSmall),
                         AppFormTextFild(
+                          key: Key('stage3-load-form-realWeight$index-input'),
                           name: 'realWeight_$index',
                           keyboardType: TextInputType.number,
                           inputFormatters: [
@@ -134,9 +135,11 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         Text('Calidad', style: textTheme.headlineMedium),
                         const SizedBox(height: AppSpacing.xSmall),
                         CustomFromDropdown<String>(
+                          key: Key('stage3-load-form-quality$index-input'),
                           name: 'quality_$index',
                           items: BasketQuality.values.map((e) {
                             return DropdownMenuItem(
+                              key: Key('stage3-load-form-${e.name}-input'),
                               value: e.name,
                               child: Text(
                                 e.name.toUpperCase(),
@@ -151,6 +154,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             width: double.infinity,
                             height: 50,
                             child: ElevatedButton.icon(
+                              key: Key('stage3-load-form-image$index-button'),
                               onPressed: () => _pickImage(index, textTheme),
                               icon: const Icon(
                                 Icons.camera_alt,
@@ -169,6 +173,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                           const SizedBox(height: 8),
                           Center(
                             child: StageImageWidget(
+                              key: Key('stage3_load_form-image-taken'),
                               imagePath: _photoPaths[index]!,
                               width: 200,
                               height: 200,
@@ -195,6 +200,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
               height: 60,
               width: double.infinity,
               child: ElevatedButton(
+                key: Key('stage3-load-form-submmit-button'),
                 onPressed: formState.status == Stage3FormStatus.submitting
                     ? null
                     : () async {
@@ -283,6 +289,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
               _pickFromCamera(index);
             },
             child: CustomCard(
+              key: Key('stage3-load-form-take-photo-button'),
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.xSmall),
                 child: Row(
