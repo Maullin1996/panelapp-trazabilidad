@@ -109,19 +109,10 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                           date: DateTime.now(),
                           returnedGaveras: gaveras,
                           returnedBaskets: _readInt(vals['returnBaskets']),
-                          //  int.parse(
-                          //   vals['returnBaskets'] ?? '0',
-                          // ),
                           returnedPreservativesJars: _readInt(
                             vals['returnPreservativesJars'],
                           ),
-                          // int.parse(
-                          //   vals['returnPreservativesJars'] ?? '0',
-                          // ),
                           returnedLimeJars: _readInt(vals['returnLimeJars']),
-                          // int.parse(
-                          //   vals['returnLimeJars'] ?? '0',
-                          // ),
                         );
 
                         if (_isEmptySubmission(data)) {
@@ -194,6 +185,9 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                                   duration: const Duration(milliseconds: 500),
                                   child: activeForm
                                       ? AppFormTextFild(
+                                          key: Key(
+                                            'stage4-page-form-${info.referenceWeight}-input',
+                                          ),
                                           name: 'returnGavera_$index',
                                           keyboardType: TextInputType.number,
                                         )
@@ -280,7 +274,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
           duration: const Duration(milliseconds: 500),
           child: activeForm
               ? AppFormTextFild(
-                  key: ValueKey(fieldName),
+                  key: Key('stage4-page-form-$fieldName-input'),
                   name: fieldName,
                   keyboardType: TextInputType.number,
                 )
