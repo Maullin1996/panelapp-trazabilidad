@@ -6,7 +6,7 @@ part of 'inputs_math_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadSummaryHash() => r'eb693ce9cff87dbffcee02ca081c66415cfbaa58';
+String _$loadSummaryHash() => r'522dbc60adc8fa3274cf99eb6e4a6d384db27a25';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,15 +39,15 @@ class LoadSummaryFamily extends Family<LoadSummary> {
   const LoadSummaryFamily();
 
   /// See also [loadSummary].
-  LoadSummaryProvider call(String projectId, int index) {
-    return LoadSummaryProvider(projectId, index);
+  LoadSummaryProvider call(String load2Id) {
+    return LoadSummaryProvider(load2Id);
   }
 
   @override
   LoadSummaryProvider getProviderOverride(
     covariant LoadSummaryProvider provider,
   ) {
-    return call(provider.projectId, provider.index);
+    return call(provider.load2Id);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -68,9 +68,9 @@ class LoadSummaryFamily extends Family<LoadSummary> {
 /// See also [loadSummary].
 class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
   /// See also [loadSummary].
-  LoadSummaryProvider(String projectId, int index)
+  LoadSummaryProvider(String load2Id)
     : this._internal(
-        (ref) => loadSummary(ref as LoadSummaryRef, projectId, index),
+        (ref) => loadSummary(ref as LoadSummaryRef, load2Id),
         from: loadSummaryProvider,
         name: r'loadSummaryProvider',
         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -78,8 +78,7 @@ class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
             : _$loadSummaryHash,
         dependencies: LoadSummaryFamily._dependencies,
         allTransitiveDependencies: LoadSummaryFamily._allTransitiveDependencies,
-        projectId: projectId,
-        index: index,
+        load2Id: load2Id,
       );
 
   LoadSummaryProvider._internal(
@@ -89,12 +88,10 @@ class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.projectId,
-    required this.index,
+    required this.load2Id,
   }) : super.internal();
 
-  final String projectId;
-  final int index;
+  final String load2Id;
 
   @override
   Override overrideWith(LoadSummary Function(LoadSummaryRef provider) create) {
@@ -107,8 +104,7 @@ class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        projectId: projectId,
-        index: index,
+        load2Id: load2Id,
       ),
     );
   }
@@ -120,16 +116,13 @@ class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
 
   @override
   bool operator ==(Object other) {
-    return other is LoadSummaryProvider &&
-        other.projectId == projectId &&
-        other.index == index;
+    return other is LoadSummaryProvider && other.load2Id == load2Id;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, projectId.hashCode);
-    hash = _SystemHash.combine(hash, index.hashCode);
+    hash = _SystemHash.combine(hash, load2Id.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -138,11 +131,8 @@ class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 mixin LoadSummaryRef on AutoDisposeProviderRef<LoadSummary> {
-  /// The parameter `projectId` of this provider.
-  String get projectId;
-
-  /// The parameter `index` of this provider.
-  int get index;
+  /// The parameter `load2Id` of this provider.
+  String get load2Id;
 }
 
 class _LoadSummaryProviderElement
@@ -151,9 +141,7 @@ class _LoadSummaryProviderElement
   _LoadSummaryProviderElement(super.provider);
 
   @override
-  String get projectId => (origin as LoadSummaryProvider).projectId;
-  @override
-  int get index => (origin as LoadSummaryProvider).index;
+  String get load2Id => (origin as LoadSummaryProvider).load2Id;
 }
 
 // ignore_for_file: type=lint

@@ -1,6 +1,5 @@
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/inputs_math_provider.dart';
 
 class SummaryCalculus {
   final int totalBaskets;
@@ -46,3 +45,5 @@ SummaryCalculus stage3PageSummaryCalculus(
     missingWeight: missingWeight,
   );
 }
+
+double clampZero(double x) => x < 0 ? 0 : x;

@@ -22,10 +22,12 @@ class Stage3Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final project = ref.watch(stage1ProjectByIdProvider(projectId));
-    final loads2 = ref
-        .watch(syncStage2ProjectsProvider)
-        .where((l) => l.projectId == projectId)
-        .toList();
+    final loads2 =
+        ref
+            .watch(syncStage2ProjectsProvider)
+            .where((l) => l.projectId == projectId)
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
 
     if (project == null) {
       return const Scaffold(
@@ -58,9 +60,7 @@ class Stage3Page extends ConsumerWidget {
               },
               itemBuilder: (BuildContext context, int index) {
                 final load2 = loads2[index];
-                final summary = ref.watch(
-                  loadSummaryProvider(projectId, index),
-                );
+                final summary = ref.watch(loadSummaryProvider(load2.id));
 
                 return GestureDetector(
                   onTap: () => _onLoadTap(

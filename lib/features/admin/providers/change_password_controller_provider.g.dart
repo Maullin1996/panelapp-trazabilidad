@@ -7,7 +7,7 @@ part of 'change_password_controller_provider.dart';
 // **************************************************************************
 
 String _$changePasswordUseCaseHash() =>
-    r'f373e545f2764d572fd3ffc64adb8c8089f91e9a';
+    r'ad239a0aa14132ce4190ce253741c2dca217528c';
 
 /// See also [changePasswordUseCase].
 @ProviderFor(changePasswordUseCase)
