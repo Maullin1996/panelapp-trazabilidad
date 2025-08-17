@@ -34,10 +34,12 @@ class Stage2Page extends ConsumerWidget {
 
     final error = ref.watch(stage2LoadsErrorProvider);
 
-    final loads = ref
-        .watch(syncStage2ProjectsProvider)
-        .where((l) => l.projectId == projectId)
-        .toList();
+    final loads =
+        ref
+            .watch(syncStage2ProjectsProvider)
+            .where((l) => l.projectId == projectId)
+            .toList()
+          ..sort((a, b) => b.date.compareTo(a.date));
 
     if (project == null) {
       return const Scaffold(

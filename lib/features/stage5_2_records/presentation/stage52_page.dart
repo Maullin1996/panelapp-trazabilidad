@@ -167,6 +167,7 @@ class Stage52Page extends ConsumerWidget {
             width: double.infinity,
             height: 60,
             child: ElevatedButton.icon(
+              key: Key('stage52-page-form-button'),
               onPressed: () {
                 context.push('${Routes.stage5}/$projectId/records/form');
               },

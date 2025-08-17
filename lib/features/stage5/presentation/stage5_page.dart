@@ -41,14 +41,17 @@ class _Stage5PageState extends ConsumerState<Stage5Page> {
         onTap: (value) => setState(() => selectedIndex = value),
         items: [
           BottomNavigationBarItem(
+            key: Key('stage52-page-resumen-botton'),
             icon: Icon(AppIcons.weakSummary),
             label: 'Resumen',
           ),
           BottomNavigationBarItem(
+            key: Key('stage52-page-reporte-botton'),
             icon: Icon(AppIcons.reporte),
             label: 'Reporte',
           ),
           BottomNavigationBarItem(
+            key: Key('stage52-page-entrega-botton'),
             icon: Icon(AppIcons.finalRecord),
             label: 'Entrega',
           ),

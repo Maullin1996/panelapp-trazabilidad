@@ -64,10 +64,12 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           const SizedBox(height: AppSpacing.small),
           // 1) Selector de gaveraWeight
           CustomFromDropdown<double>(
+            key: Key('stage52-form-gavera-input'),
             name: 'gaveras',
             items: project.gaveras
                 .map(
                   (g) => DropdownMenuItem(
+                    key: Key('stage52-form-gavera-${g.referenceWeight}'),
                     value: g.referenceWeight,
                     child: Text('${g.referenceWeight} g'),
                   ),
@@ -83,6 +85,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           const SizedBox(height: AppSpacing.small),
           // 2) Peso de panela
           AppFormTextFild(
+            key: Key('stage52-form-panela-weight-input'),
             name: 'panelaWeight',
             keyboardType: TextInputType.number,
             validator: FormBuilderValidators.compose([
@@ -101,6 +104,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           const SizedBox(height: AppSpacing.small),
           // 3) Unidades
           AppFormTextFild(
+            key: Key('stage52-form-panela-unit-input'),
             name: 'unitCount',
             keyboardType: TextInputType.number,
             validator: FormBuilderValidators.compose([
@@ -118,10 +122,12 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           const SizedBox(height: AppSpacing.small),
           // 4) Calidad
           CustomFromDropdown(
+            key: Key('stage52-form-quality-input'),
             name: 'quality',
             items: BasketQuality.values
                 .map(
                   (q) => DropdownMenuItem(
+                    key: Key('stage52-form-quality-${q.name}'),
                     value: q.name,
                     child: Text(q.name.toUpperCase()),
                   ),
@@ -138,6 +144,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
             width: double.infinity,
             height: 60,
             child: ElevatedButton.icon(
+              key: Key('stage52-form-photo-button'),
               onPressed: () async {
                 _onPickImage(textTheme);
               },
@@ -167,6 +174,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
               width: double.infinity,
               height: 60,
               child: ElevatedButton(
+                key: Key('stage52-form-submmit-button'),
                 onPressed: formState.status == Stage52FormStatus.submitting
                     ? null
                     : () {
@@ -212,6 +220,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
         ),
         actions: [
           GestureDetector(
+            key: Key('stage52-form-camera-button'),
             onTap: () {
               Navigator.of(context).pop();
               _pickFromCamera();
@@ -228,13 +237,11 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                       size: 30,
                     ),
                     SizedBox(width: AppSpacing.small),
-                    Expanded(
-                      child: Text(
-                        'Cámara',
-                        style: textTheme.headlineMedium,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    Text(
+                      'Cámara',
+                      style: textTheme.headlineMedium,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

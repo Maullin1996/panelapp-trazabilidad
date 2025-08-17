@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/providers/providers.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/helpers/summary_calculus.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
@@ -33,19 +34,8 @@ class Stage3PageSummary extends ConsumerWidget {
     if (entry3 == null) {
       return const Scaffold(body: Center(child: Text('Resumen no disponible')));
     }
-    // 2) Cálculos de totales
-    final group = load2.baskets;
-    final totalBaskets = group.count;
-    final totalRefKg = group.realWeight * totalBaskets;
 
-    final regCount = entry3.baskets.length;
-    final regWeight = entry3.baskets.fold<double>(
-      0,
-      (sum, b) => sum + b.realWeight,
-    );
-
-    final missingCount = totalBaskets - regCount;
-    final missingWeight = clampZero(totalRefKg - regWeight);
+    final summaryCalculus = stage3PageSummaryCalculus(load2, entry3);
 
     final textTheme = TextTheme.of(context);
 
@@ -84,7 +74,8 @@ class Stage3PageSummary extends ConsumerWidget {
                         icon: Icons.bar_chart,
                         iconColor: AppColors.register,
                         firstText: 'Peso esperado: ',
-                        secondText: '${totalRefKg.toStringAsFixed(2)} kg',
+                        secondText:
+                            '${summaryCalculus.totalRefKg.toStringAsFixed(2)} kg',
                       ),
                     ],
                   ),
@@ -106,7 +97,7 @@ class Stage3PageSummary extends ConsumerWidget {
                           icon: Icons.all_inbox_rounded,
                           iconColor: AppColors.register,
                           firstText: 'Registradas: ',
-                          secondText: '$regCount Canastillas',
+                          secondText: '${summaryCalculus.regCount} Canastillas',
                         ),
 
                         const SizedBox(height: AppSpacing.xSmall),
@@ -114,7 +105,8 @@ class Stage3PageSummary extends ConsumerWidget {
                           icon: Icons.check_box,
                           iconColor: AppColors.accepted,
                           firstText: 'Peso registrado: ',
-                          secondText: '${regWeight.toStringAsFixed(2)} kg',
+                          secondText:
+                              '${summaryCalculus.regWeight.toStringAsFixed(2)} kg',
                         ),
                       ],
                     ),
@@ -137,7 +129,8 @@ class Stage3PageSummary extends ConsumerWidget {
                           icon: Icons.priority_high,
                           iconColor: AppColors.error,
                           firstText: 'Faltan: ',
-                          secondText: '$missingCount Canastillas',
+                          secondText:
+                              '${summaryCalculus.missingCount} Canastillas',
                         ),
 
                         const SizedBox(height: AppSpacing.xSmall),
@@ -145,7 +138,8 @@ class Stage3PageSummary extends ConsumerWidget {
                           icon: Icons.warning,
                           iconColor: AppColors.alert,
                           firstText: 'Peso faltante: ',
-                          secondText: '${missingWeight.toStringAsFixed(2)} kg',
+                          secondText:
+                              '${summaryCalculus.missingWeight.toStringAsFixed(2)} kg',
                         ),
                       ],
                     ),

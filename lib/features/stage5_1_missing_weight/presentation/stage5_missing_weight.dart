@@ -221,6 +221,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                           ),
                         ),
                         IconButton(
+                          key: Key('stage5-missing-weight-edit-button'),
                           onPressed: () {
                             setState(() => editInstallment = !editInstallment);
                           },
@@ -254,6 +255,9 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                                 ),
                                 if (editInstallment)
                                   IconButton(
+                                    key: Key(
+                                      'stage5-missing-weight-delete-button',
+                                    ),
                                     onPressed: () async {
                                       final deleteUseCase = ref.read(
                                         deleteStage51DataProvider,

@@ -68,6 +68,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                     ),
                   ),
                   IconButton(
+                    key: Key('stage5-form-total-to-pay-add-installment-button'),
                     onPressed: () {
                       setState(() => showForm = !showForm);
                     },
@@ -87,6 +88,9 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                           FormBuilder(
                             key: _formKeyAmount,
                             child: AppFormTextFild(
+                              key: Key(
+                                'stage5-form-total-to-pay-add-installment-input',
+                              ),
                               name: 'amount',
                               keyboardType: TextInputType.number,
                               validator: (value) {
@@ -116,6 +120,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                             width: double.infinity,
                             height: 60,
                             child: ElevatedButton(
+                              key: Key('stage5-form-total-to-pay-save-button'),
                               child: Text(
                                 'Guardar abono',
                                 style: textTheme.headlineLarge,
@@ -151,6 +156,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
               FormBuilder(
                 key: _formKeyPrice,
                 child: AppFormTextFild(
+                  key: Key('stage5-form-total-to-pay-price-input'),
                   name: 'pricePerKilo',
                   keyboardType: TextInputType.number,
                   validator: (value) {
@@ -179,6 +185,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
+                  key: Key('stage5-form-total-to-pay-calculate-button'),
                   onPressed:
                       formState.status == Stage5PriceFormStatus.submitting
                       ? null
