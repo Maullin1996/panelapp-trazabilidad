@@ -58,8 +58,7 @@ class Auth extends _$Auth {
     }
 
     try {
-      // ignore: await_only_futures
-      final user = await FirebaseAuth.instance.currentUser;
+      final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
         state = const AuthParams(authStatus: AuthStatus.notAuthenticated);
         return;
