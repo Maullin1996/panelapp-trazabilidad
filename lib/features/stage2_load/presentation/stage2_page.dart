@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
 import 'package:registro_panela/features/stage2_load/providers/providers.dart';
@@ -20,13 +21,17 @@ class Stage2Page extends ConsumerWidget {
       if (previous?.status == Stage2FormStatus.submitting &&
           next.status == Stage2FormStatus.success) {
         context.pop();
-        ScaffoldMessenger.of(
+        CustomSnackBar.show(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Cargue registrado')));
+          message: 'Cargue registrado',
+          status: SnackbarStatus.accepted,
+        );
       }
       if (next.status == Stage2FormStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage ?? 'Error al guardar')),
+        CustomSnackBar.show(
+          context,
+          message: 'Error al guardar',
+          status: SnackbarStatus.accepted,
         );
       }
     });

@@ -40,7 +40,6 @@ Page<T> slideUpPage<T>(Widget child, GoRouterState state) {
   );
 }
 
-// Útil para cambios instantáneos (login <-> projects, splash)
 Page<T> noTransitionPage<T>(Widget child, GoRouterState state) {
   return NoTransitionPage<T>(key: state.pageKey, child: child);
 }

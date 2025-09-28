@@ -126,6 +126,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                                 style: textTheme.headlineLarge,
                               ),
                               onPressed: () {
+                                FocusScope.of(context).unfocus();
                                 if (!(_formKeyAmount.currentState
                                         ?.saveAndValidate() ??
                                     false)) {
@@ -190,6 +191,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay> {
                       formState.status == Stage5PriceFormStatus.submitting
                       ? null
                       : () {
+                          FocusScope.of(context).unfocus();
                           if (!(_formKeyPrice.currentState?.saveAndValidate() ??
                               false)) {
                             return;

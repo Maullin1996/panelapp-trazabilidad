@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:go_router/go_router.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/providers/auth_provider.dart';
@@ -30,14 +30,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     // Escucha cambios de estado de autenticación
     ref.listen<AuthParams>(authProvider, (previous, next) {
       if (previous?.authStatus != next.authStatus) {
-        if (next.authStatus == AuthStatus.authenticated) {
-          context.go('/splash'); // Redirige si login exitoso
-        } else if (next.authStatus == AuthStatus.notAuthenticated &&
-            next.errorMessage?.isNotEmpty == true) {
+        if (next.authStatus == AuthStatus.checking) {
+        } else if (next.authStatus == AuthStatus.notAuthenticated) {
           // Muestra mensaje de error
-          ScaffoldMessenger.of(
+          CustomSnackBar.show(
             context,
-          ).showSnackBar(SnackBar(content: Text(next.errorMessage!)));
+            message: 'Usuario invalido o revisar conexión',
+            status: SnackbarStatus.error,
+          );
         }
       }
     });
@@ -113,10 +113,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                               }
                             }
                           : null,
-                      child: Text(
-                        'Iniciar sesión',
-                        style: textTheme.headlineLarge,
-                      ),
+                      child:
+                          ref.watch(authProvider).authStatus ==
+                              AuthStatus.checking
+                          ? CircularProgressIndicator(color: AppColors.textDark)
+                          : Text(
+                              'Iniciar sesión',
+                              style: textTheme.headlineLarge,
+                            ),
                     ),
                   ),
                 ),

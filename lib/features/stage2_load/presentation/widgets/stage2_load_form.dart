@@ -160,7 +160,8 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                           final data = Stage2LoadData(
                             id: init?.id ?? uuid.v4(),
                             projectId: widget.project.id,
-                            date: init?.date ?? DateTime.now(),
+                            date: init?.date ?? DateTime.now()
+                              ..toIso8601String(),
                             baskets: BasketLoadData(
                               referenceWeight:
                                   values['referenceWeight'] as double,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_form_provider.dart';
@@ -29,13 +30,17 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
       if (next.status == Stage4FormStatus.success) {
         setState(() => activeForm = false);
         _formKey.currentState?.reset();
-        ScaffoldMessenger.of(
+        CustomSnackBar.show(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Entrega registrada')));
+          message: 'Entrega registrada',
+          status: SnackbarStatus.error,
+        );
       } else if (next.status == Stage4FormStatus.error) {
-        ScaffoldMessenger.of(
+        CustomSnackBar.show(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${next.errorMessage}')));
+          message: 'Error al guardar entrada',
+          status: SnackbarStatus.error,
+        );
       }
     });
 

@@ -1,27 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:registro_panela/core/router/auth_redirect.dart';
-import 'package:registro_panela/core/router/go_router_notifier.dart';
-import 'package:registro_panela/core/router/helper/transitions.dart';
-import 'package:registro_panela/core/router/routes.dart';
-import 'package:registro_panela/features/admin/presentation/administrative_page.dart';
-import 'package:registro_panela/features/auth/presentation/login_page.dart';
-import 'package:registro_panela/features/image_view/presentation/image_viewer.dart';
+import 'package:registro_panela/core/router/index_core.dart';
+
+import 'package:registro_panela/features/index_features.dart';
 import 'package:registro_panela/features/project_selector/presentation/project_selector_page.dart';
-import 'package:registro_panela/features/splash/splash_screen.dart';
-import 'package:registro_panela/features/stage1_delivery/presentation/stage1_page.dart';
-import 'package:registro_panela/features/stage2_load/presentation/stage2_page.dart';
-import 'package:registro_panela/features/stage3_weigh/presentation/stage3_form_page.dart';
-import 'package:registro_panela/features/stage3_weigh/presentation/stage3_page.dart';
-import 'package:registro_panela/features/stage3_weigh/presentation/stage3_page_summary.dart';
-import 'package:registro_panela/features/stage4_recollection/presentation/stage4_page.dart';
-import 'package:registro_panela/features/stage5/presentation/stage5_page.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/stage5_missing_weight.dart';
-import 'package:registro_panela/features/stage5_2_records/presentation/Stage52_page_summary.dart';
-import 'package:registro_panela/features/stage5_2_records/presentation/stage52_form_page.dart';
-import 'package:registro_panela/features/stage5_2_records/presentation/stage52_page.dart';
-import 'package:registro_panela/features/stage5_summary/presentation/stage5_summary.dart';
-import 'package:registro_panela/features/stage_selector/presentation/stage_selector_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = GoRouterNotifier(ref);

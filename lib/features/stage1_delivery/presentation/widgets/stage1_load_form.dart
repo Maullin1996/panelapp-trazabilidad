@@ -65,16 +65,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
 
     return Column(
       children: [
-        if (state.status == Stage1FormStatus.error)
-          Column(
-            children: [
-              Text(
-                state.errorMessage ?? 'Error al guardar',
-                style: const TextStyle(color: Colors.red),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
         FormBuilder(
           key: _formKey,
           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -136,9 +126,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                             Text('Cantidad', style: textTheme.headlineSmall),
                             const SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
-                              key: Key(
-                                'stage1-load-form-gavera-quantity-input$index',
-                              ),
                               name: 'gaverasCantidad_$index',
                               keyboardType: TextInputType.number,
                               validator: FormBuilderValidators.compose([
@@ -165,19 +152,36 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                             ),
                             const SizedBox(height: AppSpacing.small),
                             AppFormTextFild(
-                              key: Key(
-                                'stage1-load-form-gavera-weight-input$index',
-                              ),
                               name: 'gaverasPeso_$index',
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                  errorText: "Debe de ser un valor númerico",
-                                ),
-                                FormBuilderValidators.numeric(
-                                  errorText: "Debe ser un valor númerico",
-                                ),
-                                FormBuilderValidators.min(1),
-                              ]),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Debe ser un valor numérico";
+                                }
+                                final peso = double.tryParse(value);
+                                if (peso == null || peso <= 0) {
+                                  return "Debe ser un número válido mayor que 0";
+                                }
+                                final allValues =
+                                    _formKey.currentState?.instantValue ?? {};
+                                final valoresPesos = allValues.entries
+                                    .where(
+                                      (peso) =>
+                                          peso.key.startsWith("gaverasPeso_"),
+                                    )
+                                    .map(
+                                      (e) =>
+                                          double.tryParse(e.value.toString()),
+                                    )
+                                    .whereType<double>()
+                                    .toList();
+                                final count = valoresPesos
+                                    .where((p) => p == peso)
+                                    .length;
+                                if (count > 1) {
+                                  return "Este peso ya está registrado";
+                                }
+                                return null; // válido
+                              },
                               keyboardType: TextInputType.number,
                             ),
                           ],

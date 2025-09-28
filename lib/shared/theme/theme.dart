@@ -18,7 +18,7 @@ abstract class AppThemes {
     ),
     useMaterial3: true,
     appBarTheme: AppBarTheme(
-      color: AppColors.backgroundCrema,
+      backgroundColor: AppColors.backgroundCrema,
       centerTitle: true,
     ),
     scaffoldBackgroundColor: AppColors.backgroundCrema,

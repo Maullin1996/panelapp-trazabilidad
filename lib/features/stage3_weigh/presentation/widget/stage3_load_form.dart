@@ -254,7 +254,8 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                           id: widget.initialData?.id ?? uuid.v4(),
                           projectId: widget.project.id,
                           stage2LoadId: widget.load2.id,
-                          date: widget.initialData?.date ?? DateTime.now(),
+                          date: widget.initialData?.date ?? DateTime.now()
+                            ..toIso8601String(),
                           baskets: baskets,
                         );
                         formNotifier.submit(formData, isNew: widget.isNew);

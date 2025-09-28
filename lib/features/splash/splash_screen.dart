@@ -29,7 +29,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
     final textTheme = TextTheme.of(context);
 
     ref.listen<AuthParams>(authProvider, (previous, next) {
@@ -57,7 +56,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                _getLoadingMessage(authState.authStatus),
+                'Verificando sesión...',
                 style: const TextStyle(color: AppColors.textDark),
               ),
             ],
@@ -65,16 +64,5 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         ),
       ),
     );
-  }
-
-  String _getLoadingMessage(AuthStatus status) {
-    switch (status) {
-      case AuthStatus.checking:
-        return 'Verificando sesión...';
-      case AuthStatus.authenticated:
-        return 'Iniciando aplicación...';
-      case AuthStatus.notAuthenticated:
-        return 'Cargando...';
-    }
   }
 }

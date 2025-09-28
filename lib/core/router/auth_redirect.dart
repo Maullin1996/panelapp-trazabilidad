@@ -11,9 +11,9 @@ String? authRedirect(Ref ref, GoRouterState state) {
   final auth = ref.read(authProvider);
   final path = state.uri.path;
 
-  if (auth.authStatus == AuthStatus.checking) {
-    return path != '/splash' ? '/splash' : Routes.splash;
-  }
+  // if (auth.authStatus == AuthStatus.checking) {
+  //   return path != '/splash' ? '/splash' : Routes.splash;
+  // }
 
   if (auth.authStatus == AuthStatus.notAuthenticated) {
     return path != Routes.login ? Routes.login : null;

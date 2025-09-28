@@ -186,7 +186,8 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                         final record = Stage52RecordData(
                           id: widget.initialRecord?.id ?? _uuid.v4(),
                           projectId: widget.projectId,
-                          date: widget.initialRecord?.date ?? DateTime.now(),
+                          date: widget.initialRecord?.date ?? DateTime.now()
+                            ..toIso8601String(),
                           gaveraWeight: v['gaveras'] as double,
                           panelaWeight: double.parse(v['panelaWeight']),
                           unitCount: int.parse(v['unitCount']),

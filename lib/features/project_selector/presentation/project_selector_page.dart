@@ -194,7 +194,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                             ),
                             Text(
                               DateFormat.yMd().format(p.date),
-                              style: textTheme.bodyLarge?.copyWith(),
+                              style: textTheme.bodyLarge,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),

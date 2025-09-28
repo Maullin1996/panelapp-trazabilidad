@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/stage1_load_form.dart';
 import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -16,12 +17,19 @@ class Stage1Page extends ConsumerWidget {
     ref.listen<Stage1FormState>(stage1FormProvider, (prev, next) {
       if (prev?.status == Stage1FormStatus.submitting &&
           next.status == Stage1FormStatus.success) {
+        CustomSnackBar.show(
+          context,
+          message: 'Formulario subido correctamente',
+          status: SnackbarStatus.accepted,
+        );
         context.pop();
       }
       if (next.status == Stage1FormStatus.error) {
-        ScaffoldMessenger.of(
+        CustomSnackBar.show(
           context,
-        ).showSnackBar(SnackBar(content: Text(next.errorMessage ?? 'Error')));
+          message: 'Error al subir el formulario',
+          status: SnackbarStatus.error,
+        );
       }
     });
 
