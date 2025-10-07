@@ -59,7 +59,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   ref.read(authProvider.notifier).logout();
                   return;
                 case 'print':
-                  final selectedProject = projects[isSelected.first];
+                  final selectedProject = sorted[isSelected.first];
                   await generateAndSharePdf(selectedProject);
                   setState(() {
                     isSelected.clear();

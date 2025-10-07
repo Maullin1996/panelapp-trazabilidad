@@ -50,6 +50,8 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
     final missingPreservativesJars =
         project.preservativesJars - returns.returnedPreservativesJars;
 
+    final missingBaskets = project.basketsQuantity - returns.returnedBaskets;
+
     final missingGaveras = <MissingGavera>[];
     for (
       int i = 0;
@@ -182,11 +184,10 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                           icon: Icons.local_drink_rounded,
                           iconColor: AppColors.accentLightPanela,
                         ),
-                      if (summary3.totalMissingCount != 0)
+                      if (missingBaskets != 0)
                         CustomRichText(
                           firstText: 'Faltan: ',
-                          secondText:
-                              '${summary3.totalMissingCount} Canastillas',
+                          secondText: '$missingBaskets Canastillas',
                           icon: Icons.priority_high,
                           iconColor: AppColors.error,
                         ),

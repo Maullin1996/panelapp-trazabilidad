@@ -33,7 +33,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
         CustomSnackBar.show(
           context,
           message: 'Entrega registrada',
-          status: SnackbarStatus.error,
+          status: SnackbarStatus.accepted,
         );
       } else if (next.status == Stage4FormStatus.error) {
         CustomSnackBar.show(

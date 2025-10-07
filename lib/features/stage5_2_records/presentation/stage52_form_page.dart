@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/widgets/stage52_form.dart';
 import 'package:registro_panela/features/stage5_2_records/providers/stage52_form_status.dart';
@@ -18,13 +19,17 @@ class Stage52FormPage extends ConsumerWidget {
       if (previous?.status == Stage52FormStatus.submitting &&
           next.status == Stage52FormStatus.success) {
         context.pop();
-        ScaffoldMessenger.of(
+        CustomSnackBar.show(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Cargue registrado')));
+          message: 'Cargue registrado',
+          status: SnackbarStatus.accepted,
+        );
       }
       if (next.status == Stage52FormStatus.error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.errorMessage ?? 'Error al guardar')),
+        CustomSnackBar.show(
+          context,
+          message: 'Error al guardar',
+          status: SnackbarStatus.error,
         );
       }
     });
