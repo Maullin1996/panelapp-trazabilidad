@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:meta/meta.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
@@ -11,6 +12,19 @@ String? authRedirect(Ref ref, GoRouterState state) {
   final auth = ref.read(authProvider);
   final path = state.uri.path;
 
+  return authRedirectForTesting(
+    auth: auth,
+    path: path,
+    routeName: state.name,
+  );
+}
+
+@visibleForTesting
+String? authRedirectForTesting({
+  required AuthParams auth,
+  required String path,
+  String? routeName,
+}) {
   // if (auth.authStatus == AuthStatus.checking) {
   //   return path != '/splash' ? '/splash' : Routes.splash;
   // }
@@ -25,13 +39,13 @@ String? authRedirect(Ref ref, GoRouterState state) {
     }
 
     // Verificar permisos para otras rutas
-    return _checkRolePermissions(auth, state);
+    return _checkRolePermissions(auth, routeName);
   }
 
   return null;
 }
 
-String? _checkRolePermissions(AuthParams auth, GoRouterState state) {
+String? _checkRolePermissions(AuthParams auth, String? routeName) {
   final roleByName = <String, UserRole>{
     'stage1': UserRole.stage1,
     'stage2Detail': UserRole.stage2,
@@ -48,7 +62,6 @@ String? _checkRolePermissions(AuthParams auth, GoRouterState state) {
     'adminResetPassword': UserRole.admin,
   };
 
-  final routeName = state.name;
   final requiredRole = routeName != null ? roleByName[routeName] : null;
 
   if (requiredRole != null &&
