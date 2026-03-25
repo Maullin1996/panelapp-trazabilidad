@@ -1,79 +1,88 @@
-# Registro Panela
+# PanelApp – Sistema de trazabilidad
 
-Aplicacion Flutter para registrar y hacer seguimiento de un flujo por etapas (entrega, carga, pesaje, recoleccion y cierre), con autenticacion y almacenamiento en Firebase.
 
-**Contenido**
-1. Descripcion
-2. Funcionalidades
-3. Stack y dependencias clave
-4. Arquitectura
-5. Requisitos y configuracion
-6. Comandos utiles
-7. Estructura del proyecto
-8. Capturas de pantalla
+Aplicación móvil para gestionar procesos productivos y control de inventario en entornos reales.
 
-**Descripcion**
-Registro Panela es una app movil construida en Flutter. Usa Firebase (Auth, Firestore, Storage, Functions) para autenticacion, persistencia y archivos. La navegacion esta basada en GoRouter y el estado en Riverpod. El flujo principal esta organizado por etapas (stage1 a stage5) con pantallas de detalle, formularios y resumenes.
+## 🟢 Problema
 
-**Funcionalidades**
-- Login y gestion de sesion.
-- Selector de proyecto y selector de etapa.
-- Registro por etapas: entrega (stage1), carga (stage2), pesaje (stage3), recoleccion (stage4) y cierre (stage5).
-- Formularios y resumenes por etapa.
-- Registro de peso faltante y resumen final.
-- Visualizacion de imagenes y uso de camara.
-- Panel administrativo con reinicio de contrasena.
-- Persistencia offline de Firestore habilitada.
+Las empresas llevaban control manual de insumos y producción, generando pérdidas e inconsistencias en la trazabilidad. Sin visibilidad en tiempo real, era imposible validar el flujo de operaciones.
 
-**Stack y dependencias clave**
-- Flutter SDK (>= 3.8.1)
-- Firebase: `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage`, `cloud_functions`
-- Estado: `flutter_riverpod`
-- Navegacion: `go_router`
-- Formularios: `flutter_form_builder`, `form_builder_validators`
-- Camara e imagenes: `camera`, `image_picker`, `flutter_image_compress`, `cached_network_image`
-- Reportes: `pdf`, `printing`, `share_plus`
-- Serializacion y codigo generado: `freezed`, `json_serializable`, `build_runner`
+## 🟢 Solución
 
-**Arquitectura**
-- `lib/core`: router, servicios y utilidades base.
-- `lib/shared`: tema, widgets reutilizables y utilidades.
-- `lib/features`: modulos por funcionalidad (auth, admin, selector de proyecto, etapas 1-5, etc.).
-- `lib/firebase_options.dart`: configuracion generada por FlutterFire.
+Aplicación móvil que permite registrar, validar y monitorear el flujo de producción en tiempo real. Cada etapa del proceso queda registrada con validaciones automáticas y trazabilidad completa.
 
-**Requisitos y configuracion**
-1. Flutter SDK instalado (compatible con `sdk: ^3.8.1`).
-2. Configuracion de Firebase.
-   - Android: `android/app/google-services.json`
-   - iOS: `ios/Runner/GoogleService-Info.plist`
-   - Si deseas correr en web, considera inicializar con `DefaultFirebaseOptions.currentPlatform`.
-3. Dependencias instaladas con `flutter pub get`.
+## 🟢 Funcionalidades
 
-**Comandos utiles**
+- **Registro de insumos**: Captura detallada en cada etapa del proceso
+- **Control de inventario**: Seguimiento en tiempo real de materiales
+- **Validación de peso**: Comparación entre peso esperado vs real
+- **Registro fotográfico**: Evidencia visual de cada operación
+- **Dashboard de métricas**: Visualización de KPIs y tendencias
+- **Gestión de usuarios por roles**: Autenticación y permisos granulares
+- **Persistencia offline**: Sincronización automática con Firebase
+- **Panel administrativo**: Gestión de configuración y usuarios
+
+## 🟢 Tecnologías
+
+- **Flutter** (SDK >= 3.8.1)
+- **Firebase**: Auth, Firestore, Storage, Cloud Functions
+- **Riverpod**: Gestión de estado
+- **GoRouter**: Navegación
+- **Build Runner**: Generación de código
+
+## 🟢 Mi rol
+
+Desarrollo completo de la aplicación:
+- Arquitectura frontend con Riverpod y GoRouter
+- Integración con Firebase (Auth, Firestore, Storage)
+- Implementación de flujos por etapas (stage1-stage5)
+- Formularios y validaciones
+- Sistema de captura de imágenes
+- Generación de reportes en PDF
+- Testing (unit e integration tests)
+
+## 🟢 Demo
+
+[Ver demostración en video](https://link-to-video.com)
+
+## 🟢 Estado
+
+✅ Aplicación en uso con usuarios reales en producción.
+
+---
+
+## Detalles técnicos
+
+### Arquitectura
+- `lib/core`: Router, servicios y utilidades base
+- `lib/shared`: Tema, widgets reutilizables y utilidades
+- `lib/features`: Módulos por funcionalidad (auth, admin, etapas 1-5)
+
+### Requisitos
+- Flutter SDK instalado (>= 3.8.1)
+- Firebase configurado:
+  - Android: `android/app/google-services.json`
+  - iOS: `ios/Runner/GoogleService-Info.plist`
+- Conexión de internet para sincronización
+
+### Instalación y uso
 ```bash
+# Instalar dependencias
 flutter pub get
-flutter run
-```
 
-Generacion de codigo:
-```bash
+# Generar código
 flutter pub run build_runner build --delete-conflicting-outputs
-```
 
-Iconos y splash:
-```bash
-flutter pub run flutter_launcher_icons
-flutter pub run flutter_native_splash:create
-```
+# Ejecutar la app
+flutter run
 
-Tests:
-```bash
+# Tests
 flutter test
 flutter test integration_test
 ```
 
-**Estructura del proyecto**
-```text
+### Estructura del proyecto
+```
 lib/
   core/
     router/
@@ -82,80 +91,76 @@ lib/
   features/
     admin/
     auth/
-    image_view/
-    project_selector/
-    splash/
-    stage_selector/
     stage1_delivery/
     stage2_load/
     stage3_weigh/
     stage4_recollection/
-    stage5/
-    stage5_1_missing_weight/
-    stage5_2_records/
-    stage5_summary/
+    stage5_*/
   shared/
     theme/
     utils/
     widgets/
-  firebase_options.dart
-  main.dart
-assets/
-  images/
 ```
 
-**Capturas de pantalla**
-**Logo**
-![Logo](assets/images/logo.png)
+---
 
-**Login**
-![Login](assets/images/login.png)
+## 📸 Capturas de pantalla
 
-**Selector de proyecto**
-![Project selector](assets/images/project_selector.png)
-![Project selector 2](assets/images/project_selector_2.png)
+### Autenticación
 
-**Selector de etapa**
-![Stage selector](assets/images/stage_selector.png)
+<img src="assets/images/logo.png" alt="Logo" width="200"/>
+<img src="assets/images/login.png" alt="Login" width="200"/>
 
-**Stage 1 - Entrega**
-![Stage1](assets/images/stage1_delivery.png)
-![Stage1 2](assets/images/stage1_delivery_2.png)
-![Stage1 3](assets/images/stage1_delivery_3.png)
+### Selección
 
-**Stage 2 - Carga**
-![Stage2](assets/images/stage2_load.png)
-![Stage2 2](assets/images/stage2_load_2.png)
-![Stage2 3](assets/images/stage2_load_3.png)
+<img src="assets/images/project_selector.png" alt="Selector de proyecto" width="200"/>
+<img src="assets/images/project_selector_2.png" alt="Selector de proyecto 2" width="200"/>
+<img src="assets/images/stage_selector.png" alt="Selector de etapa" width="200"/>
 
-**Stage 3 - Pesaje**
-![Stage3](assets/images/stage3_weigh.png)
-![Stage3 2](assets/images/stage3_weigh_2.png)
-![Stage3 3](assets/images/stage3_weigh_3.png)
-![Stage3 4](assets/images/stage3_weigh_4.png)
+### Stage 1 - Entrega
 
-**Stage 4 - Recoleccion**
-![Stage4](assets/images/stage4_recollection.png)
-![Stage4 2](assets/images/stage4_recollection_2.png)
-![Stage4 3](assets/images/stage4_recollection_3.png)
-![Stage4 4](assets/images/stage4_recollection_4.png)
+<img src="assets/images/stage1_delivery.png" alt="Stage 1" width="200"/>
+<img src="assets/images/stage1_delivery_2.png" alt="Stage 1 - 2" width="200"/>
+<img src="assets/images/stage1_delivery_3.png" alt="Stage 1 - 3" width="200"/>
 
-**Stage 5 - Cierre**
-![Stage5](assets/images/stage5.png)
+### Stage 2 - Carga
 
-**Stage 5 - Peso faltante**
-![Stage5 missing weight](assets/images/stage5_1_missing_weight.png)
-![Stage5 missing weight 2](assets/images/stage5_1_missing_weight_2.png)
-![Stage5 missing weight 3](assets/images/stage5_1_missing_weight_3.png)
+<img src="assets/images/stage2_load.png" alt="Stage 2" width="200"/>
+<img src="assets/images/stage2_load_2.png" alt="Stage 2 - 2" width="200"/>
+<img src="assets/images/stage2_load_3.png" alt="Stage 2 - 3" width="200"/>
 
-**Stage 5 - Resumen**
-![Stage5 summary](assets/images/stage5_summary.png)
-![Stage5 summary 2](assets/images/stage5_summary_2.png)
-![Stage5 summary 3](assets/images/stage5_summary_3.png)
-![Stage5 summary 4](assets/images/stage5_summary_4.png)
+### Stage 3 - Pesaje
 
-**Camara**
-![Camera](assets/images/camera.png)
+<img src="assets/images/stage3_weigh.png" alt="Stage 3" width="200"/>
+<img src="assets/images/stage3_weigh_2.png" alt="Stage 3 - 2" width="200"/>
+<img src="assets/images/stage3_weigh_3.png" alt="Stage 3 - 3" width="200"/>
+<img src="assets/images/stage3_weigh_4.png" alt="Stage 3 - 4" width="200"/>
 
-**Administracion - Reset de contrasena**
-![Admin reset password](assets/images/cambio%20de%20contrase%C3%B1a%20de%20usuarios.png)
+### Stage 4 - Recolección
+
+<img src="assets/images/stage4_recollection.png" alt="Stage 4" width="200"/>
+<img src="assets/images/stage4_recollection_2.png" alt="Stage 4 - 2" width="200"/>
+<img src="assets/images/stage4_recollection_3.png" alt="Stage 4 - 3" width="200"/>
+<img src="assets/images/stage4_recollection_4.png" alt="Stage 4 - 4" width="200"/>
+
+### Stage 5 - Cierre
+
+<img src="assets/images/stage5.png" alt="Stage 5" width="200"/>
+
+### Stage 5 - Peso faltante
+
+<img src="assets/images/stage5_1_missing_weight.png" alt="Stage 5 - Peso faltante" width="200"/>
+<img src="assets/images/stage5_1_missing_weight_2.png" alt="Stage 5 - Peso faltante 2" width="200"/>
+<img src="assets/images/stage5_1_missing_weight_3.png" alt="Stage 5 - Peso faltante 3" width="200"/>
+
+### Stage 5 - Resumen
+
+<img src="assets/images/stage5_summary.png" alt="Stage 5 - Resumen" width="200"/>
+<img src="assets/images/stage5_summary_2.png" alt="Stage 5 - Resumen 2" width="200"/>
+<img src="assets/images/stage5_summary_3.png" alt="Stage 5 - Resumen 3" width="200"/>
+<img src="assets/images/stage5_summary_4.png" alt="Stage 5 - Resumen 4" width="200"/>
+
+### Utilidades
+
+<img src="assets/images/camera.png" alt="Cámara" width="200"/>
+<img src="assets/images/cambio%20de%20contrase%C3%B1a%20de%20usuarios.png" alt="Admin - Reset de contraseña" width="200"/>
