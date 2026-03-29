@@ -1,53 +1,40 @@
-# PanelApp – Sistema de trazabilidad
+# PanelApp – Sistema de trazabilidad de producción
 
+Aplicación móvil utilizada en operación real para gestionar procesos productivos y control de inventario.
 
-Aplicación móvil para gestionar procesos productivos y control de inventario en entornos reales.
+## 🚀 Demo
+[![Demo](https://img.youtube.com/vi/enNVjhjFtxQ/hqdefault.jpg)](https://youtube.com/shorts/enNVjhjFtxQ)
 
-## 🟢 Problema
+## 🧩 Problema
 
-Las empresas llevaban control manual de insumos y producción, generando pérdidas e inconsistencias en la trazabilidad. Sin visibilidad en tiempo real, era imposible validar el flujo de operaciones.
+El control manual de insumos y producción generaba pérdidas de materiales y falta de trazabilidad en el proceso.
 
-## 🟢 Solución
+## ✅ Solución
 
-Aplicación móvil que permite registrar, validar y monitorear el flujo de producción en tiempo real. Cada etapa del proceso queda registrada con validaciones automáticas y trazabilidad completa.
+Aplicación móvil que permite registrar, validar y monitorear el flujo de producción en tiempo real.
 
-## 🟢 Funcionalidades
+## ⚙️ Funcionalidades
 
-- **Registro de insumos**: Captura detallada en cada etapa del proceso
-- **Control de inventario**: Seguimiento en tiempo real de materiales
-- **Validación de peso**: Comparación entre peso esperado vs real
-- **Registro fotográfico**: Evidencia visual de cada operación
-- **Dashboard de métricas**: Visualización de KPIs y tendencias
-- **Gestión de usuarios por roles**: Autenticación y permisos granulares
-- **Persistencia offline**: Sincronización automática con Firebase
-- **Panel administrativo**: Gestión de configuración y usuarios
+- Registro de insumos enviados a producción  
+- Control de inventario y materiales retornados  
+- Validación de peso esperado vs real  
+- Registro fotográfico por unidad  
+- Dashboard con métricas de producción  
+- Gestión de usuarios por roles  
 
-## 🟢 Tecnologías
+## 🧠 Tecnologías
 
-- **Flutter** (SDK >= 3.8.1)
-- **Firebase**: Auth, Firestore, Storage, Cloud Functions
-- **Riverpod**: Gestión de estado
-- **GoRouter**: Navegación
-- **Build Runner**: Generación de código
+- Flutter  
+- Firebase (Auth, Firestore, Storage)  
+- Riverpod  
 
-## 🟢 Mi rol
+## 👨‍💻 Mi rol
 
-Desarrollo completo de la aplicación:
-- Arquitectura frontend con Riverpod y GoRouter
-- Integración con Firebase (Auth, Firestore, Storage)
-- Implementación de flujos por etapas (stage1-stage5)
-- Formularios y validaciones
-- Sistema de captura de imágenes
-- Generación de reportes en PDF
-- Testing (unit e integration tests)
+Desarrollo completo de la aplicación (frontend, lógica y backend).
 
-## 🟢 Demo
+## 📊 Estado
 
-[Ver demostración en video](https://link-to-video.com)
-
-## 🟢 Estado
-
-✅ Aplicación en uso con usuarios reales en producción.
+Aplicación en uso con usuarios reales.
 
 ---
 
