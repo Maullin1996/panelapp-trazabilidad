@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
@@ -17,9 +17,7 @@ Stage1FormData _project() {
   return Stage1FormData(
     id: 'p1',
     name: 'Molienda',
-    gaveras: const [
-      GaveraData(quantity: 2, referenceWeight: 950),
-    ],
+    gaveras: const [GaveraData(quantity: 2, referenceWeight: 950)],
     basketsQuantity: 10,
     preservativesWeight: 1,
     preservativesJars: 1,
@@ -95,9 +93,7 @@ void main() {
           syncStage51PaymentsProvider.overrideWith((ref) => [payment]),
         ],
         child: const MaterialApp(
-          home: Scaffold(
-            body: Stage5MissingWeight(projectId: 'p1'),
-          ),
+          home: Scaffold(body: Stage5MissingWeight(projectId: 'p1')),
         ),
       ),
     );

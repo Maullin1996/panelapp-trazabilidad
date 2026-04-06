@@ -1,6 +1,6 @@
 import 'package:registro_panela/core/storage/application/storage_providers.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage1_form_provider.g.dart';
@@ -16,27 +16,22 @@ class Stage1Form extends _$Stage1Form {
     state = state.copyWith(status: Stage1FormStatus.submitting);
 
     try {
-      if (data.photoPath != null &&
-          data.photoPath!.isNotEmpty &&
-          !data.photoPath!.startsWith('http')) {
-        final uploadImage = ref.read(uploadImageProvider);
-        final downloadUrl = await uploadImage(
-          path: 'stage1_photos/${data.id}.jpg',
-          localFilePath: data.photoPath!,
-        );
-        data = data.copyWith(photoPath: downloadUrl);
-      }
-      if (isNew) {
-        final createUseCase = ref.read(createStage1DataProvider);
-        await createUseCase(data);
+      final dataToSave =
+          (data.photoPath != null &&
+              data.photoPath!.isNotEmpty &&
+              !data.photoPath!.startsWith('http'))
+          ? data.copyWith(
+              photoPath: await ref.read(uploadImageProvider)(
+                path: 'stage1_photos/${data.id}.jpg',
+                localFilePath: data.photoPath!,
+              ),
+            )
+          : data;
 
-        final notifier = ref.read(stage1ProjectsProvider.notifier);
-        notifier.refresh();
+      if (isNew) {
+        await ref.read(createStage1DataProvider)(dataToSave);
       } else {
-        final updateUseCase = ref.read(updateStage1DataProvider);
-        await updateUseCase(data);
-        final notifier = ref.read(stage1ProjectsProvider.notifier);
-        notifier.refresh();
+        await ref.read(updateStage1DataProvider)(dataToSave);
       }
 
       state = state.copyWith(status: Stage1FormStatus.success);

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
@@ -93,9 +93,18 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const Key('stage52-page-resumen-botton')), findsOneWidget);
-    expect(find.byKey(const Key('stage52-page-reporte-botton')), findsOneWidget);
-    expect(find.byKey(const Key('stage52-page-entrega-botton')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage52-page-resumen-botton')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage52-page-reporte-botton')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage52-page-entrega-botton')),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Reporte'));
     await tester.pumpAndSettle();

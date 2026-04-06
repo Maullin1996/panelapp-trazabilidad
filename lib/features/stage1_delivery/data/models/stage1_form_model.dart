@@ -91,17 +91,20 @@ class Stage1FormModel {
 
   factory Stage1FormModel.fromJson(Map<String, dynamic> json) {
     return Stage1FormModel(
-      id: json['id'],
-      name: json['name'],
-      gaveras: List<Map<String, dynamic>>.from(json['gaveras']),
-      basketsQuantity: json['basketsQuantity'],
-      preservativesWeight: json['preservativesWeight'],
-      preservativesJars: json['preservativesJars'],
-      limeWeight: json['limeWeight'],
-      limeJars: json['limeJars'],
-      phone: json['phone'],
-      date: DateTime.parse(json['date']),
-      photoPath: json['photoPath'],
+      id: json['id'] as String,
+      name: json['name'] as String? ?? '',
+      gaveras: List<Map<String, dynamic>>.from(json['gaveras'] ?? []),
+      basketsQuantity: (json['basketsQuantity'] as num?)?.toInt() ?? 0,
+      preservativesWeight:
+          (json['preservativesWeight'] as num?)?.toDouble() ?? 0.0,
+      preservativesJars: (json['preservativesJars'] as num?)?.toInt() ?? 0,
+      limeWeight: (json['limeWeight'] as num?)?.toDouble() ?? 0.0,
+      limeJars: (json['limeJars'] as num?)?.toInt() ?? 0,
+      phone: json['phone'] as String? ?? '',
+      date: json['date'] != null
+          ? DateTime.parse(json['date'])
+          : DateTime.now(),
+      photoPath: json['photoPath'] as String?,
     );
   }
 }

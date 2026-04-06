@@ -9,7 +9,7 @@ import 'package:registro_panela/core/services/image_picker_service_provider.dart
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_form_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_form_provider.dart';
 import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
@@ -27,6 +27,7 @@ class Stage1LoadForm extends ConsumerStatefulWidget {
 class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   late final GlobalKey<FormBuilderState> _formKey;
   late final List<int> _gaveras;
+  late final Uuid _uuid;
   String? _photoPath;
 
   @override
@@ -35,6 +36,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     _formKey = GlobalKey<FormBuilderState>();
     _gaveras = widget.initialData?.gaveras.asMap().keys.toList() ?? [0];
     _photoPath = widget.initialData?.photoPath;
+    _uuid = const Uuid(); // 👈
   }
 
   void _addGavera() {
@@ -52,8 +54,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   @override
   Widget build(BuildContext context) {
     final initial = widget.initialData;
-
-    final uuid = Uuid();
 
     final state = ref.watch(stage1FormProvider);
 
@@ -220,17 +220,17 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               ),
               const SizedBox(height: AppSpacing.smallLarge),
               TwoFormsRow(
-                nameFirst: 'preservativesWeight',
-                labeFirst: 'Conservantes (kg)',
-                labeSecond: 'Cantidad Tarros',
-                nameSecond: 'preservativesJars',
+                nameFirst: 'preservativesJars',
+                labeFirst: 'Cantidad Tarros',
+                labeSecond: 'Conservantes (kg)',
+                nameSecond: 'preservativesWeight',
               ),
               const SizedBox(height: AppSpacing.smallLarge),
               TwoFormsRow(
-                nameFirst: 'limeWeight',
-                labeFirst: 'Cal (kg)',
-                labeSecond: 'Cantidad Tarros',
-                nameSecond: 'limeJars',
+                nameFirst: 'limeJars',
+                labeFirst: 'Cantidad Tarros',
+                labeSecond: 'Cal (kg)',
+                nameSecond: 'limeWeight',
               ),
               const SizedBox(height: AppSpacing.smallLarge),
               Text('Teléfono', style: textTheme.headlineMedium),
@@ -321,7 +321,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                               );
                             }
                             final data = Stage1FormData(
-                              id: widget.initialData?.id ?? uuid.v4(),
+                              id: widget.initialData?.id ?? _uuid.v4(),
                               name: values['name'],
                               gaveras: gaveras,
                               basketsQuantity: int.parse(
@@ -336,8 +336,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                               limeWeight: double.parse(values['limeWeight']),
                               limeJars: int.parse(values['limeJars']),
                               phone: values['phone'],
-                              date: initial?.date ?? DateTime.now()
-                                ..toIso8601String(),
+                              date: initial?.date ?? DateTime.now(),
                               photoPath: _photoPath,
                             );
                             formNotifier.submit(data, isNew: isNew);

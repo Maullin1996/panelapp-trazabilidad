@@ -3,15 +3,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/stage1_page.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 
 Stage1FormData _project({String id = 'p1', String name = 'Molienda'}) {
   return Stage1FormData(
     id: id,
     name: name,
-    gaveras: const [
-      GaveraData(quantity: 2, referenceWeight: 950),
-    ],
+    gaveras: const [GaveraData(quantity: 2, referenceWeight: 950)],
     basketsQuantity: 10,
     preservativesWeight: 1,
     preservativesJars: 1,
@@ -28,18 +26,31 @@ void main() {
   ) async {
     await tester.pumpWidget(
       const ProviderScope(
-        child: MaterialApp(
-          home: Stage1Page(projectId: 'new'),
-        ),
+        child: MaterialApp(home: Stage1Page(projectId: 'new')),
       ),
     );
 
     expect(find.text('Nuevo proyecto'), findsOneWidget);
-    expect(find.byKey(const Key('stage1-load-form-molienda-name-input')), findsOneWidget);
-    expect(find.byKey(const Key('stage1-load-form-add-gaveras-button')), findsOneWidget);
-    expect(find.byKey(const Key('stage1-load-form-baskets-quantity')), findsOneWidget);
-    expect(find.byKey(const Key('stage1-load-form-phone-input')), findsOneWidget);
-    expect(find.byKey(const Key('stage1-load-form-summit-button')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage1-load-form-molienda-name-input')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-add-gaveras-button')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-baskets-quantity')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-phone-input')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-summit-button')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Stage1Page shows edit title when project exists', (
@@ -50,9 +61,7 @@ void main() {
         overrides: [
           stage1ProjectByIdProvider.overrideWith((ref, id) => _project()),
         ],
-        child: const MaterialApp(
-          home: Stage1Page(projectId: 'p1'),
-        ),
+        child: const MaterialApp(home: Stage1Page(projectId: 'p1')),
       ),
     );
 

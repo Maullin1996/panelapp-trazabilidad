@@ -54,6 +54,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets: 
+    - assets/images/logo.png
+
   fonts:
     - family: RobotoVariableItalic
       fonts:
@@ -63,13 +66,19 @@ flutter:
 
 flutter_native_splash:
   color: "#F5EFE1"
-  image: assets/images/logo.png
+  image: assets/images/logo_splash.png
   android: true
   ios: true
-  web: false
+  android_12:
+    image: assets/images/logo_splash.png
+    color: "#F5EFE1"
 
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: assets/images/logo_icono.png
   remove_alpha_ios: true
+  adaptive_icon_background: "#F5EFE1"
+  adaptive_icon_foreground: assets/images/logo_icono.png
+  adaptive_icon_foreground_inset: 16
+

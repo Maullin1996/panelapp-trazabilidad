@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/presentation/stage2_page.dart';
 import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
@@ -50,7 +50,10 @@ void main() {
     );
 
     expect(find.text('Aún no hay cargues registrados'), findsOneWidget);
-    expect(find.byKey(const Key('stage2-page-create-load-button')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage2-page-create-load-button')),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Stage2Page renders a load card', (tester) async {
@@ -65,12 +68,18 @@ void main() {
       ),
     );
 
-    expect(find.byKey(const Key('stage2-page-load-custom-card-l1')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage2-page-load-custom-card-l1')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('stage2_page_12.0-weight')), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('stage2-page-load-custom-card-l1')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('stage2-page-edit-textbutton')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage2-page-edit-textbutton')),
+      findsOneWidget,
+    );
   });
 }

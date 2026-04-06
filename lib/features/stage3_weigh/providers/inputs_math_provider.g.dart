@@ -6,7 +6,7 @@ part of 'inputs_math_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadSummaryHash() => r'522dbc60adc8fa3274cf99eb6e4a6d384db27a25';
+String _$loadSummaryHash() => r'6831b816b6510ca686ec1bdcd265226968e87009';
 
 /// Copied from Dart SDK
 class _SystemHash {

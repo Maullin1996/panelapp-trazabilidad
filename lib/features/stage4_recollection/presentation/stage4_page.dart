@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_form_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/stage4_ui_provider.dart';

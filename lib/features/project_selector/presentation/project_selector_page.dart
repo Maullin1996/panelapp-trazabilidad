@@ -7,10 +7,9 @@ import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
 import 'package:registro_panela/features/auth/providers/auth_provider.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
-
 import 'package:registro_panela/features/project_selector/helpers/generate_and_share_pdf.dart';
 
 class ProjectSelectorPage extends ConsumerStatefulWidget {
@@ -22,7 +21,7 @@ class ProjectSelectorPage extends ConsumerStatefulWidget {
 }
 
 class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
-  Set<int> isSelected = {};
+  Set<String> isSelected = {};
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +31,17 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
           context.go(Routes.login);
         } else if (next.errorMessage?.isNotEmpty == true) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('No se pudo cerrar el usuario')),
+            const SnackBar(content: Text('No se pudo cerrar el usuario')),
           );
         }
       }
     });
 
     final projects = ref.watch(syncStage1ProjectsProvider);
-    final sorted = [...projects]..sort((a, b) => b.date.compareTo(a.date));
     final error = ref.watch(stage1ProjectsErrorProvider);
     final user = ref.watch(authProvider).user;
     final textTheme = TextTheme.of(context);
+    final body = _buildBody(projects, error, textTheme);
 
     return Scaffold(
       appBar: AppBar(
@@ -57,18 +56,12 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   context.pushNamed('adminResetPassword');
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
-                  return;
                 case 'print':
-                  final selectedProject = sorted[isSelected.first];
+                  final selectedProject = projects.firstWhere(
+                    (p) => p.id == isSelected.first,
+                  );
                   await generateAndSharePdf(selectedProject);
-                  setState(() {
-                    isSelected.clear();
-                  });
-                  return;
-              }
-
-              if (value == 'logout') {
-                ref.read(authProvider.notifier).logout();
+                  setState(() => isSelected.clear());
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -83,7 +76,6 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                     ),
                   ),
                 ),
-
               if (isSelected.isNotEmpty)
                 const PopupMenuItem<String>(
                   value: 'print',
@@ -117,7 +109,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             width: double.infinity,
             height: 60,
             child: ElevatedButton.icon(
-              key: Key('project-selector-create-project-button'),
+              key: const Key('project-selector-create-project-button'),
               label: Text('Crear proyecto', style: textTheme.headlineLarge),
               icon: const Icon(
                 Icons.add_outlined,
@@ -125,7 +117,6 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                 size: 30,
               ),
               onPressed: () {
-                // Sólo admin y stage1 pueden crear
                 if (user != null &&
                     (user.role == UserRole.admin ||
                         user.role == UserRole.stage1)) {
@@ -145,137 +136,181 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
           ),
         ),
       ),
-      body: (error != null)
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  SizedBox(height: 16),
-                  const Text('Ocurrió un error al cargar los proyectos'),
-                  SizedBox(height: 8),
-                  Text(error, style: const TextStyle(color: Colors.grey)),
-                  SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () =>
-                        ref.read(stage1ProjectsProvider.notifier).refresh(),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Reintentar'),
+      body: body,
+    );
+  }
+
+  Widget _buildBody<T>(List<T> projects, String? error, TextTheme textTheme) {
+    if (error != null) {
+      return _buildErrorBody(error);
+    }
+
+    if (projects.isEmpty) {
+      return _buildEmptyState();
+    }
+
+    return _buildProjectList(projects, textTheme);
+  }
+
+  Widget _buildEmptyState() {
+    return const EmptyWidget();
+  }
+
+  Widget _buildErrorBody(String error) {
+    return ErrorWidgetCustom(error: error);
+  }
+
+  Widget _buildProjectList<T>(List<T> projects, TextTheme textTheme) {
+    return ListView.builder(
+      padding: const EdgeInsets.only(
+        bottom: AppSpacing.small,
+        top: AppSpacing.smallLarge,
+      ),
+      itemCount: projects.length,
+      itemBuilder: (context, i) {
+        final p = projects[i] as dynamic;
+        final user = ref.read(authProvider).user;
+        return Dismissible(
+          key: Key('project-selector-dismissible-${p.id}'),
+          direction: user != null && user.role == UserRole.admin
+              ? DismissDirection.endToStart
+              : DismissDirection.none,
+          confirmDismiss: (_) async {
+            return await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: AppColors.cardBackground,
+                    title: Text(
+                      '¿Eliminar proyecto?',
+                      style: textTheme.headlineLarge,
+                    ),
+                    content: Text(
+                      'Esta acción no se puede deshacer.',
+                      style: textTheme.bodyLarge,
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text('Cancelar', style: textTheme.bodyLarge),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text(
+                          'Eliminar',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
-          : (projects.isEmpty)
-          ? const Center(child: Text('No hay proyectos disponibles.'))
-          : ListView.builder(
-              padding: const EdgeInsets.only(
-                bottom: AppSpacing.large,
-                top: AppSpacing.smallLarge,
-              ),
-              itemCount: projects.length,
-              itemBuilder: (context, i) {
-                final p = sorted[i];
-                return CustomCard(
-                  key: Key('project-selector-custom-card-${p.id}'),
-                  isSelected: isSelected.contains(i)
-                      ? AppColors.selectedColor
-                      : AppColors.cardBackground,
-                  child: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                ) ??
+                false;
+          },
+          onDismissed: (_) async {
+            await ref.read(deleteStage1DataProvider)(p.id);
+          },
+          background: Container(
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: AppSpacing.smallLarge),
+            decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.delete, color: Colors.white, size: 30),
+          ),
+          child: CustomCard(
+            key: Key('project-selector-custom-card-${p.id}'),
+            isSelected: isSelected.contains(p.id)
+                ? AppColors.selectedColor
+                : AppColors.cardBackground,
+            child: ListTile(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(p.name, style: textTheme.headlineLarge),
+                      ),
+                      Text(
+                        DateFormat.yMd().format(p.date),
+                        style: textTheme.bodyLarge,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  const Divider(thickness: 2),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.storage,
+                        size: 20.0,
+                        color: AppColors.weight,
+                      ),
+                      const SizedBox(width: AppSpacing.xSmall),
+                      Text('Gaveras', style: textTheme.headlineMedium),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  ...List.generate(
+                    p.gaveras.length,
+                    (index) => Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                p.name,
-                                style: textTheme.headlineLarge,
-                              ),
-                            ),
-                            Text(
-                              DateFormat.yMd().format(p.date),
-                              style: textTheme.bodyLarge,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.xSmall),
-                        const Divider(thickness: 2),
-                        const SizedBox(height: AppSpacing.xSmall),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.storage,
-                              size: 20.0,
-                              color: AppColors.weight,
-                            ),
-                            const SizedBox(width: AppSpacing.xSmall),
-                            Text('Gaveras', style: textTheme.headlineMedium),
-                          ],
-                        ),
-                        const SizedBox(height: AppSpacing.xSmall),
-                        ...List.generate(
-                          p.gaveras.length,
-                          (index) => Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '• Cantidad: ${p.gaveras[index].quantity} - Peso ${p.gaveras[index].referenceWeight} g',
-                                  style: textTheme.bodyLarge,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
+                        Expanded(
+                          child: Text(
+                            '• Cantidad: ${p.gaveras[index].quantity} - Peso ${p.gaveras[index].referenceWeight} g',
+                            style: textTheme.bodyLarge,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          firstText: 'Canastillas: ',
-                          secondText: '${p.basketsQuantity}',
-                          icon: Icons.shopping_basket,
-                          iconColor: AppColors.register,
-                        ),
-
-                        const SizedBox(height: AppSpacing.xSmall),
-
-                        CustomRichText(
-                          firstText: 'Contacto: ',
-                          secondText: p.phone,
-                          icon: Icons.phone,
                         ),
                       ],
                     ),
-                    onTap: () {
-                      if (user?.role == UserRole.admin) {
-                        context.push(
-                          '${Routes.projects}${Routes.stages}/${p.id}',
-                        );
-                      } else {
-                        final route = _routeForRole(user!.role);
-                        context.push('$route/${p.id}');
-                      }
-                      setState(() {
-                        isSelected.clear();
-                      });
-                    },
-                    onLongPress: () {
-                      if (isSelected.contains(i)) {
-                        setState(() {
-                          isSelected.remove(i);
-                        });
-                      } else {
-                        setState(() {
-                          isSelected.add(i);
-                        });
-                      }
-                    },
                   ),
-                );
-              },
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    firstText: 'Canastillas: ',
+                    secondText: '${p.basketsQuantity}',
+                    icon: Icons.shopping_basket,
+                    iconColor: AppColors.register,
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    firstText: 'Contacto: ',
+                    secondText: p.phone,
+                    icon: Icons.phone,
+                  ),
+                ],
+              ),
+              onTap: () => _onProjectTap(p),
+              onLongPress: () => _onProjectLongPress(p.id),
             ),
+          ),
+        );
+      },
     );
+  }
+
+  void _onProjectTap(p) {
+    final user = ref.read(authProvider).user;
+    if (user?.role == UserRole.admin) {
+      context.push('${Routes.projects}${Routes.stages}/${p.id}');
+    } else {
+      context.push('${_routeForRole(user!.role)}/${p.id}');
+    }
+    setState(() => isSelected.clear());
+  }
+
+  void _onProjectLongPress(String id) {
+    setState(() {
+      if (isSelected.contains(id)) {
+        isSelected.remove(id);
+      } else {
+        isSelected.add(id);
+      }
+    });
   }
 
   String _routeForRole(UserRole role) {
@@ -293,22 +328,5 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
       default:
         return Routes.projects;
     }
-  }
-}
-
-String byStage(int n) {
-  switch (n) {
-    case 1:
-      return Routes.stage1;
-    case 2:
-      return Routes.stage2;
-    case 3:
-      return Routes.stage3;
-    case 4:
-      return Routes.stage4;
-    case 5:
-      return Routes.stage5;
-    default:
-      return Routes.projects;
   }
 }

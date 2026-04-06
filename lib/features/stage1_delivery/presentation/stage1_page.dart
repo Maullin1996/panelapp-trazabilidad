@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/stage1_load_form.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/index.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 
 class Stage1Page extends ConsumerWidget {
@@ -37,6 +37,9 @@ class Stage1Page extends ConsumerWidget {
     final project = isNew
         ? null
         : ref.watch(stage1ProjectByIdProvider(projectId));
+    if (!isNew && project == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(

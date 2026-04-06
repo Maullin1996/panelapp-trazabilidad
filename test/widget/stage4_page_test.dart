@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/presentation/stage4_page.dart';
 import 'package:registro_panela/features/stage4_recollection/providers/sync_stage4_data_provider.dart';
@@ -54,7 +54,13 @@ void main() {
     await tester.tap(find.text('Registrar entrega'));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('stage4-page-form-950.0-input')), findsOneWidget);
-    expect(find.byKey(const Key('stage4-page-form-returnBaskets-input')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage4-page-form-950.0-input')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage4-page-form-returnBaskets-input')),
+      findsOneWidget,
+    );
   });
 }
