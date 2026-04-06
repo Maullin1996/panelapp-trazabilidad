@@ -30,4 +30,11 @@ class Stage2RepositoryImpl implements Stage2Repository {
     final model = Stage2LoadModel.fromEntity(data);
     return datasource.update(model);
   }
+
+  @override
+  Stream<List<Stage2LoadData>> watch() {
+    return datasource.watchAll().map(
+      (models) => models.map((m) => m.toEntity()).toList(),
+    );
+  }
 }
