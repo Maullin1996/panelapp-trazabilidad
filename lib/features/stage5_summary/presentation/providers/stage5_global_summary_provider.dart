@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage5_summary/domain/stage5_summary_item.dart';
-import 'package:registro_panela/features/stage5_summary/providers/stage5_summary_provider.dart';
+import 'package:registro_panela/features/stage5_summary/presentation/providers/stage5_summary_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage5_global_summary_provider.g.dart';

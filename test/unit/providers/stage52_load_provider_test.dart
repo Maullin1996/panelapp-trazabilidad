@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/repositories/stage52_repository.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/usecases/get_stage52_data.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_load_provider.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_usecases_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_load_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
 
 class _FakeStage52Repository implements Stage52Repository {
   _FakeStage52Repository(this._data);

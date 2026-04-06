@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:registro_panela/features/stage5_summary/providers/stage5_global_summary_provider.dart';
-import 'package:registro_panela/features/stage5_summary/providers/stage5_summary_provider.dart';
+import 'package:registro_panela/features/stage5_summary/presentation/providers/stage5_global_summary_provider.dart';
+import 'package:registro_panela/features/stage5_summary/presentation/providers/stage5_summary_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 

@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/widgets/stage52_form.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_form_status.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_form_status.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/shared/utils/spacing.dart';
 
 class Stage52FormPage extends ConsumerWidget {

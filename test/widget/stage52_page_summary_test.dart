@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/stage52_page_summary.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
 
 Finder _richTextContaining(String text) {
   return find.byWidgetPredicate((widget) {
@@ -11,7 +11,9 @@ Finder _richTextContaining(String text) {
     final span = widget.text;
     if (span is! TextSpan) return false;
     final children = span.children ?? const <InlineSpan>[];
-    return children.whereType<TextSpan>().any((c) => c.text?.contains(text) ?? false);
+    return children.whereType<TextSpan>().any(
+      (c) => c.text?.contains(text) ?? false,
+    );
   });
 }
 

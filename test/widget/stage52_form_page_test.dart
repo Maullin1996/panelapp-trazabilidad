@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/stage52_form_page.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
 
 Stage1FormData _project() {
   return Stage1FormData(

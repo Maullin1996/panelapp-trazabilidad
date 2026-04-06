@@ -7,8 +7,8 @@ import 'package:registro_panela/features/stage5_2_records/domain/entities/stage5
 import 'package:registro_panela/features/stage5_2_records/domain/repositories/stage52_repository.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/usecases/create_stage52_data.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/usecases/update_stage52_data.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_form_status.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_usecases_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_form_status.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
 
 class _FakeStorageRepository implements StorageRepository {
   String? lastPath;

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/widgets/form_total_to_pay.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/providers/sync_stage51_payments_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
 
 Finder _richTextContaining(String text) {
   return find.byWidgetPredicate((widget) {
@@ -11,7 +11,9 @@ Finder _richTextContaining(String text) {
     final span = widget.text;
     if (span is! TextSpan) return false;
     final children = span.children ?? const <InlineSpan>[];
-    return children.whereType<TextSpan>().any((c) => c.text?.contains(text) ?? false);
+    return children.whereType<TextSpan>().any(
+      (c) => c.text?.contains(text) ?? false,
+    );
   });
 }
 
@@ -22,9 +24,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          syncStage51PaymentsProvider.overrideWith(
-            (ref) => <PaymentData>[],
-          ),
+          syncStage51PaymentsProvider.overrideWith((ref) => <PaymentData>[]),
         ],
         child: MaterialApp(
           home: Scaffold(

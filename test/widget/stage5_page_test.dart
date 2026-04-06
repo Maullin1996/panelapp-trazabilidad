@@ -9,10 +9,10 @@ import 'package:registro_panela/features/stage2_load/presentation/providers/sync
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
-import 'package:registro_panela/features/stage4_recollection/providers/sync_stage4_data_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/presentation/providers/sync_stage4_data_provider.dart';
 import 'package:registro_panela/features/stage5/presentation/stage5_page.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/providers/sync_stage51_payments_provider.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 
 Stage1FormData _project() {
   return Stage1FormData(

@@ -3,13 +3,13 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/providers/sync_stage51_payments_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/providers/stage5_price_form_state_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage5_price_form_state_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 

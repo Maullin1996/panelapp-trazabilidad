@@ -3,13 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/repositories/stage4_repository.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/usecases/get_stage4_loads.dart';
-import 'package:registro_panela/features/stage4_recollection/providers/stage4_load_provider.dart';
-import 'package:registro_panela/features/stage4_recollection/providers/stage4_usecases_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/presentation/providers/stage4_load_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/presentation/providers/stage4_usecases_provider.dart';
 
 class _FakeStage4Repository implements Stage4Repository {
   _FakeStage4Repository(this._data);
 
-  List<Stage4FormData> _data;
+  final List<Stage4FormData> _data;
 
   @override
   Future<List<Stage4FormData>> getAll() async => _data;
@@ -26,9 +26,7 @@ Stage4FormData _stage4(String id, String projectId) {
     id: id,
     projectId: projectId,
     date: DateTime(2024, 1, 1),
-    returnedGaveras: const [
-      ReturnedGaveras(quantity: 1, referenceWeight: 10),
-    ],
+    returnedGaveras: const [ReturnedGaveras(quantity: 1, referenceWeight: 10)],
     returnedBaskets: 3,
     returnedPreservativesJars: 1,
     returnedLimeJars: 2,

@@ -1,5 +1,5 @@
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:registro_panela/features/stage5_2_records/providers/stage52_usecases_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage52_load_provider.g.dart';
