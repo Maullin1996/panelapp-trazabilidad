@@ -1,12 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'inputs_math_provider.g.dart';
 
 class LoadSummary {
+  final int totalBaskets; // ✅ agregado, lo tenía SummaryCalculus
   final double totalRefkg;
   final int regCount;
   final double regWeight;
@@ -14,6 +15,7 @@ class LoadSummary {
   final double missingWeight;
 
   LoadSummary({
+    required this.totalBaskets,
     required this.totalRefkg,
     required this.regCount,
     required this.regWeight,
@@ -28,6 +30,7 @@ LoadSummary loadSummary(Ref ref, String load2Id) {
 
   if (load2 == null) {
     return LoadSummary(
+      totalBaskets: 0,
       totalRefkg: 0,
       regCount: 0,
       regWeight: 0,
@@ -52,6 +55,7 @@ LoadSummary loadSummary(Ref ref, String load2Id) {
   final missingWeight = (totalRefkg - regWeight).clamp(0, double.infinity);
 
   return LoadSummary(
+    totalBaskets: totalBaskets,
     totalRefkg: totalRefkg,
     regCount: regCount,
     regWeight: regWeight,

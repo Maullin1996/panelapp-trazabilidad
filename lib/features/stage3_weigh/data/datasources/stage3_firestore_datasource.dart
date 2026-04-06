@@ -12,11 +12,17 @@ class Stage3FirestoreDatasource {
   }
 
   Future<void> update(Stage3Model model) async {
-    await _firestore.collection('stage3').doc(model.id).set(model.toJson());
+    await _firestore
+        .collection('stage3')
+        .doc(model.id)
+        .set(model.toJson(), SetOptions(merge: true));
   }
 
   Future<List<Stage3Model>> getAll() async {
-    final querySnapshot = await _firestore.collection('stage3').get();
+    final querySnapshot = await _firestore
+        .collection('stage3')
+        .orderBy('date', descending: true)
+        .get();
     return querySnapshot.docs
         .map((doc) => Stage3Model.fromJson(doc.data()))
         .toList();
@@ -24,5 +30,17 @@ class Stage3FirestoreDatasource {
 
   Future<void> delete(String id) async {
     await _firestore.collection('stage3').doc(id).delete();
+  }
+
+  Stream<List<Stage3Model>> watchAll() {
+    return _firestore
+        .collection('stage3')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Stage3Model.fromJson(doc.data()))
+              .toList(),
+        );
   }
 }

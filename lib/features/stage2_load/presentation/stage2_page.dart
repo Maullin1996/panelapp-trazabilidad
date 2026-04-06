@@ -164,8 +164,10 @@ class Stage2Page extends ConsumerWidget {
                       await ref.read(deleteStage2DataProvider).call(load.id);
                     },
                     background: Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.smallLarge,
+                      margin: const EdgeInsets.only(
+                        left: AppSpacing.smallLarge,
+                        right: AppSpacing.smallLarge,
+                        bottom: AppSpacing.small,
                       ),
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(

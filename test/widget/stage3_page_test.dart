@@ -8,7 +8,7 @@ import 'package:registro_panela/features/stage2_load/presentation/providers/sync
 import 'package:registro_panela/features/stage2_load/presentation/providers/stage2_loads_by_id_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/stage3_page.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
 
 Stage1FormData _project() {
   return Stage1FormData(

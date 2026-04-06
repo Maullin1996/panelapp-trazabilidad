@@ -18,7 +18,7 @@ class Stage1FirestoreDatasource {
   Future<List<Stage1FormModel>> getAll() async {
     final querySnapshot = await _firestore
         .collection('stage1')
-        .orderBy('date', descending: true) // 👈 Firestore ordena
+        .orderBy('date', descending: true)
         .get();
     return querySnapshot.docs
         .map((doc) => Stage1FormModel.fromJson(doc.data()))

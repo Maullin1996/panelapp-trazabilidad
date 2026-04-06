@@ -10,10 +10,9 @@ import 'package:registro_panela/features/stage1_delivery/presentation/providers/
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/sync_stage2_loads_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
-import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/widgets.dart';
 
 class Stage3Page extends ConsumerWidget {
   final String projectId;
@@ -22,12 +21,10 @@ class Stage3Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final project = ref.watch(stage1ProjectByIdProvider(projectId));
-    final loads2 =
-        ref
-            .watch(syncStage2ProjectsProvider)
-            .where((l) => l.projectId == projectId)
-            .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
+    final loads2 = ref
+        .watch(syncStage2ProjectsProvider)
+        .where((l) => l.projectId == projectId)
+        .toList();
 
     if (project == null) {
       return const Scaffold(
@@ -43,12 +40,7 @@ class Stage3Page extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: loads2.isEmpty
-          ? Center(
-              child: Text(
-                'Todavía no se han realizado cargues',
-                style: textTheme.bodyLarge,
-              ),
-            )
+          ? EmptyWidget()
           : ListView.separated(
               padding: const EdgeInsets.only(
                 bottom: AppSpacing.medium,
@@ -201,7 +193,7 @@ class Stage3Page extends ConsumerWidget {
           if (entry != null)
             GestureDetector(
               onTap: () {
-                context.pop(dcontext);
+                Navigator.of(dcontext).pop();
                 context.push('${Routes.stage3}/$projectId/${load2.id}/summary');
               },
               child: CustomCard(
@@ -228,7 +220,7 @@ class Stage3Page extends ConsumerWidget {
             ),
           GestureDetector(
             onTap: () {
-              context.pop(dcontext);
+              Navigator.of(dcontext).pop();
               context.push('${Routes.stage3}/$projectId/${load2.id}/form');
             },
             child: CustomCard(

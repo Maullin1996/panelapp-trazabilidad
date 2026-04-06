@@ -15,7 +15,6 @@ class Stage3Model {
     required this.baskets,
   });
 
-  /// Construye el Model a partir de tu entidad de dominio
   factory Stage3Model.fromEntity(Stage3FormData data) {
     return Stage3Model(
       id: data.id,
@@ -37,7 +36,6 @@ class Stage3Model {
     );
   }
 
-  /// Convierte el Model de vuelta a tu entidad de dominio
   Stage3FormData toEntity() {
     return Stage3FormData(
       id: id,
@@ -46,18 +44,17 @@ class Stage3Model {
       date: date,
       baskets: baskets.map((m) {
         return BasketWeighData.fromJson({
-          'id': m['id'] as String,
-          'sequence': m['sequence'] as int,
-          'referenceWeight': (m['referenceWeight'] as num).toDouble(),
-          'realWeight': (m['realWeight'] as num).toDouble(),
-          'quality': m['quality'] as String,
-          'photoPath': m['photoPath'] as String,
+          'id': (m['id'] as String?) ?? '',
+          'sequence': (m['sequence'] as int?) ?? 0,
+          'referenceWeight': (m['referenceWeight'] as num?)?.toDouble() ?? 0.0,
+          'realWeight': (m['realWeight'] as num?)?.toDouble() ?? 0.0,
+          'quality': (m['quality'] as String?) ?? 'regular',
+          'photoPath': (m['photoPath'] as String?) ?? '',
         });
       }).toList(),
     );
   }
 
-  /// Serialización a JSON (por ejemplo, para Firestore)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -68,14 +65,17 @@ class Stage3Model {
     };
   }
 
-  /// Deserialización desde JSON
   factory Stage3Model.fromJson(Map<String, dynamic> json) {
     return Stage3Model(
-      id: json['id'] as String,
-      projectId: json['projectId'] as String,
-      stage2LoadId: json['stage2LoadId'] as String,
-      date: DateTime.parse(json['date'] as String),
-      baskets: List<Map<String, dynamic>>.from(json['baskets'] as List),
+      id: (json['id'] as String?) ?? '',
+      projectId: (json['projectId'] as String?) ?? '',
+      stage2LoadId: (json['stage2LoadId'] as String?) ?? '',
+      date: json['date'] != null
+          ? DateTime.parse(json['date'] as String)
+          : DateTime.now(),
+      baskets: json['baskets'] != null
+          ? List<Map<String, dynamic>>.from(json['baskets'] as List)
+          : [],
     );
   }
 }

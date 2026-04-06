@@ -1,3 +1,5 @@
+export 'package:registro_panela/features/stage3_weigh/domain/usecase/watch_stage3_weighs.dart';
+
 export 'package:registro_panela/features/stage3_weigh/domain/usecase/create_stage3_data.dart';
 export 'package:registro_panela/features/stage3_weigh/domain/usecase/delete_stage3_data.dart';
 export 'package:registro_panela/features/stage3_weigh/domain/usecase/get_stage3_data.dart';

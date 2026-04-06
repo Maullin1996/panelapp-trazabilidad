@@ -6,13 +6,13 @@ part of 'stage3_load_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage3LoadHash() => r'e3973e6662c7549d08c0d19192394f7cef6f8dd6';
+String _$stage3LoadHash() => r'b7f9a622fc720725022f46564088159de7007976';
 
-/// See also [Stage3Load].
-@ProviderFor(Stage3Load)
+/// See also [stage3Load].
+@ProviderFor(stage3Load)
 final stage3LoadProvider =
-    AutoDisposeAsyncNotifierProvider<Stage3Load, List<Stage3FormData>>.internal(
-      Stage3Load.new,
+    AutoDisposeStreamProvider<List<Stage3FormData>>.internal(
+      stage3Load,
       name: r'stage3LoadProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
@@ -21,6 +21,8 @@ final stage3LoadProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$Stage3Load = AutoDisposeAsyncNotifier<List<Stage3FormData>>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef Stage3LoadRef = AutoDisposeStreamProviderRef<List<Stage3FormData>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -6,12 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
-import 'package:registro_panela/features/stage3_weigh/presentation/helpers/summary_calculus.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
-import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
-import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
+import 'package:registro_panela/shared/widgets/widgets.dart';
 
 class Stage3PageSummary extends ConsumerWidget {
   final String projectId;
@@ -35,7 +32,7 @@ class Stage3PageSummary extends ConsumerWidget {
       return const Scaffold(body: Center(child: Text('Resumen no disponible')));
     }
 
-    final summaryCalculus = stage3PageSummaryCalculus(load2, entry3);
+    final summaryCalculus = ref.watch(loadSummaryProvider(load2Id));
 
     final textTheme = TextTheme.of(context);
 
@@ -75,7 +72,7 @@ class Stage3PageSummary extends ConsumerWidget {
                         iconColor: AppColors.register,
                         firstText: 'Peso esperado: ',
                         secondText:
-                            '${summaryCalculus.totalRefKg.toStringAsFixed(2)} kg',
+                            '${summaryCalculus.totalRefkg.toStringAsFixed(2)} kg',
                       ),
                     ],
                   ),
@@ -187,7 +184,7 @@ class Stage3PageSummary extends ConsumerWidget {
                         iconColor: AppColors.alert,
                         firstText: 'Peso faltante: ',
                         secondText:
-                            '${(clampZero(load2.baskets.realWeight - b.realWeight)).toStringAsFixed(2)} kg',
+                            '${(load2.baskets.realWeight - b.realWeight).clamp(0, double.infinity).toStringAsFixed(2)} kg',
                       ),
 
                       const SizedBox(height: AppSpacing.xSmall),

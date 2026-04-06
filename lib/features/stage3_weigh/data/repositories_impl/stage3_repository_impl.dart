@@ -30,4 +30,11 @@ class Stage3RepositoryImpl implements Stage3Repository {
     final model = Stage3Model.fromEntity(data);
     return datasource.update(model);
   }
+
+  @override
+  Stream<List<Stage3FormData>> watch() {
+    return datasource.watchAll().map(
+      (models) => models.map((m) => m.toEntity()).toList(),
+    );
+  }
 }

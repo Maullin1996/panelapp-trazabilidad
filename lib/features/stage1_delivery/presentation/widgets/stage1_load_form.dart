@@ -10,8 +10,6 @@ import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_form_provider.dart';
-import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
-import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 import 'package:uuid/uuid.dart';
 
@@ -36,7 +34,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     _formKey = GlobalKey<FormBuilderState>();
     _gaveras = widget.initialData?.gaveras.asMap().keys.toList() ?? [0];
     _photoPath = widget.initialData?.photoPath;
-    _uuid = const Uuid(); // 👈
+    _uuid = const Uuid();
   }
 
   void _addGavera() {

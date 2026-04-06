@@ -226,6 +226,11 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             await ref.read(deleteStage1DataProvider)(p.id);
           },
           background: Container(
+            margin: const EdgeInsets.only(
+              left: AppSpacing.smallLarge,
+              right: AppSpacing.smallLarge,
+              bottom: AppSpacing.small,
+            ),
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.only(right: AppSpacing.smallLarge),
             decoration: BoxDecoration(

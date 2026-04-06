@@ -8,13 +8,10 @@ import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/helpers/comma_to_dot_formatter.dart';
-import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/stage3_form_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
-import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
-import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
-import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
+import 'package:registro_panela/shared/widgets/widgets.dart';
+
 import 'package:uuid/uuid.dart';
 
 class Stage3LoadForm extends ConsumerStatefulWidget {
@@ -40,15 +37,14 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
   late List<int> _indices;
   late double _refWeightPerBasket;
   late int _totalBaskets;
+  late final Uuid _uuid;
   late Map<int, String> _photoPaths;
 
   @override
   void didUpdateWidget(covariant Stage3LoadForm old) {
     super.didUpdateWidget(old);
     if (old.initialData != widget.initialData) {
-      // Reconstruir initMap y _photoPaths aquí
       _initFormFields();
-      // Y forzar al FormBuilder a resetearse:
       _formKey.currentState?.reset();
     }
   }
@@ -74,6 +70,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
   void initState() {
     super.initState();
     _initFormFields();
+    _uuid = const Uuid();
   }
 
   @override
@@ -81,7 +78,6 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
     final textTheme = TextTheme.of(context);
     final formState = ref.watch(stage3FormProvider);
     final formNotifier = ref.read(stage3FormProvider.notifier);
-    final uuid = const Uuid();
     final initMap = <String, dynamic>{};
     if (widget.initialData != null) {
       for (final b in widget.initialData!.baskets) {
@@ -217,8 +213,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         final baskets = <BasketWeighData>[];
 
                         for (final i in _indices) {
-                          final raw =
-                              values['realWeight_$i']; // puede ser num o String
+                          final raw = values['realWeight_$i'];
                           final qualStr = values['quality_$i'] as String?;
 
                           double? realWeight;
@@ -233,11 +228,12 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                           final hasWeight = realWeight != null;
                           final hasQuality = (qualStr?.isNotEmpty == true);
 
+                          final prev = existingMap[i];
+
                           if (hasWeight && hasQuality) {
-                            final prev = existingMap[i];
                             baskets.add(
                               BasketWeighData(
-                                id: prev?.id ?? uuid.v4(),
+                                id: prev?.id ?? _uuid.v4(),
                                 sequence: i,
                                 referenceWeight: _refWeightPerBasket,
                                 realWeight: realWeight,
@@ -247,21 +243,38 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                                 photoPath: _photoPaths[i] ?? '',
                               ),
                             );
+                          } else if (prev != null) {
+                            baskets.add(prev);
                           }
                         }
 
                         final formData = Stage3FormData(
-                          id: widget.initialData?.id ?? uuid.v4(),
+                          id: widget.initialData?.id ?? _uuid.v4(),
                           projectId: widget.project.id,
                           stage2LoadId: widget.load2.id,
-                          date: widget.initialData?.date ?? DateTime.now()
-                            ..toIso8601String(),
+                          date: widget.initialData?.date ?? DateTime.now(),
                           baskets: baskets,
                         );
                         formNotifier.submit(formData, isNew: widget.isNew);
                       },
                 child: formState.status == Stage3FormStatus.submitting
-                    ? const CircularProgressIndicator()
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          LinearProgressIndicator(
+                            value: formState.uploadProgress,
+                            backgroundColor: AppColors.textDark.withAlpha(50),
+                            color: AppColors.textDark,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            formState.totalPhotos == 0
+                                ? 'Guardando...'
+                                : 'Fotos: ${formState.uploadedPhotos}/${formState.totalPhotos}',
+                            style: textTheme.bodySmall,
+                          ),
+                        ],
+                      )
                     : Text(
                         widget.isNew ? 'Register' : 'Actualizar',
                         style: textTheme.headlineLarge,

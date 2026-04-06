@@ -5,4 +5,5 @@ abstract class Stage3Repository {
   Future<void> update(Stage3FormData data);
   Future<List<Stage3FormData>> getAll();
   Future<void> delete(String id);
+  Stream<List<Stage3FormData>> watch();
 }
