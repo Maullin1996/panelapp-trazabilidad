@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage2_load/providers/providers.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/widget/stage3_load_form.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/stage3_form_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';

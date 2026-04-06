@@ -5,8 +5,8 @@ import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/presentation/stage2_page.dart';
-import 'package:registro_panela/features/stage2_load/providers/sync_stage2_loads_provider.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_loads_error_provider.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/sync_stage2_loads_provider.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/stage2_loads_error_provider.dart';
 
 Stage1FormData _project() {
   return Stage1FormData(

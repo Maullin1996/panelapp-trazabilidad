@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_loads_by_id_provider.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/stage2_loads_by_id_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/inputs_math_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';

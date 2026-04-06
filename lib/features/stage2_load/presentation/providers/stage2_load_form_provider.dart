@@ -1,5 +1,5 @@
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_usecases_provider.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/stage2_usecases_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage2_load_form_provider.g.dart';

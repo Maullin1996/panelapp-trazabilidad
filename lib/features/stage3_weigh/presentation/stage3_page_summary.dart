@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage2_load/providers/providers.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/helpers/summary_calculus.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';

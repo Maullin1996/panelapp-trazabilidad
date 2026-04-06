@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/features/stage2_load/providers/providers.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

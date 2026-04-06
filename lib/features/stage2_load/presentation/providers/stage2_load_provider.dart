@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:registro_panela/features/stage2_load/providers/providers.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'stage2_load_provider.g.dart';

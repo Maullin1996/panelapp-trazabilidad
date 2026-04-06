@@ -3,7 +3,7 @@ import 'package:registro_panela/features/stage2_load/data/datasources/stage2_fir
 import 'package:registro_panela/features/stage2_load/data/repositories_impl/stage2_repository_impl.dart';
 import 'package:registro_panela/features/stage2_load/domain/repositories/stage2_repository.dart';
 
-import '../domain/usecases/index.dart';
+import '../../domain/usecases/index.dart';
 
 final stage2RepositoryProvider = Provider<Stage2Repository>((ref) {
   final datasource = Stage2FirestoreDatasource();

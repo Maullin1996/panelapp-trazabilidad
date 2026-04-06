@@ -6,7 +6,7 @@ import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:registro_panela/features/stage2_load/providers/stage2_load_form_provider.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/stage2_load_form_provider.dart';
 import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:uuid/uuid.dart';
 
@@ -27,6 +27,13 @@ class Stage2LoadForm extends ConsumerStatefulWidget {
 
 class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+  late final Uuid _uuid;
+
+  @override
+  void initState() {
+    super.initState();
+    _uuid = Uuid();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +49,6 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
     final formState = ref.watch(stage2FormProvider);
 
     final formNotifier = ref.read(stage2FormProvider.notifier);
-
-    final uuid = Uuid();
 
     final textTheme = TextTheme.of(context);
 
@@ -158,10 +163,9 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                           }
                           final values = _formKey.currentState!.value;
                           final data = Stage2LoadData(
-                            id: init?.id ?? uuid.v4(),
+                            id: init?.id ?? _uuid.v4(),
                             projectId: widget.project.id,
-                            date: init?.date ?? DateTime.now()
-                              ..toIso8601String(),
+                            date: init?.date ?? DateTime.now(),
                             baskets: BasketLoadData(
                               referenceWeight:
                                   values['referenceWeight'] as double,
