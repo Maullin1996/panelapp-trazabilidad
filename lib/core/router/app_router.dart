@@ -4,6 +4,8 @@ import 'package:registro_panela/core/router/index_core.dart';
 
 import 'package:registro_panela/features/index_features.dart';
 import 'package:registro_panela/features/project_selector/presentation/project_selector_page.dart';
+import 'package:registro_panela/features/pdf/presentation/pdf_screen.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = GoRouterNotifier(ref);
@@ -163,6 +165,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) {
           final String image = state.extra as String;
           return ImageViewer(image: image);
+        },
+      ),
+      GoRoute(
+        name: 'pdf-preview',
+        path: '/pdf-preview',
+        builder: (_, state) {
+          final project = state.extra as Stage1FormData;
+          return PdfScreen(project: project);
         },
       ),
       GoRoute(

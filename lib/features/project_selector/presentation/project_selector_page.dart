@@ -10,7 +10,7 @@ import 'package:registro_panela/features/auth/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
-import 'package:registro_panela/features/project_selector/helpers/generate_and_share_pdf.dart';
+import 'package:registro_panela/features/pdf/helpers/generate_and_share_pdf.dart';
 
 class ProjectSelectorPage extends ConsumerStatefulWidget {
   const ProjectSelectorPage({super.key});
@@ -56,6 +56,12 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   context.pushNamed('adminResetPassword');
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
+                case 'preview':
+                  final selectedProject = projects.firstWhere(
+                    (p) => p.id == isSelected.first,
+                  );
+                  context.pushNamed('pdf-preview', extra: selectedProject);
+                  setState(() => isSelected.clear());
                 case 'print':
                   final selectedProject = projects.firstWhere(
                     (p) => p.id == isSelected.first,
@@ -76,7 +82,17 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                     ),
                   ),
                 ),
-              if (isSelected.isNotEmpty)
+              if (isSelected.isNotEmpty) ...[
+                const PopupMenuItem<String>(
+                  value: 'preview',
+                  child: Text(
+                    'Vista previa PDF',
+                    style: TextStyle(
+                      fontFamily: AppTypography.familyRoboto,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
                 const PopupMenuItem<String>(
                   value: 'print',
                   child: Text(
@@ -87,6 +103,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                     ),
                   ),
                 ),
+              ],
               const PopupMenuItem<String>(
                 value: 'logout',
                 child: Text(
