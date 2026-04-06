@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
+import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
+import 'package:registro_panela/features/auth/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
 import 'package:registro_panela/features/stage2_load/providers/providers.dart';
@@ -10,6 +12,8 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
+import 'package:registro_panela/shared/widgets/error_widget_custom.dart';
 
 class Stage2Page extends ConsumerWidget {
   final String projectId;
@@ -39,12 +43,10 @@ class Stage2Page extends ConsumerWidget {
 
     final error = ref.watch(stage2LoadsErrorProvider);
 
-    final loads =
-        ref
-            .watch(syncStage2ProjectsProvider)
-            .where((l) => l.projectId == projectId)
-            .toList()
-          ..sort((a, b) => b.date.compareTo(a.date));
+    final loads = ref
+        .watch(syncStage2ProjectsProvider)
+        .where((l) => l.projectId == projectId)
+        .toList();
 
     if (project == null) {
       return const Scaffold(
@@ -61,27 +63,9 @@ class Stage2Page extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: loads.isEmpty
-          ? const Center(child: Text('Aún no hay cargues registrados'))
+          ? const EmptyWidget()
           : (error != null)
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
-                  const SizedBox(height: AppSpacing.small),
-                  Text('Ocurrió un error al cargar los proyectos'),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  Text(error, style: TextStyle(color: Colors.grey)),
-                  const SizedBox(height: AppSpacing.smallLarge),
-                  ElevatedButton.icon(
-                    onPressed: () =>
-                        ref.read(stage2LoadProvider.notifier).refresh(),
-                    icon: const Icon(Icons.refresh),
-                    label: const Text('Reintentar'),
-                  ),
-                ],
-              ),
-            )
+          ? ErrorWidgetCustom(error: error)
           : ListView.builder(
               padding: const EdgeInsets.only(
                 bottom: AppSpacing.medium,
@@ -90,6 +74,7 @@ class Stage2Page extends ConsumerWidget {
               itemCount: loads.length,
               itemBuilder: (BuildContext context, int index) {
                 final load = loads[index];
+                final user = ref.read(authProvider).user;
                 return GestureDetector(
                   onTap: () {
                     showDialog(
@@ -135,45 +120,107 @@ class Stage2Page extends ConsumerWidget {
                       ),
                     );
                   },
-                  child: CustomCard(
-                    key: Key('stage2-page-load-custom-card-${load.id}'),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomRichText(
-                          icon: Icons.calendar_month,
-                          firstText: 'Fecha: ',
-                          secondText: DateFormat.yMd().format(load.date),
-                        ),
-
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          icon: Icons.shopping_basket,
-                          iconColor: AppColors.register,
-                          firstText: 'Canastillas: ',
-                          secondText: load.baskets.count.toString(),
-                        ),
-
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          key: Key(
-                            'stage2_page_${load.baskets.realWeight.toStringAsFixed(1)}-weight',
+                  child: Dismissible(
+                    key: Key('stage2-page-load-dismissible-${load.id}'),
+                    direction: user != null && user.role == UserRole.admin
+                        ? DismissDirection.endToStart
+                        : DismissDirection.none,
+                    confirmDismiss: (_) async {
+                      return await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: AppColors.cardBackground,
+                              title: Text(
+                                '¿Eliminar proyecto?',
+                                style: textTheme.headlineLarge,
+                              ),
+                              content: Text(
+                                'Esta acción no se puede deshacer.',
+                                style: textTheme.bodyLarge,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text(
+                                    'Cancelar',
+                                    style: textTheme.bodyLarge,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: const Text(
+                                    'Eliminar',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ) ??
+                          false;
+                    },
+                    onDismissed: (_) async {
+                      await ref.read(deleteStage2DataProvider).call(load.id);
+                    },
+                    background: Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.smallLarge,
+                      ),
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.only(
+                        right: AppSpacing.smallLarge,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                    child: CustomCard(
+                      key: Key('stage2-page-load-custom-card-${load.id}'),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomRichText(
+                            icon: Icons.calendar_month,
+                            firstText: 'Fecha: ',
+                            secondText: DateFormat.yMd().format(load.date),
                           ),
-                          icon: Icons.scale,
-                          iconColor: AppColors.weight,
-                          firstText: 'Peso: ',
-                          secondText:
-                              '${load.baskets.realWeight.toStringAsFixed(1)} kg',
-                        ),
 
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          icon: Icons.storage_outlined,
-                          iconColor: AppColors.weight,
-                          firstText: 'Gavera: ',
-                          secondText: '${load.baskets.referenceWeight} g',
-                        ),
-                      ],
+                          const SizedBox(height: AppSpacing.xSmall),
+                          CustomRichText(
+                            icon: Icons.shopping_basket,
+                            iconColor: AppColors.register,
+                            firstText: 'Canastillas: ',
+                            secondText: load.baskets.count.toString(),
+                          ),
+
+                          const SizedBox(height: AppSpacing.xSmall),
+                          CustomRichText(
+                            key: Key(
+                              'stage2_page_${load.baskets.realWeight.toStringAsFixed(1)}-weight',
+                            ),
+                            icon: Icons.scale,
+                            iconColor: AppColors.weight,
+                            firstText: 'Peso: ',
+                            secondText:
+                                '${load.baskets.realWeight.toStringAsFixed(1)} kg',
+                          ),
+
+                          const SizedBox(height: AppSpacing.xSmall),
+                          CustomRichText(
+                            icon: Icons.storage_outlined,
+                            iconColor: AppColors.weight,
+                            firstText: 'Gavera: ',
+                            secondText: '${load.baskets.referenceWeight} g',
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
