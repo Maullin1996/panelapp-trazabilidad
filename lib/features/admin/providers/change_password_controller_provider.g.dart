@@ -6,45 +6,108 @@ part of 'change_password_controller_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$changePasswordUseCaseHash() =>
-    r'ad239a0aa14132ce4190ce253741c2dca217528c';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [changePasswordUseCase].
-@ProviderFor(changePasswordUseCase)
-final changePasswordUseCaseProvider =
-    AutoDisposeProvider<AdminChangeUserPasswordUseCase>.internal(
-      changePasswordUseCase,
-      name: r'changePasswordUseCaseProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$changePasswordUseCaseHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
+@ProviderFor(ChangePasswordController)
+final changePasswordControllerProvider = ChangePasswordControllerProvider._();
+
+final class ChangePasswordControllerProvider
+    extends $NotifierProvider<ChangePasswordController, AsyncValue<void>> {
+  ChangePasswordControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'changePasswordControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$changePasswordControllerHash();
+
+  @$internal
+  @override
+  ChangePasswordController create() => ChangePasswordController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AsyncValue<void> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AsyncValue<void>>(value),
     );
+  }
+}
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ChangePasswordUseCaseRef =
-    AutoDisposeProviderRef<AdminChangeUserPasswordUseCase>;
 String _$changePasswordControllerHash() =>
     r'34bf25adf7a5d6ade31d0d19cd88435812df7da5';
 
-/// See also [ChangePasswordController].
-@ProviderFor(ChangePasswordController)
-final changePasswordControllerProvider =
-    AutoDisposeNotifierProvider<
-      ChangePasswordController,
-      AsyncValue<void>
-    >.internal(
-      ChangePasswordController.new,
-      name: r'changePasswordControllerProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$changePasswordControllerHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+abstract class _$ChangePasswordController extends $Notifier<AsyncValue<void>> {
+  AsyncValue<void> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<void>, AsyncValue<void>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, AsyncValue<void>>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
 
-typedef _$ChangePasswordController = AutoDisposeNotifier<AsyncValue<void>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+@ProviderFor(changePasswordUseCase)
+final changePasswordUseCaseProvider = ChangePasswordUseCaseProvider._();
+
+final class ChangePasswordUseCaseProvider
+    extends
+        $FunctionalProvider<
+          AdminChangeUserPasswordUseCase,
+          AdminChangeUserPasswordUseCase,
+          AdminChangeUserPasswordUseCase
+        >
+    with $Provider<AdminChangeUserPasswordUseCase> {
+  ChangePasswordUseCaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'changePasswordUseCaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$changePasswordUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<AdminChangeUserPasswordUseCase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  AdminChangeUserPasswordUseCase create(Ref ref) {
+    return changePasswordUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AdminChangeUserPasswordUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AdminChangeUserPasswordUseCase>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$changePasswordUseCaseHash() =>
+    r'ad239a0aa14132ce4190ce253741c2dca217528c';

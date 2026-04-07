@@ -6,7 +6,6 @@ import 'package:registro_panela/features/admin/domain/entities/app_user.dart';
 import 'package:registro_panela/features/admin/providers/admin_provider.dart';
 import 'package:registro_panela/features/admin/providers/change_password_controller_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
 import '../../auth/providers/auth_provider.dart'; // tu provider de Auth

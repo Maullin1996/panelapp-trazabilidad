@@ -1,8 +1,8 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/stage4_recollection/data/datasources/stage4_firestore_datasource.dart';
 import 'package:registro_panela/features/stage4_recollection/data/repositories_impl/stage4_repository_impl.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/repositories/stage4_repository.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/usecases/index.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final stage4RepositoryProvider = Provider<Stage4Repository>((ref) {
   final datasource = Stage4FirestoreDatasource();

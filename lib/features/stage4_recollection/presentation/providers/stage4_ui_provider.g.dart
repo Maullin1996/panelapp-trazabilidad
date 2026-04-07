@@ -6,153 +6,102 @@ part of 'stage4_ui_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage4UiHash() => r'd4227e97c7861851492a6c742f34fedb63939996';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$Stage4Ui extends BuildlessAutoDisposeNotifier<Stage4UiState> {
-  late final String projectId;
-
-  Stage4UiState build(String projectId);
-}
-
-/// See also [Stage4Ui].
 @ProviderFor(Stage4Ui)
-const stage4UiProvider = Stage4UiFamily();
+final stage4UiProvider = Stage4UiFamily._();
 
-/// See also [Stage4Ui].
-class Stage4UiFamily extends Family<Stage4UiState> {
-  /// See also [Stage4Ui].
-  const Stage4UiFamily();
+final class Stage4UiProvider
+    extends $NotifierProvider<Stage4Ui, Stage4UiState> {
+  Stage4UiProvider._({
+    required Stage4UiFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'stage4UiProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [Stage4Ui].
-  Stage4UiProvider call(String projectId) {
-    return Stage4UiProvider(projectId);
+  @override
+  String debugGetCreateSourceHash() => _$stage4UiHash();
+
+  @override
+  String toString() {
+    return r'stage4UiProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Stage4UiProvider getProviderOverride(covariant Stage4UiProvider provider) {
-    return call(provider.projectId);
-  }
+  Stage4Ui create() => Stage4Ui();
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'stage4UiProvider';
-}
-
-/// See also [Stage4Ui].
-class Stage4UiProvider
-    extends AutoDisposeNotifierProviderImpl<Stage4Ui, Stage4UiState> {
-  /// See also [Stage4Ui].
-  Stage4UiProvider(String projectId)
-    : this._internal(
-        () => Stage4Ui()..projectId = projectId,
-        from: stage4UiProvider,
-        name: r'stage4UiProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$stage4UiHash,
-        dependencies: Stage4UiFamily._dependencies,
-        allTransitiveDependencies: Stage4UiFamily._allTransitiveDependencies,
-        projectId: projectId,
-      );
-
-  Stage4UiProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.projectId,
-  }) : super.internal();
-
-  final String projectId;
-
-  @override
-  Stage4UiState runNotifierBuild(covariant Stage4Ui notifier) {
-    return notifier.build(projectId);
-  }
-
-  @override
-  Override overrideWith(Stage4Ui Function() create) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Stage4UiState value) {
+    return $ProviderOverride(
       origin: this,
-      override: Stage4UiProvider._internal(
-        () => create()..projectId = projectId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        projectId: projectId,
-      ),
+      providerOverride: $SyncValueProvider<Stage4UiState>(value),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<Stage4Ui, Stage4UiState> createElement() {
-    return _Stage4UiProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is Stage4UiProvider && other.projectId == projectId;
+    return other is Stage4UiProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, projectId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin Stage4UiRef on AutoDisposeNotifierProviderRef<Stage4UiState> {
-  /// The parameter `projectId` of this provider.
-  String get projectId;
-}
+String _$stage4UiHash() => r'77fa42a55bbce52b5756563d50ffb98e92aafc29';
 
-class _Stage4UiProviderElement
-    extends AutoDisposeNotifierProviderElement<Stage4Ui, Stage4UiState>
-    with Stage4UiRef {
-  _Stage4UiProviderElement(super.provider);
+final class Stage4UiFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          Stage4Ui,
+          Stage4UiState,
+          Stage4UiState,
+          Stage4UiState,
+          String
+        > {
+  Stage4UiFamily._()
+    : super(
+        retry: null,
+        name: r'stage4UiProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  Stage4UiProvider call(String projectId) =>
+      Stage4UiProvider._(argument: projectId, from: this);
 
   @override
-  String get projectId => (origin as Stage4UiProvider).projectId;
+  String toString() => r'stage4UiProvider';
 }
 
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$Stage4Ui extends $Notifier<Stage4UiState> {
+  late final _$args = ref.$arg as String;
+  String get projectId => _$args;
+
+  Stage4UiState build(String projectId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<Stage4UiState, Stage4UiState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<Stage4UiState, Stage4UiState>,
+              Stage4UiState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}

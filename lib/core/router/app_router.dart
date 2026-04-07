@@ -178,7 +178,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'adminResetPassword',
         path: '/admin/reset-password',
-        builder: (_, __) => const AdminResetPasswordPage(),
+        builder: (_, _) => const AdminResetPasswordPage(),
       ),
     ],
   );

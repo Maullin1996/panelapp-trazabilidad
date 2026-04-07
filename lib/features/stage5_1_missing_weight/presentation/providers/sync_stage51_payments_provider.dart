@@ -3,7 +3,7 @@ import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage51_notifier_provider.dart';
 
 final syncStage51PaymentsProvider = Provider((ref) {
-  final asyncProjects = ref.watch(stage51NotifierProvider);
+  final asyncProjects = ref.watch(stage51Provider);
   return asyncProjects.maybeWhen(
     data: (data) => data,
     orElse: () => <PaymentData>[],

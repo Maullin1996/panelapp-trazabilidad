@@ -6,23 +6,46 @@ part of 'stage2_load_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage2LoadHash() => r'9f1ad6eaff9c6db76a506314bad7827f515839b5';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [stage2Load].
 @ProviderFor(stage2Load)
-final stage2LoadProvider =
-    AutoDisposeStreamProvider<List<Stage2LoadData>>.internal(
-      stage2Load,
-      name: r'stage2LoadProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$stage2LoadHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final stage2LoadProvider = Stage2LoadProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef Stage2LoadRef = AutoDisposeStreamProviderRef<List<Stage2LoadData>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class Stage2LoadProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Stage2LoadData>>,
+          List<Stage2LoadData>,
+          Stream<List<Stage2LoadData>>
+        >
+    with
+        $FutureModifier<List<Stage2LoadData>>,
+        $StreamProvider<List<Stage2LoadData>> {
+  Stage2LoadProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'stage2LoadProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$stage2LoadHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Stage2LoadData>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Stage2LoadData>> create(Ref ref) {
+    return stage2Load(ref);
+  }
+}
+
+String _$stage2LoadHash() => r'992fe0e59693eb7931f5c3c723754b5c39cef594';

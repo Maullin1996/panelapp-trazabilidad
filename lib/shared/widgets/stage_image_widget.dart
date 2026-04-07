@@ -38,8 +38,8 @@ class StageImageWidget extends StatelessWidget {
     if (imagePath.startsWith('http')) {
       return CachedNetworkImage(
         imageUrl: imagePath,
-        placeholder: (_, __) => placeholder,
-        errorWidget: (_, __, ___) => errorWidget,
+        placeholder: (_, _) => placeholder,
+        errorWidget: (_, _, _) => errorWidget,
         width: width,
         height: height,
         fit: fit,

@@ -32,7 +32,7 @@ class Stage4Ui extends _$Stage4Ui {
           );
         } else {
           aggregatedGaveras[i] = aggregatedGaveras[i].copyWith(
-            quantity: prev + add,
+            quantity: (prev + add).toInt(),
           );
         }
       }

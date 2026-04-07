@@ -4,8 +4,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_form_data.dart';
+import 'package:registro_panela/features/stage4_recollection/domin/entities/stage4_ui_state.dart';
 import 'package:registro_panela/features/stage4_recollection/presentation/providers/stage4_form_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/presentation/providers/stage4_ui_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -158,8 +160,8 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
 
   // ── Bottom bar ─────────────────────────────────────────────────────────────
   Widget _buildBottomBar({
-    required project,
-    required returns,
+    required Stage1FormData? project,
+    required Stage4UiState returns,
     required formNotifier,
     required bool isSubmitting,
   }) {
@@ -229,7 +231,11 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
   }
 
   // ── Lógica del botón ───────────────────────────────────────────────────────
-  void _onTapButton(project, returns, formNotifier) {
+  void _onTapButton(
+    Stage1FormData? project,
+    Stage4UiState returns,
+    formNotifier,
+  ) {
     HapticFeedback.lightImpact();
 
     if (!_activeForm) {
@@ -242,11 +248,11 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     final vals = _formKey.currentState!.value;
 
     final gaveras = <ReturnedGaveras>[];
-    for (int i = 0; i < project.gaveras.length; i++) {
+    for (int i = 0; i < (project?.gaveras.length ?? 0); i++) {
       gaveras.add(
         ReturnedGaveras(
           quantity: int.tryParse(vals['returnGavera_$i'] ?? '') ?? 0,
-          referenceWeight: project.gaveras[i].referenceWeight,
+          referenceWeight: project!.gaveras[i].referenceWeight,
         ),
       );
     }
@@ -270,7 +276,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     }
 
     final remainingPreservatives =
-        project.preservativesJars - returns.returnedPreservativesJars;
+        project!.preservativesJars - returns.returnedPreservativesJars;
     final remainingLime = project.limeJars - returns.returnedLimeJars;
     final gaverasExceed = gaveras.asMap().entries.any(
       (e) =>
@@ -678,7 +684,7 @@ class _CardHeader extends StatelessWidget {
               ),
             ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );
@@ -794,7 +800,7 @@ class _ProgressRow extends StatelessWidget {
               tween: Tween(begin: 0, end: progress.clamp(0.0, 1.0)),
               duration: const Duration(milliseconds: 800),
               curve: Curves.easeOutCubic,
-              builder: (_, value, __) => LinearProgressIndicator(
+              builder: (_, value, _) => LinearProgressIndicator(
                 value: value,
                 minHeight: 5,
                 backgroundColor: AppColors.primaryPanelaBrown.withAlpha(25),

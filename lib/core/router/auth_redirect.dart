@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meta/meta.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
@@ -12,14 +11,9 @@ String? authRedirect(Ref ref, GoRouterState state) {
   final auth = ref.read(authProvider);
   final path = state.uri.path;
 
-  return authRedirectForTesting(
-    auth: auth,
-    path: path,
-    routeName: state.name,
-  );
+  return authRedirectForTesting(auth: auth, path: path, routeName: state.name);
 }
 
-@visibleForTesting
 String? authRedirectForTesting({
   required AuthParams auth,
   required String path,

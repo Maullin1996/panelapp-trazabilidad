@@ -6,148 +6,89 @@ part of 'global_missing_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage3GlobalSummaryHash() =>
-    r'948ef8064198e03506607a0bf89958074e15e47a';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [stage3GlobalSummary].
 @ProviderFor(stage3GlobalSummary)
-const stage3GlobalSummaryProvider = Stage3GlobalSummaryFamily();
+final stage3GlobalSummaryProvider = Stage3GlobalSummaryFamily._();
 
-/// See also [stage3GlobalSummary].
-class Stage3GlobalSummaryFamily extends Family<Stage3GlobalSummary> {
-  /// See also [stage3GlobalSummary].
-  const Stage3GlobalSummaryFamily();
+final class Stage3GlobalSummaryProvider
+    extends
+        $FunctionalProvider<
+          Stage3GlobalSummary,
+          Stage3GlobalSummary,
+          Stage3GlobalSummary
+        >
+    with $Provider<Stage3GlobalSummary> {
+  Stage3GlobalSummaryProvider._({
+    required Stage3GlobalSummaryFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'stage3GlobalSummaryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [stage3GlobalSummary].
-  Stage3GlobalSummaryProvider call(String projectId) {
-    return Stage3GlobalSummaryProvider(projectId);
+  @override
+  String debugGetCreateSourceHash() => _$stage3GlobalSummaryHash();
+
+  @override
+  String toString() {
+    return r'stage3GlobalSummaryProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Stage3GlobalSummaryProvider getProviderOverride(
-    covariant Stage3GlobalSummaryProvider provider,
-  ) {
-    return call(provider.projectId);
+  $ProviderElement<Stage3GlobalSummary> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Stage3GlobalSummary create(Ref ref) {
+    final argument = this.argument as String;
+    return stage3GlobalSummary(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'stage3GlobalSummaryProvider';
-}
-
-/// See also [stage3GlobalSummary].
-class Stage3GlobalSummaryProvider
-    extends AutoDisposeProvider<Stage3GlobalSummary> {
-  /// See also [stage3GlobalSummary].
-  Stage3GlobalSummaryProvider(String projectId)
-    : this._internal(
-        (ref) => stage3GlobalSummary(ref as Stage3GlobalSummaryRef, projectId),
-        from: stage3GlobalSummaryProvider,
-        name: r'stage3GlobalSummaryProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$stage3GlobalSummaryHash,
-        dependencies: Stage3GlobalSummaryFamily._dependencies,
-        allTransitiveDependencies:
-            Stage3GlobalSummaryFamily._allTransitiveDependencies,
-        projectId: projectId,
-      );
-
-  Stage3GlobalSummaryProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.projectId,
-  }) : super.internal();
-
-  final String projectId;
-
-  @override
-  Override overrideWith(
-    Stage3GlobalSummary Function(Stage3GlobalSummaryRef provider) create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Stage3GlobalSummary value) {
+    return $ProviderOverride(
       origin: this,
-      override: Stage3GlobalSummaryProvider._internal(
-        (ref) => create(ref as Stage3GlobalSummaryRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        projectId: projectId,
-      ),
+      providerOverride: $SyncValueProvider<Stage3GlobalSummary>(value),
     );
   }
 
   @override
-  AutoDisposeProviderElement<Stage3GlobalSummary> createElement() {
-    return _Stage3GlobalSummaryProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is Stage3GlobalSummaryProvider && other.projectId == projectId;
+    return other is Stage3GlobalSummaryProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, projectId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin Stage3GlobalSummaryRef on AutoDisposeProviderRef<Stage3GlobalSummary> {
-  /// The parameter `projectId` of this provider.
-  String get projectId;
-}
+String _$stage3GlobalSummaryHash() =>
+    r'948ef8064198e03506607a0bf89958074e15e47a';
 
-class _Stage3GlobalSummaryProviderElement
-    extends AutoDisposeProviderElement<Stage3GlobalSummary>
-    with Stage3GlobalSummaryRef {
-  _Stage3GlobalSummaryProviderElement(super.provider);
+final class Stage3GlobalSummaryFamily extends $Family
+    with $FunctionalFamilyOverride<Stage3GlobalSummary, String> {
+  Stage3GlobalSummaryFamily._()
+    : super(
+        retry: null,
+        name: r'stage3GlobalSummaryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  Stage3GlobalSummaryProvider call(String projectId) =>
+      Stage3GlobalSummaryProvider._(argument: projectId, from: this);
 
   @override
-  String get projectId => (origin as Stage3GlobalSummaryProvider).projectId;
+  String toString() => r'stage3GlobalSummaryProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

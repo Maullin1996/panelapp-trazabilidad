@@ -6,143 +6,82 @@ part of 'inputs_math_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$loadSummaryHash() => r'93427a4af4ba2001f41a0446b2ebf949fd50c377';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [loadSummary].
 @ProviderFor(loadSummary)
-const loadSummaryProvider = LoadSummaryFamily();
+final loadSummaryProvider = LoadSummaryFamily._();
 
-/// See also [loadSummary].
-class LoadSummaryFamily extends Family<LoadSummary> {
-  /// See also [loadSummary].
-  const LoadSummaryFamily();
+final class LoadSummaryProvider
+    extends $FunctionalProvider<LoadSummary, LoadSummary, LoadSummary>
+    with $Provider<LoadSummary> {
+  LoadSummaryProvider._({
+    required LoadSummaryFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'loadSummaryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [loadSummary].
-  LoadSummaryProvider call(String load2Id) {
-    return LoadSummaryProvider(load2Id);
+  @override
+  String debugGetCreateSourceHash() => _$loadSummaryHash();
+
+  @override
+  String toString() {
+    return r'loadSummaryProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  LoadSummaryProvider getProviderOverride(
-    covariant LoadSummaryProvider provider,
-  ) {
-    return call(provider.load2Id);
+  $ProviderElement<LoadSummary> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  LoadSummary create(Ref ref) {
+    final argument = this.argument as String;
+    return loadSummary(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'loadSummaryProvider';
-}
-
-/// See also [loadSummary].
-class LoadSummaryProvider extends AutoDisposeProvider<LoadSummary> {
-  /// See also [loadSummary].
-  LoadSummaryProvider(String load2Id)
-    : this._internal(
-        (ref) => loadSummary(ref as LoadSummaryRef, load2Id),
-        from: loadSummaryProvider,
-        name: r'loadSummaryProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$loadSummaryHash,
-        dependencies: LoadSummaryFamily._dependencies,
-        allTransitiveDependencies: LoadSummaryFamily._allTransitiveDependencies,
-        load2Id: load2Id,
-      );
-
-  LoadSummaryProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.load2Id,
-  }) : super.internal();
-
-  final String load2Id;
-
-  @override
-  Override overrideWith(LoadSummary Function(LoadSummaryRef provider) create) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LoadSummary value) {
+    return $ProviderOverride(
       origin: this,
-      override: LoadSummaryProvider._internal(
-        (ref) => create(ref as LoadSummaryRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        load2Id: load2Id,
-      ),
+      providerOverride: $SyncValueProvider<LoadSummary>(value),
     );
   }
 
   @override
-  AutoDisposeProviderElement<LoadSummary> createElement() {
-    return _LoadSummaryProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is LoadSummaryProvider && other.load2Id == load2Id;
+    return other is LoadSummaryProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, load2Id.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin LoadSummaryRef on AutoDisposeProviderRef<LoadSummary> {
-  /// The parameter `load2Id` of this provider.
-  String get load2Id;
-}
+String _$loadSummaryHash() => r'93427a4af4ba2001f41a0446b2ebf949fd50c377';
 
-class _LoadSummaryProviderElement
-    extends AutoDisposeProviderElement<LoadSummary>
-    with LoadSummaryRef {
-  _LoadSummaryProviderElement(super.provider);
+final class LoadSummaryFamily extends $Family
+    with $FunctionalFamilyOverride<LoadSummary, String> {
+  LoadSummaryFamily._()
+    : super(
+        retry: null,
+        name: r'loadSummaryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  LoadSummaryProvider call(String load2Id) =>
+      LoadSummaryProvider._(argument: load2Id, from: this);
 
   @override
-  String get load2Id => (origin as LoadSummaryProvider).load2Id;
+  String toString() => r'loadSummaryProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

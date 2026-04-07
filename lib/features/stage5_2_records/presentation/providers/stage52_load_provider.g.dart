@@ -6,23 +6,46 @@ part of 'stage52_load_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage52LoadHash() => r'ff5e34913786b27882e0020644281622f25ec5f3';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [stage52Load].
 @ProviderFor(stage52Load)
-final stage52LoadProvider =
-    AutoDisposeStreamProvider<List<Stage52RecordData>>.internal(
-      stage52Load,
-      name: r'stage52LoadProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$stage52LoadHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final stage52LoadProvider = Stage52LoadProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef Stage52LoadRef = AutoDisposeStreamProviderRef<List<Stage52RecordData>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class Stage52LoadProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Stage52RecordData>>,
+          List<Stage52RecordData>,
+          Stream<List<Stage52RecordData>>
+        >
+    with
+        $FutureModifier<List<Stage52RecordData>>,
+        $StreamProvider<List<Stage52RecordData>> {
+  Stage52LoadProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'stage52LoadProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$stage52LoadHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Stage52RecordData>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Stage52RecordData>> create(Ref ref) {
+    return stage52Load(ref);
+  }
+}
+
+String _$stage52LoadHash() => r'c88470913364c0e14eb5f110e8619a9bbb790e7c';

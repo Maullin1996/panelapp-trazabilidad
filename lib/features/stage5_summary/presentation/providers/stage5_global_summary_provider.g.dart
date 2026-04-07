@@ -6,149 +6,89 @@ part of 'stage5_global_summary_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage5GlobalSummaryHash() =>
-    r'620a5d9c6da91a312b9e2868f2d117b8e751fc87';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [stage5GlobalSummary].
 @ProviderFor(stage5GlobalSummary)
-const stage5GlobalSummaryProvider = Stage5GlobalSummaryFamily();
+final stage5GlobalSummaryProvider = Stage5GlobalSummaryFamily._();
 
-/// See also [stage5GlobalSummary].
-class Stage5GlobalSummaryFamily extends Family<List<Stage5SummaryItem>> {
-  /// See also [stage5GlobalSummary].
-  const Stage5GlobalSummaryFamily();
+final class Stage5GlobalSummaryProvider
+    extends
+        $FunctionalProvider<
+          List<Stage5SummaryItem>,
+          List<Stage5SummaryItem>,
+          List<Stage5SummaryItem>
+        >
+    with $Provider<List<Stage5SummaryItem>> {
+  Stage5GlobalSummaryProvider._({
+    required Stage5GlobalSummaryFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'stage5GlobalSummaryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// See also [stage5GlobalSummary].
-  Stage5GlobalSummaryProvider call(String projectId) {
-    return Stage5GlobalSummaryProvider(projectId);
+  @override
+  String debugGetCreateSourceHash() => _$stage5GlobalSummaryHash();
+
+  @override
+  String toString() {
+    return r'stage5GlobalSummaryProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Stage5GlobalSummaryProvider getProviderOverride(
-    covariant Stage5GlobalSummaryProvider provider,
-  ) {
-    return call(provider.projectId);
+  $ProviderElement<List<Stage5SummaryItem>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<Stage5SummaryItem> create(Ref ref) {
+    final argument = this.argument as String;
+    return stage5GlobalSummary(ref, argument);
   }
 
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'stage5GlobalSummaryProvider';
-}
-
-/// See also [stage5GlobalSummary].
-class Stage5GlobalSummaryProvider
-    extends AutoDisposeProvider<List<Stage5SummaryItem>> {
-  /// See also [stage5GlobalSummary].
-  Stage5GlobalSummaryProvider(String projectId)
-    : this._internal(
-        (ref) => stage5GlobalSummary(ref as Stage5GlobalSummaryRef, projectId),
-        from: stage5GlobalSummaryProvider,
-        name: r'stage5GlobalSummaryProvider',
-        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-            ? null
-            : _$stage5GlobalSummaryHash,
-        dependencies: Stage5GlobalSummaryFamily._dependencies,
-        allTransitiveDependencies:
-            Stage5GlobalSummaryFamily._allTransitiveDependencies,
-        projectId: projectId,
-      );
-
-  Stage5GlobalSummaryProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.projectId,
-  }) : super.internal();
-
-  final String projectId;
-
-  @override
-  Override overrideWith(
-    List<Stage5SummaryItem> Function(Stage5GlobalSummaryRef provider) create,
-  ) {
-    return ProviderOverride(
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Stage5SummaryItem> value) {
+    return $ProviderOverride(
       origin: this,
-      override: Stage5GlobalSummaryProvider._internal(
-        (ref) => create(ref as Stage5GlobalSummaryRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        projectId: projectId,
-      ),
+      providerOverride: $SyncValueProvider<List<Stage5SummaryItem>>(value),
     );
   }
 
   @override
-  AutoDisposeProviderElement<List<Stage5SummaryItem>> createElement() {
-    return _Stage5GlobalSummaryProviderElement(this);
-  }
-
-  @override
   bool operator ==(Object other) {
-    return other is Stage5GlobalSummaryProvider && other.projectId == projectId;
+    return other is Stage5GlobalSummaryProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, projectId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin Stage5GlobalSummaryRef
-    on AutoDisposeProviderRef<List<Stage5SummaryItem>> {
-  /// The parameter `projectId` of this provider.
-  String get projectId;
-}
+String _$stage5GlobalSummaryHash() =>
+    r'620a5d9c6da91a312b9e2868f2d117b8e751fc87';
 
-class _Stage5GlobalSummaryProviderElement
-    extends AutoDisposeProviderElement<List<Stage5SummaryItem>>
-    with Stage5GlobalSummaryRef {
-  _Stage5GlobalSummaryProviderElement(super.provider);
+final class Stage5GlobalSummaryFamily extends $Family
+    with $FunctionalFamilyOverride<List<Stage5SummaryItem>, String> {
+  Stage5GlobalSummaryFamily._()
+    : super(
+        retry: null,
+        name: r'stage5GlobalSummaryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  Stage5GlobalSummaryProvider call(String projectId) =>
+      Stage5GlobalSummaryProvider._(argument: projectId, from: this);
 
   @override
-  String get projectId => (origin as Stage5GlobalSummaryProvider).projectId;
+  String toString() => r'stage5GlobalSummaryProvider';
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

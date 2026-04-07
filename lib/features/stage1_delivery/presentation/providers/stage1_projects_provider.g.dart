@@ -6,23 +6,46 @@ part of 'stage1_projects_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage1ProjectsHash() => r'f6155024f7141cd31b965275f7f7ff8b6c4ce802';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [stage1Projects].
 @ProviderFor(stage1Projects)
-final stage1ProjectsProvider =
-    AutoDisposeStreamProvider<List<Stage1FormData>>.internal(
-      stage1Projects,
-      name: r'stage1ProjectsProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$stage1ProjectsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final stage1ProjectsProvider = Stage1ProjectsProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef Stage1ProjectsRef = AutoDisposeStreamProviderRef<List<Stage1FormData>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class Stage1ProjectsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Stage1FormData>>,
+          List<Stage1FormData>,
+          Stream<List<Stage1FormData>>
+        >
+    with
+        $FutureModifier<List<Stage1FormData>>,
+        $StreamProvider<List<Stage1FormData>> {
+  Stage1ProjectsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'stage1ProjectsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$stage1ProjectsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Stage1FormData>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Stage1FormData>> create(Ref ref) {
+    return stage1Projects(ref);
+  }
+}
+
+String _$stage1ProjectsHash() => r'6ebe3be03ae851a802e97f6e32c90259de1a2fcd';

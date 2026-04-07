@@ -315,7 +315,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
     );
   }
 
-  void _onProjectTap(p) {
+  void _onProjectTap(dynamic p) {
     final user = ref.read(authProvider).user;
     if (user?.role == UserRole.admin) {
       context.push('${Routes.projects}${Routes.stages}/${p.id}');

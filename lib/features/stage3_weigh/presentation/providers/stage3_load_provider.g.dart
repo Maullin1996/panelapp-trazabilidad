@@ -6,23 +6,46 @@ part of 'stage3_load_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$stage3LoadHash() => r'b7f9a622fc720725022f46564088159de7007976';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [stage3Load].
 @ProviderFor(stage3Load)
-final stage3LoadProvider =
-    AutoDisposeStreamProvider<List<Stage3FormData>>.internal(
-      stage3Load,
-      name: r'stage3LoadProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$stage3LoadHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
+final stage3LoadProvider = Stage3LoadProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef Stage3LoadRef = AutoDisposeStreamProviderRef<List<Stage3FormData>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class Stage3LoadProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Stage3FormData>>,
+          List<Stage3FormData>,
+          Stream<List<Stage3FormData>>
+        >
+    with
+        $FutureModifier<List<Stage3FormData>>,
+        $StreamProvider<List<Stage3FormData>> {
+  Stage3LoadProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'stage3LoadProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$stage3LoadHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<List<Stage3FormData>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<List<Stage3FormData>> create(Ref ref) {
+    return stage3Load(ref);
+  }
+}
+
+String _$stage3LoadHash() => r'90fb49725c335bd1553d9a6066111d4c1ec2fda3';

@@ -30,25 +30,23 @@ final changePasswordUseCaseProvider = Provider<AdminChangeUserPasswordUseCase>((
   return AdminChangeUserPasswordUseCase(ref.read(adminUserRepositoryProvider));
 });
 
-class AdminUsersController extends StateNotifier<AsyncValue<List<AppUser>>> {
-  final Ref ref;
-  AdminUsersController(this.ref) : super(const AsyncLoading()) {
-    _load();
+class AdminUsersController extends AsyncNotifier<List<AppUser>> {
+  @override
+  Future<List<AppUser>> build() async {
+    final usecase = ref.read(getAllUsersUseCaseProvider);
+    return usecase();
   }
 
-  Future<void> _load() async {
+  Future<void> refresh() async {
+    state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final usecase = ref.read(getAllUsersUseCaseProvider);
       return usecase();
     });
   }
-
-  Future<void> refresh() => _load();
 }
 
 final adminUsersControllerProvider =
-    StateNotifierProvider<AdminUsersController, AsyncValue<List<AppUser>>>((
-      ref,
-    ) {
-      return AdminUsersController(ref);
-    });
+    AsyncNotifierProvider<AdminUsersController, List<AppUser>>(
+      AdminUsersController.new,
+    );
