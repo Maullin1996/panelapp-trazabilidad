@@ -10,10 +10,7 @@ part 'stage4_ui_provider.g.dart';
 class Stage4Ui extends _$Stage4Ui {
   @override
   Stage4UiState build(String projectId) {
-    final entries = ref
-        .watch(syncStage4DataProvider)
-        .where((e) => e.projectId == projectId)
-        .toList();
+    final entries = ref.watch(syncStage4DataProvider(projectId));
 
     final project = ref.watch(stage1ProjectByIdProvider(projectId))!;
 
@@ -48,15 +45,14 @@ class Stage4Ui extends _$Stage4Ui {
         return previousValue + element.returnedBaskets;
       }
     });
-    final totalPreservatives = entries.fold<int>(
-      0,
-      (previousValue, element) =>
-          previousValue + element.returnedPreservativesJars,
-    );
-    final totalLime = entries.fold(
-      0,
-      (previousValue, element) => previousValue + element.returnedLimeJars,
-    );
+    final totalPreservatives = entries.fold<int>(0, (previousValue, element) {
+      final sum = previousValue + element.returnedPreservativesJars;
+      return sum > project.preservativesJars ? project.preservativesJars : sum;
+    });
+    final totalLime = entries.fold(0, (previousValue, element) {
+      final sum = previousValue + element.returnedLimeJars;
+      return sum > project.limeJars ? project.limeJars : sum;
+    });
 
     return Stage4UiState(
       returnedGaveras: aggregatedGaveras,
@@ -65,19 +61,4 @@ class Stage4Ui extends _$Stage4Ui {
       returnedLimeJars: totalLime,
     );
   }
-
-  void updateGavera(int index, int quantity) {
-    final list = [...state.returnedGaveras];
-    list[index] = list[index].copyWith(quantity: quantity);
-    state = state.copyWith(returnedGaveras: list);
-  }
-
-  void updateBaskets(int baskets) =>
-      state = state.copyWith(returnedBaskets: baskets);
-
-  void updatePreservatives(int jars) =>
-      state = state.copyWith(returnedPreservativesJars: jars);
-
-  void updateLime(int limeJarm) =>
-      state = state.copyWith(returnedLimeJars: limeJarm);
 }

@@ -21,8 +21,15 @@ class Stage4RepositoryImpl implements Stage4Repository {
   }
 
   @override
-  Future<List<Stage4FormData>> getAll() async {
-    final models = await datasource.getAll();
+  Future<List<Stage4FormData>> getAll(String projectId) async {
+    final models = await datasource.getAll(projectId);
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  @override
+  Stream<List<Stage4FormData>> watch(String projectId) {
+    return datasource
+        .watchAll(projectId)
+        .map((models) => models.map((m) => m.toEntity()).toList());
   }
 }

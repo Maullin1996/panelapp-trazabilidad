@@ -1,7 +1,6 @@
 import 'package:registro_panela/features/stage4_recollection/data/datasources/stage4_firestore_datasource.dart';
 import 'package:registro_panela/features/stage4_recollection/data/repositories_impl/stage4_repository_impl.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/repositories/stage4_repository.dart';
-import 'package:registro_panela/features/stage4_recollection/domin/usecases/get_stage4_loads.dart';
 import 'package:registro_panela/features/stage4_recollection/domin/usecases/index.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,4 +19,8 @@ final updateStage4DataProvider = Provider<UpdateStage4Data>((ref) {
 
 final getStage4DataProvider = Provider((ref) {
   return GetStage4Loads(ref.read(stage4RepositoryProvider));
+});
+
+final watchStage4DataProvider = Provider((ref) {
+  return WatchStage4Data(ref.read(stage4RepositoryProvider));
 });

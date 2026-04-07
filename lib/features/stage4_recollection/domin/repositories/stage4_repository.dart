@@ -3,5 +3,6 @@ import 'package:registro_panela/features/stage4_recollection/domin/entities/stag
 abstract class Stage4Repository {
   Future<void> create(Stage4FormData data);
   Future<void> update(Stage4FormData data);
-  Future<List<Stage4FormData>> getAll();
+  Future<List<Stage4FormData>> getAll(String projectId);
+  Stream<List<Stage4FormData>> watch(String projectId);
 }
