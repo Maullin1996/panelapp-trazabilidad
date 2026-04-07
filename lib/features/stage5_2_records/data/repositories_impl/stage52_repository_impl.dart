@@ -30,4 +30,11 @@ class Stage52RepositoryImpl implements Stage52Repository {
     final model = Stage52RecordModel.fromEntity(data);
     return datasource.update(model);
   }
+
+  @override
+  Stream<List<Stage52RecordData>> watch() {
+    return datasource.watchAll().map(
+      (models) => models.map((m) => m.toEntity()).toList(),
+    );
+  }
 }

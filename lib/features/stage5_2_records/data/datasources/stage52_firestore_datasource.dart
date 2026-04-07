@@ -16,7 +16,10 @@ class Stage52FirestoreDatasource {
   }
 
   Future<List<Stage52RecordModel>> getAll() async {
-    final querySnapShot = await _firestore.collection('stage52').get();
+    final querySnapShot = await _firestore
+        .collection('stage52')
+        .orderBy('date', descending: true)
+        .get();
     return querySnapShot.docs
         .map((doc) => Stage52RecordModel.fromJson(doc.data()))
         .toList();
@@ -24,5 +27,17 @@ class Stage52FirestoreDatasource {
 
   Future<void> delete(String id) async {
     await _firestore.collection('stage52').doc(id).delete();
+  }
+
+  Stream<List<Stage52RecordModel>> watchAll() {
+    return _firestore
+        .collection('stage52')
+        .orderBy('date', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Stage52RecordModel.fromJson(doc.data()))
+              .toList(),
+        );
   }
 }

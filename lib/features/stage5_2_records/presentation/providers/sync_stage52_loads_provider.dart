@@ -9,3 +9,11 @@ final syncStage52LoadsProvider = Provider<List<Stage52RecordData>>((ref) {
     orElse: () => <Stage52RecordData>[],
   );
 });
+
+final stage52ByProjectProvider =
+    Provider.family<List<Stage52RecordData>, String>((ref, projectId) {
+      return ref
+          .watch(syncStage52LoadsProvider)
+          .where((r) => r.projectId == projectId)
+          .toList();
+    });

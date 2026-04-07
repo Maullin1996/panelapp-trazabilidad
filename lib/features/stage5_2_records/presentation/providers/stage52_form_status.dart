@@ -1,6 +1,5 @@
 import 'package:registro_panela/core/storage/application/storage_providers.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_load_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -27,7 +26,6 @@ class Stage52Form extends _$Stage52Form {
     required bool isNew,
   }) async {
     state = const Stage52FormState(status: Stage52FormStatus.submitting);
-    final notifier = ref.read(stage52LoadProvider.notifier);
     try {
       if (data.photoPath.isNotEmpty && !data.photoPath.startsWith('http')) {
         final uploadImage = ref.read(uploadImageProvider);
@@ -44,7 +42,6 @@ class Stage52Form extends _$Stage52Form {
         final updateUseCase = ref.read(updateStage52DataProvider);
         await updateUseCase(data);
       }
-      notifier.refresh();
 
       state = const Stage52FormState(status: Stage52FormStatus.success);
     } catch (e) {

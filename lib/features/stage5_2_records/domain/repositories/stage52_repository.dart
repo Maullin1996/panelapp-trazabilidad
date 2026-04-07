@@ -5,4 +5,5 @@ abstract class Stage52Repository {
   Future<void> update(Stage52RecordData data);
   Future<List<Stage52RecordData>> getAll();
   Future<void> delete(String id);
+  Stream<List<Stage52RecordData>> watch();
 }

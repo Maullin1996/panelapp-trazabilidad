@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,7 +36,9 @@ class Stage52FormPage extends ConsumerWidget {
     });
 
     final Stage52RecordData? initialRecord = id != null
-        ? ref.watch(syncStage52LoadsProvider).firstWhere((r) => r.id == id)
+        ? ref
+              .watch(syncStage52LoadsProvider)
+              .firstWhereOrNull((r) => r.id == id)
         : null;
 
     final textTheme = TextTheme.of(context);

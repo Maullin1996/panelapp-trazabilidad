@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -19,7 +20,13 @@ class Stage52SummaryPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final record = ref
         .watch(syncStage52LoadsProvider)
-        .firstWhere((r) => r.id == recordId);
+        .firstWhereOrNull((r) => r.id == recordId);
+
+    if (record == null) {
+      return const Scaffold(
+        body: Center(child: Text('Registro no encontrado')),
+      );
+    }
 
     final textTheme = TextTheme.of(context);
 

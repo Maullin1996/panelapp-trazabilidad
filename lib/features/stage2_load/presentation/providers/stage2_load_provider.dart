@@ -7,7 +7,7 @@ part 'stage2_load_provider.g.dart';
 
 @riverpod
 Stream<List<Stage2LoadData>> stage2Load(Ref ref) {
-  final usecase = ref.read(watchStage2LoadsProvider);
+  final usecase = ref.watch(watchStage2LoadsProvider);
   return usecase();
 }
 

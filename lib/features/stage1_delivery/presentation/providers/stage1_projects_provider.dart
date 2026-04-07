@@ -7,6 +7,6 @@ part 'stage1_projects_provider.g.dart';
 
 @riverpod
 Stream<List<Stage1FormData>> stage1Projects(Ref ref) {
-  final usecase = ref.read(watchStage1ProjectsProvider);
+  final usecase = ref.watch(watchStage1ProjectsProvider);
   return usecase();
 }
