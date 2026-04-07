@@ -2,6 +2,7 @@ import 'package:registro_panela/features/stage5_1_missing_weight/data/datasource
 import 'package:registro_panela/features/stage5_1_missing_weight/data/repositories_impl/stage51_repository_impl.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/repositories/stage51_repository.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/usecase/index.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/domain/usecase/watch_stage51_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final stage51RepositoryProvider = Provider<Stage51Repository>((ref) {
@@ -20,4 +21,8 @@ final getStage51DataProvider = Provider<GetStage51Data>((ref) {
 
 final deleteStage51DataProvider = Provider<DeleteStage51Data>((ref) {
   return DeleteStage51Data(ref.read(stage51RepositoryProvider));
+});
+
+final watchStage51DataProvider = Provider<WatchStage51Data>((ref) {
+  return WatchStage51Data(ref.read(stage51RepositoryProvider));
 });

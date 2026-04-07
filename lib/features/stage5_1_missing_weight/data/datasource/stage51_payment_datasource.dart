@@ -21,4 +21,15 @@ class Stage51PaymentDatasource {
         .map((doc) => PaymentDataModel.fromJson(doc.data()))
         .toList();
   }
+
+  Stream<List<PaymentDataModel>> watchAll() {
+    return _firestore
+        .collection('stage51')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => PaymentDataModel.fromJson(doc.data()))
+              .toList(),
+        );
+  }
 }

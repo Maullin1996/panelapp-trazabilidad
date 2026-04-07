@@ -8,7 +8,6 @@ import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/widgets/form_total_to_pay.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/global_missing_provider.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage51_notifier_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage51_usecases_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -57,20 +56,36 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
     final missingBaskets = project.basketsQuantity - returns.returnedBaskets;
 
     final missingGaveras = <MissingGavera>[];
-    for (
-      int i = 0;
-      i < project.gaveras.length && i < returns.returnedGaveras.length;
-      i++
-    ) {
-      final sent = project.gaveras[i];
-      final ret = returns.returnedGaveras[i];
-      final diff = sent.quantity - ret.quantity;
+
+    final returnedByWeight = {
+      for (final ret in returns.returnedGaveras) ret.referenceWeight: ret,
+    };
+
+    for (final sent in project.gaveras) {
+      final ret = returnedByWeight[sent.referenceWeight];
+      final returnedQty = ret?.quantity ?? 0;
+      final diff = sent.quantity - returnedQty;
       if (diff != 0) {
         missingGaveras.add(
-          MissingGavera(count: diff, referenceWeight: ret.referenceWeight),
+          MissingGavera(count: diff, referenceWeight: sent.referenceWeight),
         );
       }
     }
+
+    // for (
+    //   int i = 0;
+    //   i < project.gaveras.length && i < returns.returnedGaveras.length;
+    //   i++
+    // ) {
+    //   final sent = project.gaveras[i];
+    //   final ret = returns.returnedGaveras[i];
+    //   final diff = sent.quantity - ret.quantity;
+    //   if (diff != 0) {
+    //     missingGaveras.add(
+    //       MissingGavera(count: diff, referenceWeight: ret.referenceWeight),
+    //     );
+    //   }
+    // }
 
     final hasMissingGaveras = missingGaveras.isNotEmpty;
 
@@ -268,11 +283,6 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                                         deleteStage51DataProvider,
                                       );
                                       await deleteUseCase(e.id);
-                                      ref
-                                          .read(
-                                            stage51NotifierProvider.notifier,
-                                          )
-                                          .refresh();
                                     },
                                     icon: const Icon(
                                       Icons.delete,
