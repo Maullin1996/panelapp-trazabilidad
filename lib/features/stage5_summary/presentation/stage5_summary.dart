@@ -23,130 +23,125 @@ class Stage5Summary extends ConsumerWidget {
               style: textTheme.headlineMedium,
             ),
           )
-        : Scaffold(
-            body: SingleChildScrollView(
-              padding: EdgeInsets.only(top: AppSpacing.small),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // TOTAL GLOBAL
-                  CustomCard(
-                    child: Column(
-                      children: [
-                        Center(
+        : SingleChildScrollView(
+            padding: EdgeInsets.only(top: AppSpacing.small),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // TOTAL GLOBAL
+                CustomCard(
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Resumen general',
+                          style: textTheme.headlineLarge,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xSmall),
+                      ...globalSummary.map((it) {
+                        return Center(
                           child: Text(
-                            'Resumen general',
+                            '• ${it.totalCount} canastillas de ${it.realWeight.toStringAsFixed(0)} kg – gavera ${it.gaveraWeight.toStringAsFixed(0)} g',
+                            style: textTheme.bodyLarge,
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.smallLarge),
+                Center(
+                  child: Text('Resumen Diario', style: textTheme.headlineLarge),
+                ),
+                const SizedBox(height: AppSpacing.small),
+                ...summaryByDay.map((summary) {
+                  final formattedDate = DateFormat(
+                    "EEEE d 'de' MMMM",
+                    'es',
+                  ).format(summary.date);
+
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.small,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.smallLarge,
+                          ),
+                          child: Text(
+                            formattedDate,
                             style: textTheme.headlineLarge,
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xSmall),
-                        ...globalSummary.map((it) {
-                          return Center(
-                            child: Text(
-                              '• ${it.totalCount} canastillas de ${it.realWeight.toStringAsFixed(0)} kg – gavera ${it.gaveraWeight.toStringAsFixed(0)}',
-                              style: textTheme.bodyLarge,
-                            ),
-                          );
-                        }),
+                        CustomCard(
+                          child: Column(
+                            children: summary.items.map((e) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppSpacing.xSmall,
+                                  horizontal: AppSpacing.xSmall,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Canastillas:',
+                                          style: textTheme.headlineMedium,
+                                        ),
+                                        Text(
+                                          '${e.totalCount}',
+                                          style: textTheme.bodyLarge,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Peso:',
+                                          style: textTheme.headlineMedium,
+                                        ),
+                                        Text(
+                                          '${e.realWeight.toStringAsFixed(1)} kg',
+                                          style: textTheme.bodyLarge,
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Gavera usada:',
+                                          style: textTheme.headlineMedium,
+                                        ),
+                                        Text(
+                                          '${e.gaveraWeight} g',
+                                          style: textTheme.bodyLarge,
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(height: 24),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.smallLarge),
-                  Center(
-                    child: Text(
-                      'Resumen Diario',
-                      style: textTheme.headlineLarge,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  ...summaryByDay.map((summary) {
-                    final formattedDate = DateFormat(
-                      "EEEE d 'de' MMMM",
-                      'es',
-                    ).format(summary.date);
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.small,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.smallLarge,
-                            ),
-                            child: Text(
-                              formattedDate,
-                              style: textTheme.headlineLarge,
-                            ),
-                          ),
-                          const SizedBox(height: AppSpacing.xSmall),
-                          CustomCard(
-                            child: Column(
-                              children: summary.items.map((e) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: AppSpacing.xSmall,
-                                    horizontal: AppSpacing.xSmall,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Canastillas:',
-                                            style: textTheme.headlineMedium,
-                                          ),
-                                          Text(
-                                            '${e.totalCount}',
-                                            style: textTheme.bodyLarge,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Peso:',
-                                            style: textTheme.headlineMedium,
-                                          ),
-                                          Text(
-                                            '${e.realWeight.toStringAsFixed(1)} kg',
-                                            style: textTheme.bodyLarge,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Gavera usada:',
-                                            style: textTheme.headlineMedium,
-                                          ),
-                                          Text(
-                                            '${e.gaveraWeight} g',
-                                            style: textTheme.bodyLarge,
-                                          ),
-                                        ],
-                                      ),
-                                      const Divider(height: 24),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-                ],
-              ),
+                  );
+                }),
+              ],
             ),
           );
   }

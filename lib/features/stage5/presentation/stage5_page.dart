@@ -20,7 +20,11 @@ class _Stage5PageState extends ConsumerState<Stage5Page> {
 
   @override
   Widget build(BuildContext context) {
-    final project = ref.watch(stage1ProjectByIdProvider(widget.projectId))!;
+    final project = ref.watch(stage1ProjectByIdProvider(widget.projectId));
+
+    if (project == null) {
+      return Scaffold(body: Center(child: Text('Proyecto no encontrado')));
+    }
 
     final screens = [
       Stage5Summary(projectId: widget.projectId),
@@ -41,17 +45,17 @@ class _Stage5PageState extends ConsumerState<Stage5Page> {
         onTap: (value) => setState(() => selectedIndex = value),
         items: [
           BottomNavigationBarItem(
-            key: Key('stage52-page-resumen-botton'),
+            key: Key('stage52-page-resumen-button'),
             icon: Icon(AppIcons.weakSummary),
             label: 'Resumen',
           ),
           BottomNavigationBarItem(
-            key: Key('stage52-page-reporte-botton'),
+            key: Key('stage52-page-reporte-button'),
             icon: Icon(AppIcons.reporte),
             label: 'Reporte',
           ),
           BottomNavigationBarItem(
-            key: Key('stage52-page-entrega-botton'),
+            key: Key('stage52-page-entrega-button'),
             icon: Icon(AppIcons.finalRecord),
             label: 'Entrega',
           ),

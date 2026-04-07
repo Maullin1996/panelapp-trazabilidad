@@ -194,52 +194,33 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                 ),
               ],
             ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(16),
-                onTap: isSubmitting
-                    ? null
-                    : () => _onTapButton(project, returns, formNotifier),
-                onTapDown: (_) => _btnController.forward(),
-                onTapUp: (_) => _btnController.reverse(),
-                onTapCancel: () => _btnController.reverse(),
-                child: Center(
-                  child: isSubmitting
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            color: AppColors.textLight,
-                            strokeWidth: 2.5,
-                          ),
-                        )
-                      : Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _activeForm
-                                  ? Icons.check_rounded
-                                  : AppIcons.pickUpSupplies,
-                              color: AppColors.textLight,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              _activeForm
-                                  ? 'Guardar registro'
-                                  : 'Registrar devolución',
-                              style: const TextStyle(
-                                fontFamily: AppTypography.familyRoboto,
-                                fontSize: AppTypography.h3,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textLight,
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
+            child: ElevatedButton.icon(
+              icon: Icon(
+                _activeForm ? Icons.check_rounded : AppIcons.pickUpSupplies,
+                color: AppColors.textLight,
+                size: 20,
               ),
+              label: isSubmitting
+                  ? const SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        color: AppColors.textLight,
+                        strokeWidth: 2.5,
+                      ),
+                    )
+                  : Text(
+                      _activeForm ? 'Guardar registro' : 'Registrar devolución',
+                      style: const TextStyle(
+                        fontFamily: AppTypography.familyRoboto,
+                        fontSize: AppTypography.h4,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textLight,
+                      ),
+                    ),
+              onPressed: isSubmitting
+                  ? null
+                  : () => _onTapButton(project, returns, formNotifier),
             ),
           ),
         ),

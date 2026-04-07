@@ -6,6 +6,7 @@ import 'package:registro_panela/features/stage5_2_records/presentation/providers
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
 class Stage52Page extends ConsumerWidget {
@@ -20,6 +21,28 @@ class Stage52Page extends ConsumerWidget {
         .toList();
 
     final textTheme = TextTheme.of(context);
+
+    if (records.isEmpty) {
+      return Scaffold(
+        body: EmptyWidget(),
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.smallLarge),
+            child: SizedBox(
+              width: double.infinity,
+              height: 60,
+              child: ElevatedButton.icon(
+                key: Key('stage52-page-form-button'),
+                onPressed: () {
+                  context.push('${Routes.stage5}/$projectId/records/form');
+                },
+                label: Text('Nuevo registro', style: textTheme.headlineLarge),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       body: ListView.builder(

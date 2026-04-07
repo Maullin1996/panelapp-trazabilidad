@@ -39,11 +39,15 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
   Widget build(BuildContext context) {
     final summary3 = ref.watch(stage3GlobalSummaryProvider(widget.projectId));
 
-    final project = ref.watch(stage1ProjectByIdProvider(widget.projectId))!;
+    final project = ref.watch(stage1ProjectByIdProvider(widget.projectId));
 
     final returns = ref.watch(stage4UiProvider(widget.projectId));
 
     final textTheme = TextTheme.of(context);
+
+    if (project == null) {
+      return Scaffold(body: Center(child: Text('Proyecto no encontrado')));
+    }
 
     final missingLimeJars = project.limeJars - returns.returnedLimeJars;
 
