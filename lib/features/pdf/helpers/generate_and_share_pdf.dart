@@ -5,6 +5,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:registro_panela/shared/utils/typography.dart';
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'dart:typed_data';
 
 // Mapea tus tamaños a puntos del PDF (un poco más grandes para impresión)
 class PdfTypography {
@@ -16,7 +17,7 @@ class PdfTypography {
   static const double h1 = 34; // ↑ desde 30
 }
 
-Future<void> generateAndSharePdf(Stage1FormData project) async {
+Future<Uint8List> generatePdf(Stage1FormData project) async {
   final fontRegular = pw.Font.ttf(
     await rootBundle.load(
       'assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf',
@@ -351,5 +352,10 @@ Future<void> generateAndSharePdf(Stage1FormData project) async {
   );
 
   final bytes = await pdf.save();
+  return bytes;
+}
+
+Future<void> generateAndSharePdf(Stage1FormData project) async {
+  final bytes = await generatePdf(project);
   await Printing.sharePdf(bytes: bytes, filename: 'proyecto_${project.id}.pdf');
 }
