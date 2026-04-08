@@ -51,6 +51,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
         actions: [
           PopupMenuButton<String>(
             position: PopupMenuPosition.under,
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xSmall),
+            borderRadius: BorderRadius.circular(AppRadius.large),
             color: AppColors.cardBackground,
             icon: const Icon(Icons.more_vert),
             onSelected: (value) async {
@@ -77,44 +79,38 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
               if (user!.role == UserRole.admin)
                 const PopupMenuItem<String>(
                   value: 'users',
-                  child: Text(
-                    'Usuarios',
-                    style: TextStyle(
-                      fontFamily: AppTypography.familyRoboto,
-                      fontSize: 20,
-                    ),
+                  child: _PopMenuDecoracion(
+                    text: 'Usuarios',
+                    backGroundcolor: AppColors.weight,
                   ),
                 ),
               if (isSelected.isNotEmpty) ...[
                 const PopupMenuItem<String>(
                   value: 'preview',
-                  child: Text(
-                    'Vista previa PDF',
-                    style: TextStyle(
-                      fontFamily: AppTypography.familyRoboto,
-                      fontSize: 20,
-                    ),
+                  child: _PopMenuDecoracion(
+                    text: 'Vista previa PDF',
+                    backGroundcolor: AppColors.weight,
                   ),
                 ),
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'print',
-                  child: Text(
-                    'Imprimir',
-                    style: TextStyle(
-                      fontFamily: AppTypography.familyRoboto,
-                      fontSize: 20,
-                    ),
+                  child: _PopMenuDecoracion(
+                    text: 'Imprimir',
+                    backGroundcolor: AppColors.weight,
                   ),
                 ),
               ],
               const PopupMenuItem<String>(
                 value: 'logout',
-                child: Text(
-                  'Cerrar sesión',
-                  style: TextStyle(
-                    fontFamily: AppTypography.familyRoboto,
-                    fontSize: 20,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(color: AppColors.weight, thickness: 0.5),
+                    _PopMenuDecoracion(
+                      text: 'Cerrar sesión',
+                      backGroundcolor: AppColors.error,
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -132,17 +128,20 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.smallLarge),
                 child: SizedBox(
+                  height: 55,
                   width: double.infinity,
-                  height: 60,
                   child: ElevatedButton.icon(
                     key: const Key('project-selector-create-project-button'),
                     label: Text(
                       'Crear proyecto',
-                      style: textTheme.headlineLarge,
+                      style: textTheme.headlineLarge?.copyWith(
+                        color: AppColors.cardBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     icon: const Icon(
                       Icons.add_outlined,
-                      color: Color(0xFF3A2B1F),
+                      color: AppColors.cardBackground,
                       size: 30,
                     ),
                     onPressed: () {
@@ -178,7 +177,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
   }
 
   Widget _buildProjectList<T>(List<T> projects, TextTheme textTheme) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.small),
       padding: const EdgeInsets.only(
         bottom: AppSpacing.small,
         left: AppSpacing.small,
@@ -227,89 +227,135 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
           onDismissed: (_) async {
             await ref.read(deleteStage1DataProvider)(p.id);
           },
-          background: Container(
-            margin: const EdgeInsets.only(
-              left: AppSpacing.smallLarge,
-              right: AppSpacing.smallLarge,
-              bottom: AppSpacing.small,
-            ),
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: AppSpacing.smallLarge),
-            decoration: BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.delete, color: Colors.white, size: 30),
-          ),
-          child: CustomCard(
-            key: Key('project-selector-custom-card-${p.id}'),
-            isSelected: isSelected.contains(p.id)
-                ? AppColors.selectedColor
-                : AppColors.cardBackground,
-            child: ListTile(
-              title: Column(
+          background: DismissbleBackgraoundContainer(),
+          child: GestureDetector(
+            onTap: () => _onProjectTap(p),
+            onLongPress: () => _onProjectLongPress(p.id),
+            child: CustomCard(
+              key: Key('project-selector-custom-card-${p.id}'),
+              isSelected: isSelected.contains(p.id)
+                  ? AppColors.selectedColor
+                  : AppColors.cardBackground,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(p.name, style: textTheme.headlineLarge),
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.xSmall),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryDarkPanela,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppRadius.medium),
+                        topRight: Radius.circular(AppRadius.medium),
                       ),
-                      Text(
-                        DateFormat.yMd().format(p.date),
-                        style: textTheme.bodyLarge,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  const Divider(thickness: 2),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.storage,
-                        size: 20.0,
-                        color: AppColors.weight,
-                      ),
-                      const SizedBox(width: AppSpacing.xSmall),
-                      Text('Gaveras', style: textTheme.headlineMedium),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  ...List.generate(
-                    p.gaveras.length,
-                    (index) => Row(
+                    ),
+                    child: Row(
                       children: [
                         Expanded(
                           child: Text(
-                            '• Cantidad: ${p.gaveras[index].quantity} - Peso ${p.gaveras[index].referenceWeight} g',
-                            style: textTheme.bodyLarge,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            p.name,
+                            style: textTheme.headlineMedium?.copyWith(
+                              color: AppColors.backgroundCrema,
+                            ),
                           ),
+                        ),
+                        Text(
+                          DateFormat.yMd().format(p.date),
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: AppColors.backgroundCrema,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomRichText(
-                    firstText: 'Canastillas: ',
-                    secondText: '${p.basketsQuantity}',
-                    icon: Icons.shopping_basket,
-                    iconColor: AppColors.register,
-                  ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomRichText(
-                    firstText: 'Contacto: ',
-                    secondText: p.phone,
-                    icon: Icons.phone,
+                  Padding(
+                    padding: const EdgeInsets.all(AppSpacing.small),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const IconDecoration(
+                              icon: Icons.storage,
+                              iconColor: AppColors.weight,
+                              backgroundColor: AppColors.weight,
+                            ),
+                            const SizedBox(width: AppSpacing.xSmall),
+                            Text('Gaveras', style: textTheme.headlineMedium),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
+                        ...List.generate(
+                          p.gaveras.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 4,
+                              left: AppSpacing.small,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.weight.withAlpha(30),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.small,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'unidades: ${p.gaveras[index].quantity} de',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.weight,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondaryDarkPanela
+                                        .withAlpha(20),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.small,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    '${p.gaveras[index].referenceWeight} g',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.secondaryDarkPanela,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
+                        CustomRichText(
+                          firstText: 'Canastillas: ',
+                          secondText: '${p.basketsQuantity}',
+                          icon: Icons.shopping_basket,
+                          iconColor: AppColors.register,
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
+                        CustomRichText(
+                          firstText: 'Contacto: ',
+                          secondText: p.phone,
+                          icon: Icons.phone,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              onTap: () => _onProjectTap(p),
-              onLongPress: () => _onProjectLongPress(p.id),
             ),
           ),
         );
@@ -352,5 +398,34 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
       default:
         return Routes.projects;
     }
+  }
+}
+
+class _PopMenuDecoracion extends StatelessWidget {
+  final String text;
+  final Color backGroundcolor;
+
+  const _PopMenuDecoracion({required this.text, required this.backGroundcolor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xSmall,
+        vertical: AppSpacing.xSmall,
+      ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: backGroundcolor.withAlpha(38),
+        borderRadius: BorderRadius.circular(AppRadius.small),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: AppTypography.familyRoboto,
+          fontSize: AppTypography.body,
+        ),
+      ),
+    );
   }
 }
