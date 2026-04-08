@@ -154,7 +154,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     final textTheme = TextTheme.of(context);
     return AppBar(
       leading: BackButton(onPressed: () => context.pop()),
-      title: Text(title, style: textTheme.headlineLarge),
+      title: Text(title.toUpperCase(), style: textTheme.headlineLarge),
     );
   }
 
@@ -268,8 +268,10 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     );
 
     if (_isEmptySubmission(data)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No hay cambios para guardar')),
+      CustomSnackBar.show(
+        context,
+        message: 'No hay cambios para guardar',
+        status: SnackbarStatus.info,
       );
       setState(() => _activeForm = false);
       return;
@@ -288,8 +290,10 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     if (data.returnedPreservativesJars > remainingPreservatives ||
         data.returnedLimeJars > remainingLime ||
         gaverasExceed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cantidad supera el máximo permitido')),
+      CustomSnackBar.show(
+        context,
+        message: 'Cantidad supera el máximo permitido',
+        status: SnackbarStatus.warning,
       );
       return;
     }

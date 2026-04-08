@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
+import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
@@ -51,37 +52,43 @@ class Stage52SummaryPage extends ConsumerWidget {
                 fit: BoxFit.contain,
               ),
             const SizedBox(height: AppSpacing.smallLarge),
-            CustomRichText(
-              icon: Icons.calendar_month,
-              firstText: 'Fecha: ',
-              secondText: DateFormat.yMd().format(record.date),
-            ),
-            const SizedBox(height: AppSpacing.small),
-            CustomRichText(
-              icon: Icons.storage_outlined,
-              iconColor: AppColors.weight,
-              firstText: 'Gavera usada: ',
-              secondText: '${record.gaveraWeight} g',
-            ),
-            const SizedBox(height: AppSpacing.small),
-            CustomRichText(
-              icon: Icons.scale,
-              iconColor: AppColors.weight,
-              firstText: 'Peso panela: ',
-              secondText: '${record.panelaWeight.toStringAsFixed(2)} kg',
-            ),
-            const SizedBox(height: AppSpacing.small),
-            CustomRichText(
-              icon: Icons.unarchive_outlined,
-              firstText: 'Unidades  de panela: ',
-              secondText: record.unitCount.toString(),
-            ),
-            const SizedBox(height: AppSpacing.small),
-            CustomRichText(
-              icon: Icons.verified,
-              iconColor: AppColors.accepted,
-              firstText: 'Calidad: ',
-              secondText: record.quality.name.toUpperCase(),
+            CustomCard(
+              child: Column(
+                children: [
+                  CustomRichText(
+                    icon: Icons.calendar_month,
+                    firstText: 'Fecha: ',
+                    secondText: DateFormat.yMd().format(record.date),
+                  ),
+                  const SizedBox(height: AppSpacing.small),
+                  CustomRichText(
+                    icon: Icons.storage_outlined,
+                    iconColor: AppColors.weight,
+                    firstText: 'Gavera usada: ',
+                    secondText: '${record.gaveraWeight} g',
+                  ),
+                  const SizedBox(height: AppSpacing.small),
+                  CustomRichText(
+                    icon: Icons.scale,
+                    iconColor: AppColors.weight,
+                    firstText: 'Peso panela: ',
+                    secondText: '${record.panelaWeight.toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: AppSpacing.small),
+                  CustomRichText(
+                    icon: Icons.unarchive_outlined,
+                    firstText: 'Unidades  de panela: ',
+                    secondText: record.unitCount.toString(),
+                  ),
+                  const SizedBox(height: AppSpacing.small),
+                  CustomRichText(
+                    icon: Icons.verified,
+                    iconColor: AppColors.accepted,
+                    firstText: 'Calidad: ',
+                    secondText: record.quality.name.toUpperCase(),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

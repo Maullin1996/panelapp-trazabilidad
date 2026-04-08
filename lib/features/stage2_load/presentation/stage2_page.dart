@@ -58,7 +58,10 @@ class Stage2Page extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cargues ${project.name}', style: textTheme.headlineLarge),
+        title: Text(
+          'Cargues ${project.name}'.toUpperCase(),
+          style: textTheme.headlineLarge,
+        ),
         centerTitle: true,
         leading: BackButton(onPressed: () => context.pop()),
       ),
@@ -69,6 +72,8 @@ class Stage2Page extends ConsumerWidget {
           : ListView.builder(
               padding: const EdgeInsets.only(
                 bottom: AppSpacing.medium,
+                left: AppSpacing.small,
+                right: AppSpacing.small,
                 top: AppSpacing.small,
               ),
               itemCount: loads.length,

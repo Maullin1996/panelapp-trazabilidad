@@ -31,19 +31,22 @@ class Stage5PriceForm extends _$Stage5PriceForm {
   @override
   Stage5PriceFormState build() => const Stage5PriceFormState();
 
-  Future<void> submit({required PaymentData data}) async {
+  Future<bool> submit({required PaymentData data}) async {
     state = state.copyWith(status: Stage5PriceFormStatus.submitting);
 
     try {
       final createUseCase = ref.read(createStage51DataProvider);
       await createUseCase(data);
-
+      if (!ref.mounted) return false;
       state = state.copyWith(status: Stage5PriceFormStatus.success);
+      return true;
     } catch (e) {
+      if (!ref.mounted) return false;
       state = state.copyWith(
         status: Stage5PriceFormStatus.error,
         errorMessage: e.toString(),
       );
+      return false;
     }
   }
 }

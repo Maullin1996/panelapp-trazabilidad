@@ -36,7 +36,10 @@ class Stage3Page extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pesaje: ${project.name}', style: textTheme.headlineLarge),
+        title: Text(
+          'PESAJE: ${project.name.toUpperCase()}',
+          style: textTheme.headlineLarge,
+        ),
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: loads2.isEmpty
@@ -44,6 +47,8 @@ class Stage3Page extends ConsumerWidget {
           : ListView.separated(
               padding: const EdgeInsets.only(
                 bottom: AppSpacing.medium,
+                left: AppSpacing.small,
+                right: AppSpacing.small,
                 top: AppSpacing.smallLarge,
               ),
               itemCount: loads2.length,

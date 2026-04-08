@@ -4,16 +4,39 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 enum SnackbarStatus { error, accepted, warning, info }
 
 class CustomSnackBar {
+  static void showWithMessenger(
+    ScaffoldMessengerState messenger, {
+    required String message,
+    required SnackbarStatus status,
+    Duration duration = const Duration(seconds: 4),
+  }) {
+    _display(messenger, message: message, status: status, duration: duration);
+  }
+
   static void show(
     BuildContext context, {
     required String message,
     required SnackbarStatus status,
     Duration duration = const Duration(seconds: 4),
   }) {
+    _display(
+      ScaffoldMessenger.of(context),
+      message: message,
+      status: status,
+      duration: duration,
+    );
+  }
+
+  static void _display(
+    ScaffoldMessengerState messenger, {
+    required String message,
+    required SnackbarStatus status,
+    Duration duration = const Duration(seconds: 4),
+  }) {
     final config = _getConfig(status);
 
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
       SnackBar(
         content: Row(
           children: [
@@ -68,37 +91,37 @@ class CustomSnackBar {
     switch (status) {
       case SnackbarStatus.accepted:
         return {
-          'color': AppColors.accepted,
-          'bgColor': AppColors.accepted.withAlpha(150),
-          'bgIcon': AppColors.accepted.withAlpha(230),
+          'color': AppColors.textLight,
+          'bgColor': AppColors.accepted,
+          'bgIcon': AppColors.accepted,
           'borderColor': AppColors.accepted.withAlpha(102),
           'icon': Icons.check_circle,
           'title': '¡Éxito!',
         };
       case SnackbarStatus.error:
         return {
-          'color': AppColors.error,
-          'bgColor': AppColors.error.withAlpha(100),
-          'bgIcon': AppColors.error.withAlpha(230),
-          'borderColor': AppColors.error.withAlpha(102),
+          'color': AppColors.textLight,
+          'bgColor': AppColors.error,
+          'bgIcon': AppColors.error,
+          'borderColor': AppColors.error,
           'icon': Icons.error_outline,
           'title': 'Error',
         };
       case SnackbarStatus.warning:
         return {
-          'color': Colors.amber,
-          'bgColor': Colors.amber.withAlpha(100),
-          'bgIcon': Colors.amber.withAlpha(230),
-          'borderColor': Colors.amber.withAlpha(102),
+          'color': AppColors.textLight,
+          'bgColor': Colors.amber,
+          'bgIcon': Colors.amber,
+          'borderColor': Colors.amber,
           'icon': Icons.warning_amber,
           'title': 'Advertencia',
         };
       case SnackbarStatus.info:
         return {
-          'color': Colors.blue,
-          'bgColor': Colors.blue.withAlpha(100),
-          'bgIcon': Colors.blue.withAlpha(230),
-          'borderColor': Colors.blue.withAlpha(102),
+          'color': AppColors.textLight,
+          'bgColor': Colors.blue,
+          'bgIcon': Colors.blue,
+          'borderColor': Colors.blue,
           'icon': Icons.info_outline,
           'title': 'Información',
         };

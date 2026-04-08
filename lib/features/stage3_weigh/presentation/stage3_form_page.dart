@@ -72,13 +72,19 @@ class Stage3FormPage extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            isNew ? 'Registrar pesaje' : 'Editar pesaje',
+            isNew
+                ? 'Registrar pesaje'.toUpperCase()
+                : 'Editar pesaje'.toUpperCase(),
             style: textTheme.headlineLarge,
           ),
           leading: BackButton(onPressed: () => context.pop()),
         ),
         body: Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.small),
+          padding: const EdgeInsets.only(
+            top: AppSpacing.small,
+            left: AppSpacing.small,
+            right: AppSpacing.small,
+          ),
           child: Stage3LoadForm(
             project: project,
             load2: load2,

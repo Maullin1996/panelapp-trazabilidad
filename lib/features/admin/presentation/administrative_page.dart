@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/admin/domain/entities/app_user.dart';
 import 'package:registro_panela/features/admin/providers/admin_provider.dart';
 import 'package:registro_panela/features/admin/providers/change_password_controller_provider.dart';
@@ -43,7 +44,10 @@ class _AdminResetPasswordPageState
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cambiar contraseña', style: textTheme.headlineLarge),
+        title: Text(
+          'Cambiar contraseña'.toUpperCase(),
+          style: textTheme.headlineLarge,
+        ),
         actions: [
           IconButton(
             onPressed: () =>
@@ -181,21 +185,22 @@ class _AdminResetPasswordPageState
     result.when(
       data: (_) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
+        CustomSnackBar.show(
+          context,
+          message:
               'Contraseña actualizada para ${selected.email.isNotEmpty ? selected.email : uid}',
-            ),
-          ),
+          status: SnackbarStatus.accepted,
         );
         _fbKey.currentState?.reset();
         ref.read(changePasswordControllerProvider.notifier).reset();
       },
       error: (e, _) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
+        CustomSnackBar.show(
           context,
-        ).showSnackBar(SnackBar(content: Text('Error: $e')));
+          message: 'Error: $e',
+          status: SnackbarStatus.error,
+        );
       },
       loading: () {}, // ya está deshabilitado el botón
     );

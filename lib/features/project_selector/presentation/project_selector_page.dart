@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
+import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
@@ -30,8 +31,10 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
         if (next.authStatus == AuthStatus.notAuthenticated) {
           context.go(Routes.login);
         } else if (next.errorMessage?.isNotEmpty == true) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('No se pudo cerrar el usuario')),
+          CustomSnackBar.show(
+            context,
+            message: 'No se pudo cerrar el usuario',
+            status: SnackbarStatus.error,
           );
         }
       }
@@ -117,43 +120,40 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             ],
           ),
         ],
-        title: Text('Seleccionar Proyecto', style: textTheme.headlineLarge),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.smallLarge),
-          child: SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton.icon(
-              key: const Key('project-selector-create-project-button'),
-              label: Text('Crear proyecto', style: textTheme.headlineLarge),
-              icon: const Icon(
-                Icons.add_outlined,
-                color: Color(0xFF3A2B1F),
-                size: 30,
-              ),
-              onPressed: () {
-                if (user != null &&
-                    (user.role == UserRole.admin ||
-                        user.role == UserRole.stage1)) {
-                  context.push('${Routes.stage1}/new');
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Sólo admin o Stage1 pueden crear proyectos',
-                      ),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              },
-            ),
-          ),
+        title: Text(
+          'Seleccionar Proyecto'.toUpperCase(),
+          style: textTheme.headlineLarge,
         ),
       ),
-      body: body,
+      bottomNavigationBar:
+          (user != null &&
+              (user.role == UserRole.admin || user.role == UserRole.stage1))
+          ? SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.smallLarge),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton.icon(
+                    key: const Key('project-selector-create-project-button'),
+                    label: Text(
+                      'Crear proyecto',
+                      style: textTheme.headlineLarge,
+                    ),
+                    icon: const Icon(
+                      Icons.add_outlined,
+                      color: Color(0xFF3A2B1F),
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      context.push('${Routes.stage1}/new');
+                    },
+                  ),
+                ),
+              ),
+            )
+          : null,
+      body: SafeArea(child: body),
     );
   }
 
@@ -181,6 +181,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
     return ListView.builder(
       padding: const EdgeInsets.only(
         bottom: AppSpacing.small,
+        left: AppSpacing.small,
+        right: AppSpacing.small,
         top: AppSpacing.smallLarge,
       ),
       itemCount: projects.length,

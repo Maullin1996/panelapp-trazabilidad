@@ -45,7 +45,9 @@ class Stage1Page extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            project == null ? 'Nuevo proyecto' : 'Modificar ${project.name}',
+            project == null
+                ? 'Nuevo proyecto'.toUpperCase()
+                : 'Modificar ${project.name}'.toUpperCase(),
             style: textTheme.headlineLarge,
           ),
           leading: IconButton(

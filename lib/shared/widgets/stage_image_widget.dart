@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:registro_panela/shared/utils/tokens.dart';
 
 /// Widget que muestra una imagen local o remota con caching.
 class StageImageWidget extends StatelessWidget {
@@ -36,13 +37,16 @@ class StageImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // Si es una URL (Firebase u otra), usamos CachedNetworkImage
     if (imagePath.startsWith('http')) {
-      return CachedNetworkImage(
-        imageUrl: imagePath,
-        placeholder: (_, _) => placeholder,
-        errorWidget: (_, _, _) => errorWidget,
-        width: width,
-        height: height,
-        fit: fit,
+      return ClipRRect(
+        borderRadius: BorderRadiusGeometry.circular(AppRadius.large),
+        child: CachedNetworkImage(
+          imageUrl: imagePath,
+          placeholder: (_, _) => placeholder,
+          errorWidget: (_, _, _) => errorWidget,
+          width: width,
+          height: height,
+          fit: fit,
+        ),
       );
     }
 

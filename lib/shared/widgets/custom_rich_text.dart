@@ -28,8 +28,13 @@ class CustomRichText extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             text: TextSpan(
               children: [
-                TextSpan(style: textTheme.headlineMedium, text: firstText),
-                TextSpan(style: textTheme.bodyLarge, text: secondText),
+                TextSpan(style: textTheme.headlineLarge, text: firstText),
+                TextSpan(
+                  style: textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                  text: secondText,
+                ),
               ],
             ),
           ),

@@ -13,12 +13,8 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 0,
       color: isSelected,
-      margin: EdgeInsets.only(
-        left: AppSpacing.smallLarge,
-        right: AppSpacing.smallLarge,
-        bottom: AppSpacing.small,
-      ),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
           AppRadius.large,

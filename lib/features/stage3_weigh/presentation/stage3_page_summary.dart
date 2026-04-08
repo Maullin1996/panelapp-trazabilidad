@@ -38,12 +38,14 @@ class Stage3PageSummary extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pesaje', style: textTheme.headlineLarge),
+        title: Text('PESAJE', style: textTheme.headlineLarge),
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(
           bottom: AppSpacing.mediumLarge,
+          left: AppSpacing.small,
+          right: AppSpacing.small,
           top: AppSpacing.smallLarge,
         ),
         child: Column(
