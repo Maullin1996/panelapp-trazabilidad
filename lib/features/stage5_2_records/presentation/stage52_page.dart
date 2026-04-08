@@ -10,6 +10,7 @@ import 'package:registro_panela/features/stage5_2_records/presentation/providers
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/empty_widget.dart';
+import 'package:registro_panela/shared/widgets/icon_decoration.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
 class Stage52Page extends ConsumerWidget {
@@ -358,13 +359,13 @@ class _MetricChip extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  final Color? iconColor;
+  final Color iconColor;
 
   const _MetricChip({
     required this.icon,
     required this.label,
     required this.value,
-    this.iconColor,
+    this.iconColor = AppColors.textDark,
   });
 
   @override
@@ -376,13 +377,10 @@ class _MetricChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            padding: const EdgeInsets.all(AppSpacing.xSmall),
-            decoration: BoxDecoration(
-              color: (iconColor ?? AppColors.textDark).withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(AppRadius.small),
-            ),
-            child: Icon(icon, size: 13, color: iconColor ?? AppColors.textDark),
+          IconDecoration(
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: iconColor.withValues(alpha: 0.12),
           ),
           const SizedBox(width: 4),
           Text(

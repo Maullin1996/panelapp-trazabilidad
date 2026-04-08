@@ -20,10 +20,7 @@ class CustomCard extends StatelessWidget {
           AppRadius.large,
         ), // Bordes redondeados
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.small),
-        child: child,
-      ),
+      child: child,
     );
   }
 }

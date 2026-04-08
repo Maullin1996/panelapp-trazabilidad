@@ -55,37 +55,58 @@ class Stage52SummaryPage extends ConsumerWidget {
             CustomCard(
               child: Column(
                 children: [
-                  CustomRichText(
-                    icon: Icons.calendar_month,
-                    firstText: 'Fecha: ',
-                    secondText: DateFormat.yMd().format(record.date),
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.small),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryDarkPanela,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(AppSpacing.smallLarge),
+                        topRight: Radius.circular(AppSpacing.smallLarge),
+                      ),
+                    ),
+                    child: CustomRichText(
+                      icon: Icons.calendar_month,
+                      iconColor: AppColors.backgroundCrema,
+                      firstTextColor: AppColors.backgroundCrema,
+                      secondTextColor: AppColors.backgroundCrema,
+                      firstText: 'Fecha: ',
+                      secondText: DateFormat.yMd().format(record.date),
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.storage_outlined,
-                    iconColor: AppColors.weight,
-                    firstText: 'Gavera usada: ',
-                    secondText: '${record.gaveraWeight} g',
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.scale,
-                    iconColor: AppColors.weight,
-                    firstText: 'Peso panela: ',
-                    secondText: '${record.panelaWeight.toStringAsFixed(2)} kg',
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.unarchive_outlined,
-                    firstText: 'Unidades  de panela: ',
-                    secondText: record.unitCount.toString(),
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  CustomRichText(
-                    icon: Icons.verified,
-                    iconColor: AppColors.accepted,
-                    firstText: 'Calidad: ',
-                    secondText: record.quality.name.toUpperCase(),
+                  Padding(
+                    padding: const EdgeInsets.all(AppSpacing.xSmall),
+                    child: Column(
+                      children: [
+                        CustomRichText(
+                          icon: Icons.storage_outlined,
+                          iconColor: AppColors.weight,
+                          firstText: 'Gavera usada: ',
+                          secondText: '${record.gaveraWeight} g',
+                        ),
+                        const SizedBox(height: AppSpacing.small),
+                        CustomRichText(
+                          icon: Icons.scale,
+                          iconColor: AppColors.weight,
+                          firstText: 'Peso panela: ',
+                          secondText:
+                              '${record.panelaWeight.toStringAsFixed(2)} kg',
+                        ),
+                        const SizedBox(height: AppSpacing.small),
+                        CustomRichText(
+                          icon: Icons.unarchive_outlined,
+                          firstText: 'Unidades  de panela: ',
+                          secondText: record.unitCount.toString(),
+                        ),
+                        const SizedBox(height: AppSpacing.small),
+                        CustomRichText(
+                          icon: Icons.verified,
+                          iconColor: AppColors.accepted,
+                          firstText: 'Calidad: ',
+                          secondText: record.quality.name.toUpperCase(),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

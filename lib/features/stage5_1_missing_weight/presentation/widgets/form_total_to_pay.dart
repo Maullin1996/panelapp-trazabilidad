@@ -7,6 +7,7 @@ import 'package:registro_panela/features/stage5_1_missing_weight/presentation/he
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage51_price_per_kilo_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
+import 'package:registro_panela/shared/widgets/icon_decoration.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
@@ -130,106 +131,109 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay>
               ? FadeTransition(
                   opacity: _fadeAnim,
                   child: CustomCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Monto del abono', style: textTheme.bodyMedium),
-                        const SizedBox(height: AppSpacing.xSmall),
-                        FormBuilder(
-                          key: _formKeyAmount,
-                          child: AppFormTextFild(
-                            key: const Key(
-                              'stage5-form-total-to-pay-add-installment-input',
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.small),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Monto del abono', style: textTheme.bodyMedium),
+                          const SizedBox(height: AppSpacing.xSmall),
+                          FormBuilder(
+                            key: _formKeyAmount,
+                            child: AppFormTextFild(
+                              key: const Key(
+                                'stage5-form-total-to-pay-add-installment-input',
+                              ),
+                              name: 'amount',
+                              keyboardType: TextInputType.number,
+                              hintText: '\$ 0',
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Requerido';
+                                }
+                                final digitsOnly = value.replaceAll(
+                                  RegExp(r'[^0-9]'),
+                                  '',
+                                );
+                                final parsed = double.tryParse(digitsOnly);
+                                if (parsed == null) {
+                                  return 'Debe ser un número válido';
+                                }
+                                if (parsed < 1) return 'Debe ser mayor que 0';
+                                return null;
+                              },
+                              inputFormatters: [MoneyInputFormatter()],
+                              valueTransformer: (text) {
+                                if (text == null) return null;
+                                return text.replaceAll(RegExp(r'[^0-9]'), '');
+                              },
                             ),
-                            name: 'amount',
-                            keyboardType: TextInputType.number,
-                            hintText: '\$ 0',
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Requerido';
-                              }
-                              final digitsOnly = value.replaceAll(
-                                RegExp(r'[^0-9]'),
-                                '',
-                              );
-                              final parsed = double.tryParse(digitsOnly);
-                              if (parsed == null) {
-                                return 'Debe ser un número válido';
-                              }
-                              if (parsed < 1) return 'Debe ser mayor que 0';
-                              return null;
-                            },
-                            inputFormatters: [MoneyInputFormatter()],
-                            valueTransformer: (text) {
-                              if (text == null) return null;
-                              return text.replaceAll(RegExp(r'[^0-9]'), '');
-                            },
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.small),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 48,
-                          child: ElevatedButton(
-                            key: const Key(
-                              'stage5-form-total-to-pay-save-button',
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryPanelaBrown,
-                              foregroundColor: AppColors.textLight,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  AppRadius.large,
+                          const SizedBox(height: AppSpacing.small),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 48,
+                            child: ElevatedButton(
+                              key: const Key(
+                                'stage5-form-total-to-pay-save-button',
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryPanelaBrown,
+                                foregroundColor: AppColors.textLight,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.large,
+                                  ),
                                 ),
                               ),
-                            ),
-                            child: Text(
-                              'Guardar abono',
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: AppColors.textLight,
-                                fontWeight: FontWeight.w500,
+                              child: Text(
+                                'Guardar abono',
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: AppColors.textLight,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
+                              onPressed: () async {
+                                FocusScope.of(context).unfocus();
+                                if (!(_formKeyAmount.currentState
+                                        ?.saveAndValidate() ??
+                                    false)) {
+                                  return;
+                                }
+
+                                final messenger = ScaffoldMessenger.of(context);
+                                final val = _formKeyAmount.currentState!.value;
+                                final amount = double.parse(val['amount']);
+                                final payment = PaymentData(
+                                  id: uuid.v4(),
+                                  projectId: widget.projectId,
+                                  date: DateTime.now(),
+                                  amount: amount,
+                                );
+
+                                final success = await formNotifier.submit(
+                                  data: payment,
+                                );
+                                if (!mounted) return;
+                                if (success) {
+                                  CustomSnackBar.showWithMessenger(
+                                    messenger,
+                                    message: 'Abono registrado exitosamente',
+                                    status: SnackbarStatus.accepted,
+                                  );
+                                  _toggleForm();
+                                } else {
+                                  CustomSnackBar.showWithMessenger(
+                                    messenger,
+                                    message: 'Error al registrar el abono',
+                                    status: SnackbarStatus.error,
+                                  );
+                                }
+                              },
                             ),
-                            onPressed: () async {
-                              FocusScope.of(context).unfocus();
-                              if (!(_formKeyAmount.currentState
-                                      ?.saveAndValidate() ??
-                                  false)) {
-                                return;
-                              }
-
-                              final messenger = ScaffoldMessenger.of(context);
-                              final val = _formKeyAmount.currentState!.value;
-                              final amount = double.parse(val['amount']);
-                              final payment = PaymentData(
-                                id: uuid.v4(),
-                                projectId: widget.projectId,
-                                date: DateTime.now(),
-                                amount: amount,
-                              );
-
-                              final success = await formNotifier.submit(
-                                data: payment,
-                              );
-                              if (!mounted) return;
-                              if (success) {
-                                CustomSnackBar.showWithMessenger(
-                                  messenger,
-                                  message: 'Abono registrado exitosamente',
-                                  status: SnackbarStatus.accepted,
-                                );
-                                _toggleForm();
-                              } else {
-                                CustomSnackBar.showWithMessenger(
-                                  messenger,
-                                  message: 'Error al registrar el abono',
-                                  status: SnackbarStatus.error,
-                                );
-                              }
-                            },
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 )
@@ -250,72 +254,80 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay>
           ),
         ),
         CustomCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Valor por kilo', style: textTheme.bodyMedium),
-              const SizedBox(height: AppSpacing.xSmall),
-              FormBuilder(
-                key: _formKeyPrice,
-                child: AppFormTextFild(
-                  key: const Key('stage5-form-total-to-pay-price-input'),
-                  name: 'pricePerKilo',
-                  keyboardType: TextInputType.number,
-                  hintText: '\$ 0',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) return 'Requerido';
-                    final digitsOnly = value.replaceAll(RegExp(r'[^0-9]'), '');
-                    final parsed = double.tryParse(digitsOnly);
-                    if (parsed == null) return 'Debe ser un número válido';
-                    if (parsed < 1) return 'Debe ser mayor que 0';
-                    return null;
-                  },
-                  inputFormatters: [MoneyInputFormatter()],
-                  valueTransformer: (text) {
-                    if (text == null) return null;
-                    final digitsOnly = text.replaceAll(RegExp(r'[^0-9]'), '');
-                    return double.tryParse(digitsOnly);
-                  },
-                ),
-              ),
-              const SizedBox(height: AppSpacing.small),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  key: const Key('stage5-form-total-to-pay-calculate-button'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryPanelaBrown,
-                    foregroundColor: AppColors.textLight,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppRadius.large),
-                    ),
-                  ),
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    if (!(_formKeyPrice.currentState?.saveAndValidate() ??
-                        false)) {
-                      return;
-                    }
-                    final values = _formKeyPrice.currentState!.value;
-                    final price = values['pricePerKilo'] as double;
-                    ref
-                        .read(
-                          stage5PricePerKiloProvider(widget.projectId).notifier,
-                        )
-                        .setPrice(price);
-                    widget.onPriceCalculated?.call();
-                  },
-                  child: Text(
-                    'Calcular',
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textLight,
-                      fontWeight: FontWeight.w500,
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.small),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Valor por kilo', style: textTheme.bodyMedium),
+                const SizedBox(height: AppSpacing.xSmall),
+                FormBuilder(
+                  key: _formKeyPrice,
+                  child: AppFormTextFild(
+                    key: const Key('stage5-form-total-to-pay-price-input'),
+                    name: 'pricePerKilo',
+                    keyboardType: TextInputType.number,
+                    hintText: '\$ 0',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) return 'Requerido';
+                      final digitsOnly = value.replaceAll(
+                        RegExp(r'[^0-9]'),
+                        '',
+                      );
+                      final parsed = double.tryParse(digitsOnly);
+                      if (parsed == null) return 'Debe ser un número válido';
+                      if (parsed < 1) return 'Debe ser mayor que 0';
+                      return null;
+                    },
+                    inputFormatters: [MoneyInputFormatter()],
+                    valueTransformer: (text) {
+                      if (text == null) return null;
+                      final digitsOnly = text.replaceAll(RegExp(r'[^0-9]'), '');
+                      return double.tryParse(digitsOnly);
+                    },
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.small),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    key: const Key('stage5-form-total-to-pay-calculate-button'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryPanelaBrown,
+                      foregroundColor: AppColors.textLight,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.large),
+                      ),
+                    ),
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                      if (!(_formKeyPrice.currentState?.saveAndValidate() ??
+                          false)) {
+                        return;
+                      }
+                      final values = _formKeyPrice.currentState!.value;
+                      final price = values['pricePerKilo'] as double;
+                      ref
+                          .read(
+                            stage5PricePerKiloProvider(
+                              widget.projectId,
+                            ).notifier,
+                          )
+                          .setPrice(price);
+                      widget.onPriceCalculated?.call();
+                    },
+                    child: Text(
+                      'Calcular',
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textLight,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
 
@@ -333,67 +345,70 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay>
             ),
           ),
           CustomCard(
-            child: Column(
-              children: [
-                _SummaryRow(
-                  icon: Icons.monitor_weight_outlined,
-                  iconColor: AppColors.weight,
-                  label: 'Peso registrado',
-                  value: '${totalWeight.toStringAsFixed(2)} kg',
-                ),
-                _SummaryRow(
-                  icon: Icons.attach_money,
-                  iconColor: AppColors.accepted,
-                  label: 'Valor por kilo',
-                  value: '\$ ${moneyFormat(pricePerKilo)}',
-                ),
-                _SummaryRow(
-                  icon: Icons.calculate_outlined,
-                  iconColor: AppColors.accepted,
-                  label: 'Total bruto',
-                  value: '\$ ${moneyFormat(pricePerKilo * totalWeight)}',
-                ),
-                _SummaryRow(
-                  icon: Icons.remove_circle_outline,
-                  iconColor: AppColors.accentLightPanela,
-                  label: 'Total abonado',
-                  value: '\$ ${moneyFormat(totalInstallments)}',
-                ),
-                const Divider(height: 20, thickness: 0.5),
-                Row(
-                  children: [
-                    Container(
-                      width: 28,
-                      height: 28,
-                      decoration: BoxDecoration(
-                        color: AppColors.error.withAlpha(35),
-                        borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.small),
+              child: Column(
+                children: [
+                  _SummaryRow(
+                    icon: Icons.monitor_weight_outlined,
+                    iconColor: AppColors.weight,
+                    label: 'Peso registrado',
+                    value: '${totalWeight.toStringAsFixed(2)} kg',
+                  ),
+                  _SummaryRow(
+                    icon: Icons.attach_money,
+                    iconColor: AppColors.accepted,
+                    label: 'Valor por kilo',
+                    value: '\$ ${moneyFormat(pricePerKilo)}',
+                  ),
+                  _SummaryRow(
+                    icon: Icons.calculate_outlined,
+                    iconColor: AppColors.accepted,
+                    label: 'Total bruto',
+                    value: '\$ ${moneyFormat(pricePerKilo * totalWeight)}',
+                  ),
+                  _SummaryRow(
+                    icon: Icons.remove_circle_outline,
+                    iconColor: AppColors.accentLightPanela,
+                    label: 'Total abonado',
+                    value: '\$ ${moneyFormat(totalInstallments)}',
+                  ),
+                  const Divider(height: 20, thickness: 0.5),
+                  Row(
+                    children: [
+                      Container(
+                        width: 28,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: AppColors.error.withAlpha(35),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.receipt_long,
+                          size: 15,
+                          color: AppColors.error,
+                        ),
                       ),
-                      child: Icon(
-                        Icons.receipt_long,
-                        size: 15,
-                        color: AppColors.error,
+                      const SizedBox(width: AppSpacing.xSmall),
+                      Expanded(
+                        child: Text(
+                          'Total a pagar',
+                          style: textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.xSmall),
-                    Expanded(
-                      child: Text(
-                        'Total a pagar',
-                        style: textTheme.bodyLarge?.copyWith(
+                      Text(
+                        '\$ ${moneyFormat(totalToPay)}',
+                        style: textTheme.headlineMedium?.copyWith(
+                          color: AppColors.error,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                    ),
-                    Text(
-                      '\$ ${moneyFormat(totalToPay)}',
-                      style: textTheme.headlineMedium?.copyWith(
-                        color: AppColors.error,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -422,14 +437,10 @@ class _SummaryRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 7),
       child: Row(
         children: [
-          Container(
-            width: 28,
-            height: 28,
-            decoration: BoxDecoration(
-              color: iconColor.withAlpha(35),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, size: 15, color: iconColor),
+          IconDecoration(
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: iconColor.withAlpha(35),
           ),
           const SizedBox(width: AppSpacing.xSmall),
           Expanded(child: Text(label, style: textTheme.bodyMedium)),
