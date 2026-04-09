@@ -12,6 +12,7 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/dismissble_backgraound_container.dart';
 import 'package:registro_panela/shared/widgets/empty_widget.dart';
 import 'package:registro_panela/shared/widgets/error_widget_custom.dart';
 
@@ -60,7 +61,7 @@ class Stage2Page extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'Cargues ${project.name}'.toUpperCase(),
-          style: textTheme.headlineLarge,
+          style: textTheme.headlineMedium,
         ),
         centerTitle: true,
         leading: BackButton(onPressed: () => context.pop()),
@@ -69,7 +70,9 @@ class Stage2Page extends ConsumerWidget {
           ? const EmptyWidget()
           : (error != null)
           ? ErrorWidgetCustom(error: error)
-          : ListView.builder(
+          : ListView.separated(
+              separatorBuilder: (_, _) =>
+                  const SizedBox(height: AppSpacing.small),
               padding: const EdgeInsets.only(
                 bottom: AppSpacing.medium,
                 left: AppSpacing.small,
@@ -168,63 +171,65 @@ class Stage2Page extends ConsumerWidget {
                     onDismissed: (_) async {
                       await ref.read(deleteStage2DataProvider).call(load.id);
                     },
-                    background: Container(
-                      margin: const EdgeInsets.only(
-                        left: AppSpacing.smallLarge,
-                        right: AppSpacing.smallLarge,
-                        bottom: AppSpacing.small,
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(
-                        right: AppSpacing.smallLarge,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
+                    background: DismissbleBackgraoundContainer(),
                     child: CustomCard(
                       key: Key('stage2-page-load-custom-card-${load.id}'),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomRichText(
-                            icon: Icons.calendar_month,
-                            firstText: 'Fecha: ',
-                            secondText: DateFormat.yMd().format(load.date),
-                          ),
-
-                          const SizedBox(height: AppSpacing.xSmall),
-                          CustomRichText(
-                            icon: Icons.shopping_basket,
-                            iconColor: AppColors.register,
-                            firstText: 'Canastillas: ',
-                            secondText: load.baskets.count.toString(),
-                          ),
-
-                          const SizedBox(height: AppSpacing.xSmall),
-                          CustomRichText(
-                            key: Key(
-                              'stage2_page_${load.baskets.realWeight.toStringAsFixed(1)}-weight',
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.xSmall,
+                              horizontal: AppSpacing.small,
                             ),
-                            icon: Icons.scale,
-                            iconColor: AppColors.weight,
-                            firstText: 'Peso: ',
-                            secondText:
-                                '${load.baskets.realWeight.toStringAsFixed(1)} kg',
+                            decoration: BoxDecoration(
+                              color: AppColors.secondaryDarkPanela,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(AppRadius.medium),
+                                topRight: Radius.circular(AppRadius.medium),
+                              ),
+                            ),
+                            child: Text(
+                              DateFormat.yMd().format(load.date),
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: AppColors.textLight,
+                              ),
+                            ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(AppSpacing.small),
+                            child: Column(
+                              children: [
+                                CustomRichText(
+                                  icon: Icons.shopping_basket,
+                                  iconColor: AppColors.register,
+                                  firstText: 'Canastillas: ',
+                                  secondText: load.baskets.count.toString(),
+                                ),
 
-                          const SizedBox(height: AppSpacing.xSmall),
-                          CustomRichText(
-                            icon: Icons.storage_outlined,
-                            iconColor: AppColors.weight,
-                            firstText: 'Gavera: ',
-                            secondText: '${load.baskets.referenceWeight} g',
+                                const SizedBox(height: AppSpacing.xSmall),
+                                CustomRichText(
+                                  key: Key(
+                                    'stage2_page_${load.baskets.realWeight.toStringAsFixed(1)}-weight',
+                                  ),
+                                  icon: Icons.scale,
+                                  iconColor: AppColors.weight,
+                                  firstText: 'Peso: ',
+                                  secondText:
+                                      '${load.baskets.realWeight.toStringAsFixed(1)} kg',
+                                ),
+
+                                const SizedBox(height: AppSpacing.xSmall),
+                                CustomRichText(
+                                  icon: Icons.storage_outlined,
+                                  iconColor: AppColors.weight,
+                                  firstText: 'Gavera: ',
+                                  secondText:
+                                      '${load.baskets.referenceWeight} g',
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -238,13 +243,19 @@ class Stage2Page extends ConsumerWidget {
           padding: const EdgeInsets.all(AppSpacing.smallLarge),
           child: SizedBox(
             width: double.infinity,
-            height: 60,
+            height: 55,
             child: ElevatedButton.icon(
               key: Key('stage2-page-create-load-button'),
-              label: Text('Nuevo cargue', style: textTheme.headlineLarge),
+              label: Text(
+                'Nuevo cargue',
+                style: textTheme.headlineLarge?.copyWith(
+                  color: AppColors.textLight,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               icon: const Icon(
                 Icons.add_outlined,
-                color: AppColors.textDark,
+                color: AppColors.textLight,
                 size: 30,
               ),
               onPressed: () {

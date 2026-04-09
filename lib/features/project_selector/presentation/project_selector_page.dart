@@ -118,7 +118,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
         ],
         title: Text(
           'Seleccionar Proyecto'.toUpperCase(),
-          style: textTheme.headlineLarge,
+          style: textTheme.headlineMedium,
         ),
       ),
       bottomNavigationBar:

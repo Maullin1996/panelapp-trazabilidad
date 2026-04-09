@@ -52,7 +52,7 @@ class Stage52FormPage extends ConsumerWidget {
             id == null
                 ? 'Nuevo registro de panela'
                 : 'Editar registro de panela',
-            style: textTheme.headlineLarge,
+            style: textTheme.headlineMedium,
           ),
         ),
         body: SingleChildScrollView(

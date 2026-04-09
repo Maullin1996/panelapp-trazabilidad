@@ -154,7 +154,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     final textTheme = TextTheme.of(context);
     return AppBar(
       leading: BackButton(onPressed: () => context.pop()),
-      title: Text(title.toUpperCase(), style: textTheme.headlineLarge),
+      title: Text(title.toUpperCase(), style: textTheme.headlineMedium),
     );
   }
 

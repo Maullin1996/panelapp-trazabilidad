@@ -34,7 +34,7 @@ class Stage52SummaryPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Detalle del registro', style: textTheme.headlineLarge),
+        title: Text('Detalle del registro', style: textTheme.headlineMedium),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(

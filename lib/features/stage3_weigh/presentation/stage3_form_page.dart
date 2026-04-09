@@ -75,7 +75,7 @@ class Stage3FormPage extends ConsumerWidget {
             isNew
                 ? 'Registrar pesaje'.toUpperCase()
                 : 'Editar pesaje'.toUpperCase(),
-            style: textTheme.headlineLarge,
+            style: textTheme.headlineMedium,
           ),
           leading: BackButton(onPressed: () => context.pop()),
         ),

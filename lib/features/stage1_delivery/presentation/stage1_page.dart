@@ -48,7 +48,7 @@ class Stage1Page extends ConsumerWidget {
             project == null
                 ? 'Nuevo proyecto'.toUpperCase()
                 : 'Modificar ${project.name}'.toUpperCase(),
-            style: textTheme.headlineLarge,
+            style: textTheme.headlineMedium,
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_rounded),

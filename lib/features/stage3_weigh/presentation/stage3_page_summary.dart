@@ -5,8 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/widget/summary_card.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
@@ -38,188 +41,228 @@ class Stage3PageSummary extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('PESAJE', style: textTheme.headlineLarge),
+        title: Text('PESAJE', style: textTheme.headlineMedium),
         leading: BackButton(onPressed: () => context.pop()),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(
-          bottom: AppSpacing.mediumLarge,
-          left: AppSpacing.small,
-          right: AppSpacing.small,
-          top: AppSpacing.smallLarge,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                CustomCard(
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          'Registrado en molienda',
-                          style: textTheme.headlineLarge,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.small),
-                      CustomRichText(
-                        icon: Icons.calendar_month,
-                        firstText: 'Fecha cargue: ',
-                        secondText: DateFormat.yMd().format(load2.date),
-                      ),
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
-                        icon: Icons.bar_chart,
-                        iconColor: AppColors.register,
-                        firstText: 'Peso esperado: ',
-                        secondText:
-                            '${summaryCalculus.totalRefkg.toStringAsFixed(2)} kg',
-                      ),
-                    ],
+      body: CustomScrollView(
+        slivers: [
+          // ── Sección resumen (estático, no cambia) ──
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: AppSpacing.small,
+                right: AppSpacing.small,
+                top: AppSpacing.smallLarge,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // tus 3 cards de resumen aquí sin cambios
+                  SummaryCard(
+                    title: 'Registrado en molienda',
+                    firstTextCard1: 'Fecha cargue: ',
+                    secondTextCard1: DateFormat.yMd().format(load2.date),
+                    firstTextCard2: 'Peso esperado: ',
+                    secondTextCard2:
+                        '${summaryCalculus.totalRefkg.toStringAsFixed(2)} kg',
+                    firstIcon: Icons.calendar_month,
+                    firstIconColors: AppColors.weight,
+                    secondIcon: Icons.bar_chart,
+                    secondIconColors: AppColors.register,
+                    textTheme: textTheme,
                   ),
-                ),
-
-                CustomCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.small),
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            'Registrado en bodega',
-                            style: textTheme.headlineLarge,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.small),
-                        CustomRichText(
-                          icon: Icons.all_inbox_rounded,
-                          iconColor: AppColors.register,
-                          firstText: 'Registradas: ',
-                          secondText: '${summaryCalculus.regCount} Canastillas',
-                        ),
-
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          icon: Icons.check_box,
-                          iconColor: AppColors.accepted,
-                          firstText: 'Peso registrado: ',
-                          secondText:
-                              '${summaryCalculus.regWeight.toStringAsFixed(2)} kg',
-                        ),
-                      ],
+                  const SizedBox(height: AppSpacing.xSmall),
+                  SummaryCard(
+                    textTheme: textTheme,
+                    title: 'Registrado en bodega',
+                    firstTextCard1: 'Registradas: ',
+                    secondTextCard1: '${summaryCalculus.regCount} Canastillas',
+                    firstTextCard2: 'Peso registrado: ',
+                    secondTextCard2:
+                        '${summaryCalculus.regWeight.toStringAsFixed(2)} kg',
+                    firstIcon: Icons.all_inbox_rounded,
+                    firstIconColors: AppColors.register,
+                    secondIconColors: AppColors.accepted,
+                    secondIcon: Icons.check_box,
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  SummaryCard(
+                    textTheme: textTheme,
+                    title: 'Faltantes',
+                    firstTextCard1: 'Faltan: ',
+                    secondTextCard1:
+                        '${summaryCalculus.missingCount} Canastillas',
+                    firstTextCard2: 'Peso faltante: ',
+                    secondTextCard2:
+                        '${summaryCalculus.missingWeight.toStringAsFixed(2)} kg',
+                    firstIcon: Icons.priority_high,
+                    firstIconColors: AppColors.error,
+                    secondIconColors: AppColors.alert,
+                    secondIcon: Icons.warning,
+                  ),
+                  const SizedBox(height: AppSpacing.small),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 2, bottom: 6),
+                    child: Text(
+                      'DETALLE POR CANASTILLA',
+                      style: textTheme.labelMedium?.copyWith(
+                        letterSpacing: 1.1,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                ],
+              ),
+            ),
+          ),
 
-                CustomCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.small),
-                    child: Column(
-                      children: [
-                        Center(
-                          child: Text(
-                            'Faltantes',
-                            style: textTheme.headlineLarge,
-                          ),
-                        ),
-                        const SizedBox(height: AppSpacing.small),
-                        CustomRichText(
-                          icon: Icons.priority_high,
-                          iconColor: AppColors.error,
-                          firstText: 'Faltan: ',
-                          secondText:
-                              '${summaryCalculus.missingCount} Canastillas',
-                        ),
-
-                        const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          icon: Icons.warning,
-                          iconColor: AppColors.alert,
-                          firstText: 'Peso faltante: ',
-                          secondText:
-                              '${summaryCalculus.missingWeight.toStringAsFixed(2)} kg',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
+          // ── Listado lazy de canastillas ──
+          SliverList.separated(
+            separatorBuilder: (_, _) =>
                 const SizedBox(height: AppSpacing.small),
+            itemCount: entry3.baskets.length,
+            itemBuilder: (context, index) {
+              final b = entry3.baskets[index];
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.small,
+                ),
+                child: _BasketCard(
+                  basket: b,
+                  load2: load2,
+                  sequence: b.sequence,
+                ),
+              );
+            },
+          ),
 
-                Center(
+          const SliverToBoxAdapter(
+            child: SizedBox(height: AppSpacing.mediumLarge),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BasketCard extends StatelessWidget {
+  final BasketWeighData basket;
+  final Stage2LoadData load2;
+  final int sequence;
+
+  const _BasketCard({
+    required this.basket,
+    required this.load2,
+    required this.sequence,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+    return CustomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── header compacto ──
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.small,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryDarkPanela.withAlpha(20),
+                    borderRadius: BorderRadius.circular(AppRadius.small),
+                    border: Border.all(
+                      color: AppColors.secondaryDarkPanela.withAlpha(60),
+                      width: 1,
+                    ),
+                  ),
                   child: Text(
-                    'Detalle por canastilla',
-                    style: textTheme.headlineLarge,
+                    '#${sequence + 1}',
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.secondaryDarkPanela,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xSmall),
+                Text(
+                  'Canastilla',
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
+          ),
 
-            const SizedBox(height: AppSpacing.smallLarge),
-
-            // Listado de cada canastilla
-            ...entry3.baskets.map((b) {
-              return CustomCard(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.smallLarge),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text(
-                          'Canastilla #${b.sequence + 1}',
-                          style: textTheme.headlineLarge,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
-                        icon: Icons.scale,
-                        iconColor: AppColors.weight,
-                        firstText: 'Peso registrado: ',
-                        secondText: '${b.realWeight.toStringAsFixed(2)} kg',
-                      ),
-
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
-                        icon: Icons.warning,
-                        iconColor: AppColors.alert,
-                        firstText: 'Peso faltante: ',
-                        secondText:
-                            '${(load2.baskets.realWeight - b.realWeight).clamp(0, double.infinity).toStringAsFixed(2)} kg',
-                      ),
-
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
-                        icon: Icons.verified,
-                        iconColor: AppColors.accepted,
-                        firstText: 'Calidad: ',
-                        secondText: b.quality.name.toUpperCase(),
-                      ),
-
-                      const SizedBox(height: AppSpacing.xSmall),
-                      if (b.photoPath.isNotEmpty)
-                        GestureDetector(
-                          onTap: () => context.push(
-                            Routes.imageViewer,
-                            extra: b.photoPath,
-                          ),
-                          child: Center(
-                            child: StageImageWidget(
-                              imagePath: b.photoPath,
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
+          // ── imagen ──
+          if (basket.photoPath.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xSmall),
+            GestureDetector(
+              onTap: () =>
+                  context.push(Routes.imageViewer, extra: basket.photoPath),
+              child: Center(
+                child: StageImageWidget(
+                  imagePath: basket.photoPath,
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
                 ),
-              );
-            }),
+              ),
+            ),
           ],
-        ),
+
+          // ── datos ──
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.small),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.weight.withAlpha(38),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppRadius.medium),
+                ),
+              ),
+              padding: const EdgeInsets.all(AppSpacing.small),
+              child: Column(
+                children: [
+                  CustomRichText(
+                    icon: Icons.scale,
+                    iconColor: AppColors.weight,
+                    firstText: 'Peso registrado: ',
+                    secondText: '${basket.realWeight.toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    icon: Icons.warning,
+                    iconColor: AppColors.alert,
+                    firstText: 'Peso faltante: ',
+                    secondText:
+                        '${(load2.baskets.realWeight - basket.realWeight).clamp(0, double.infinity).toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    icon: Icons.verified,
+                    iconColor: AppColors.accepted,
+                    firstText: 'Calidad: ',
+                    secondText: basket.quality.name.toUpperCase(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

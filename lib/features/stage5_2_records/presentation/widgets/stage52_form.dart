@@ -60,7 +60,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Gavera', style: textTheme.headlineLarge),
+          Text('Gavera', style: textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.small),
           // 1) Selector de gaveraWeight
           CustomFromDropdown<double>(
@@ -81,7 +81,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
-          Text('Peso de panela (kg)', style: textTheme.headlineLarge),
+          Text('Peso de panela (kg)', style: textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.small),
           // 2) Peso de panela
           AppFormTextFild(
@@ -100,7 +100,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
-          Text('Unidades de panela', style: textTheme.headlineLarge),
+          Text('Unidades de panela', style: textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.small),
           // 3) Unidades
           AppFormTextFild(
@@ -118,7 +118,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           ),
 
           const SizedBox(height: AppSpacing.smallLarge),
-          Text('Calidad', style: textTheme.headlineLarge),
+          Text('Calidad', style: textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.small),
           // 4) Calidad
           CustomFromDropdown(
@@ -153,7 +153,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                 color: AppColors.textDark,
                 size: 30,
               ),
-              label: Text('Tomar foto', style: textTheme.headlineLarge),
+              label: Text('Tomar foto', style: textTheme.headlineMedium),
             ),
           ),
           if (_photoPath != null) ...[
@@ -197,7 +197,10 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                         );
                         formNotifier.submit(data: record, isNew: isNew);
                       },
-                child: Text('Guardar registro', style: textTheme.headlineLarge),
+                child: Text(
+                  'Guardar registro',
+                  style: textTheme.headlineMedium,
+                ),
               ),
             ),
           ),

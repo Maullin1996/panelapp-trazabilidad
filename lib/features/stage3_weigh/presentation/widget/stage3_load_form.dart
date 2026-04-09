@@ -91,7 +91,9 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
           child: FormBuilder(
             key: _formKey,
             initialValue: initMap,
-            child: ListView.builder(
+            child: ListView.separated(
+              separatorBuilder: (_, _) =>
+                  const SizedBox(height: AppSpacing.small),
               itemCount: _indices.length,
               itemBuilder: (BuildContext context, int index) {
                 return CustomCard(
@@ -100,11 +102,43 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Center(
-                          child: Text(
-                            'Canastilla #${index + 1}',
-                            style: textTheme.headlineLarge,
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.secondaryDarkPanela.withAlpha(
+                                  20,
+                                ),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.small,
+                                ),
+                                border: Border.all(
+                                  color: AppColors.secondaryDarkPanela
+                                      .withAlpha(60),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Text(
+                                '#${index + 1}',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.secondaryDarkPanela,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.xSmall),
+                            Text(
+                              'Canastilla',
+                              style: textTheme.headlineMedium?.copyWith(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: AppSpacing.smallLarge),
                         Text('Peso real (kg)', style: textTheme.headlineMedium),
@@ -152,14 +186,16 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             child: ElevatedButton.icon(
                               key: Key('stage3-load-form-image$index-button'),
                               onPressed: () => _pickImage(index, textTheme),
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.camera_alt,
-                                color: AppColors.textDark,
+                                color: AppColors.textLight,
                                 size: 30,
                               ),
                               label: Text(
                                 'Tomar foto',
-                                style: textTheme.headlineLarge,
+                                style: textTheme.headlineMedium?.copyWith(
+                                  color: AppColors.textLight,
+                                ),
                               ),
                             ),
                           ),
@@ -190,10 +226,11 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
             padding: const EdgeInsets.only(
               left: AppSpacing.small,
               right: AppSpacing.small,
-              bottom: AppSpacing.smallLarge,
+              top: AppSpacing.small,
+              bottom: AppSpacing.small,
             ),
             child: SizedBox(
-              height: 60,
+              height: 55,
               width: double.infinity,
               child: ElevatedButton(
                 key: Key('stage3-load-form-submmit-button'),
@@ -271,13 +308,17 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             formState.totalPhotos == 0
                                 ? 'Guardando...'
                                 : 'Fotos: ${formState.uploadedPhotos}/${formState.totalPhotos}',
-                            style: textTheme.bodySmall,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: AppColors.textLight,
+                            ),
                           ),
                         ],
                       )
                     : Text(
                         widget.isNew ? 'Register' : 'Actualizar',
-                        style: textTheme.headlineLarge,
+                        style: textTheme.headlineMedium?.copyWith(
+                          color: AppColors.textLight,
+                        ),
                       ),
               ),
             ),

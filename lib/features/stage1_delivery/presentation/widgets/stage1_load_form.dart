@@ -250,16 +250,21 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               Center(
                 child: SizedBox(
                   width: double.infinity,
-                  height: 60,
+                  height: 55,
                   child: ElevatedButton.icon(
                     key: Key('stage1-load-form-photo-button'),
                     onPressed: () => _onPickImage(textTheme),
                     icon: const Icon(
                       Icons.camera_alt,
-                      size: 30,
-                      color: AppColors.textDark,
+                      size: 20,
+                      color: AppColors.cardBackground,
                     ),
-                    label: Text('Tomar Foto', style: textTheme.headlineLarge),
+                    label: Text(
+                      'Tomar Foto',
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: AppColors.cardBackground,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -287,7 +292,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               Center(
                 child: SizedBox(
                   width: double.infinity,
-                  height: 60,
+                  height: 55,
                   child: ElevatedButton(
                     key: Key('stage1-load-form-summit-button'),
                     onPressed: state.status == Stage1FormStatus.submitting
@@ -341,7 +346,13 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                           },
                     child: state.status == Stage1FormStatus.submitting
                         ? const CircularProgressIndicator()
-                        : Text('Guardar', style: textTheme.headlineLarge),
+                        : Text(
+                            'Guardar',
+                            style: textTheme.headlineMedium?.copyWith(
+                              color: AppColors.cardBackground,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                   ),
                 ),
               ),
