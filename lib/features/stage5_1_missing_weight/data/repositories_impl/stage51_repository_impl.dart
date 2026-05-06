@@ -20,12 +20,6 @@ class Stage51RepositoryImpl implements Stage51Repository {
   }
 
   @override
-  Future<List<PaymentData>> getAll() async {
-    final models = await datasource.getAll();
-    return models.map((model) => model.toEntity()).toList();
-  }
-
-  @override
   Stream<List<PaymentData>> watch() {
     return datasource.watchAll().map(
       (models) => models.map((m) => m.toEntity()).toList(),

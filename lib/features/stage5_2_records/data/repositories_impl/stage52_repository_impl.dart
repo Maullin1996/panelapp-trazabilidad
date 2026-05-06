@@ -20,12 +20,6 @@ class Stage52RepositoryImpl implements Stage52Repository {
   }
 
   @override
-  Future<List<Stage52RecordData>> getAll() async {
-    final models = await datasource.getAll();
-    return models.map((model) => model.toEntity()).toList();
-  }
-
-  @override
   Future<void> update(Stage52RecordData data) {
     final model = Stage52RecordModel.fromEntity(data);
     return datasource.update(model);

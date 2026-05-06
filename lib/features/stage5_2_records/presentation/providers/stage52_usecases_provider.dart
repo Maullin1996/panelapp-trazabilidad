@@ -10,17 +10,12 @@ final stage52RepositoryProvider = Provider<Stage52Repository>((ref) {
 });
 
 //Usecases
-// ✅ Después
 final createStage52DataProvider = Provider<CreateStage52Data>((ref) {
   return CreateStage52Data(ref.watch(stage52RepositoryProvider));
 });
 
 final updateStage52DataProvider = Provider<UpdateStage52Data>((ref) {
   return UpdateStage52Data(ref.watch(stage52RepositoryProvider));
-});
-
-final getStage52ProjectsProvider = Provider<GetStage52Data>((ref) {
-  return GetStage52Data(ref.watch(stage52RepositoryProvider));
 });
 
 final deleteStage52DataProvider = Provider<DeleteStage52Data>((ref) {

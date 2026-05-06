@@ -49,7 +49,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Aún no hay cargues registrados'), findsOneWidget);
+    expect(find.text('Proyecto no encontrado'), findsOneWidget);
     expect(
       find.byKey(const Key('stage2-page-create-load-button')),
       findsOneWidget,

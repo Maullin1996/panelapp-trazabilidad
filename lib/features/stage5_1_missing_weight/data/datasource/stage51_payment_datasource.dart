@@ -15,13 +15,6 @@ class Stage51PaymentDatasource {
     await _firestore.collection('stage51').doc(id).delete();
   }
 
-  Future<List<PaymentDataModel>> getAll() async {
-    final querySnapshot = await _firestore.collection('stage51').get();
-    return querySnapshot.docs
-        .map((doc) => PaymentDataModel.fromJson(doc.data()))
-        .toList();
-  }
-
   Stream<List<PaymentDataModel>> watchAll() {
     return _firestore
         .collection('stage51')

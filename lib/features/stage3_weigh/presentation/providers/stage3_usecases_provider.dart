@@ -18,10 +18,6 @@ final updateStage3DataProvider = Provider<UpdateStage3Data>((ref) {
   return UpdateStage3Data(ref.read(stage3RepositoryProvider));
 });
 
-final getStage3LoadsProvider = Provider<GetStage3Data>((ref) {
-  return GetStage3Data(ref.read(stage3RepositoryProvider));
-});
-
 final watchStatage3LoadsProvider = Provider<WatchStage3Weighs>((ref) {
   return WatchStage3Weighs(ref.read(stage3RepositoryProvider));
 });

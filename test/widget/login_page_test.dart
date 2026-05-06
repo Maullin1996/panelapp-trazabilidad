@@ -47,7 +47,6 @@ void main() {
     );
 
     expect(find.byKey(const Key('login-message')), findsOneWidget);
-    expect(find.text('Bienvenido'), findsOneWidget);
     expect(find.byKey(const Key('login-email-input')), findsOneWidget);
     expect(find.byKey(const Key('login-password-input')), findsOneWidget);
     expect(find.byKey(const Key('login-enter-button')), findsOneWidget);

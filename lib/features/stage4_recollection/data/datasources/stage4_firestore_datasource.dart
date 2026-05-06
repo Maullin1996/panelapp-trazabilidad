@@ -15,16 +15,6 @@ class Stage4FirestoreDatasource {
     await _firestore.collection('stage4').doc(model.id).update(model.toJson());
   }
 
-  Future<List<Stage4FormModel>> getAll(String projectId) async {
-    final querySnapShot = await _firestore
-        .collection('stage4')
-        .where('projectId', isEqualTo: projectId)
-        .get();
-    return querySnapShot.docs
-        .map((doc) => Stage4FormModel.fromJson(doc.data()))
-        .toList();
-  }
-
   Stream<List<Stage4FormModel>> watchAll(String projectId) {
     return _firestore
         .collection('stage4')

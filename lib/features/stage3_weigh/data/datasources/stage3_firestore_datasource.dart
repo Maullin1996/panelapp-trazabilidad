@@ -18,16 +18,6 @@ class Stage3FirestoreDatasource {
         .set(model.toJson(), SetOptions(merge: true));
   }
 
-  Future<List<Stage3Model>> getAll() async {
-    final querySnapshot = await _firestore
-        .collection('stage3')
-        .orderBy('date', descending: true)
-        .get();
-    return querySnapshot.docs
-        .map((doc) => Stage3Model.fromJson(doc.data()))
-        .toList();
-  }
-
   Future<void> delete(String id) async {
     await _firestore.collection('stage3').doc(id).delete();
   }

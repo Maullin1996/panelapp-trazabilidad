@@ -15,10 +15,6 @@ final createStage51DataProvider = Provider<CreateStage51Data>((ref) {
   return CreateStage51Data(ref.read(stage51RepositoryProvider));
 });
 
-final getStage51DataProvider = Provider<GetStage51Data>((ref) {
-  return GetStage51Data(ref.read(stage51RepositoryProvider));
-});
-
 final deleteStage51DataProvider = Provider<DeleteStage51Data>((ref) {
   return DeleteStage51Data(ref.read(stage51RepositoryProvider));
 });

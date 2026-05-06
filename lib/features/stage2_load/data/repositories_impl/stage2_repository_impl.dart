@@ -20,12 +20,6 @@ class Stage2RepositoryImpl implements Stage2Repository {
   }
 
   @override
-  Future<List<Stage2LoadData>> getAll() async {
-    final models = await datasource.getAll();
-    return models.map((model) => model.toEntity()).toList();
-  }
-
-  @override
   Future<void> update(Stage2LoadData data) async {
     final model = Stage2LoadModel.fromEntity(data);
     return datasource.update(model);

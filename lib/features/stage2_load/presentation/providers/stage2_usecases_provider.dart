@@ -19,10 +19,6 @@ final updateStage2DataProvider = Provider<UpdateStage2Data>((ref) {
   return UpdateStage2Data(ref.read(stage2RepositoryProvider));
 });
 
-final getStage2LoadsProvider = Provider<GetStage2Load>((ref) {
-  return GetStage2Load(ref.read(stage2RepositoryProvider));
-});
-
 final watchStage2LoadsProvider = Provider<WatchStage2Load>((ref) {
   return WatchStage2Load(ref.read(stage2RepositoryProvider));
 });

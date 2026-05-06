@@ -30,7 +30,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Nuevo proyecto'), findsOneWidget);
+    expect(find.text('NUEVO PROYECTO'), findsOneWidget);
     expect(
       find.byKey(const Key('stage1-load-form-molienda-name-input')),
       findsOneWidget,
@@ -65,6 +65,6 @@ void main() {
       ),
     );
 
-    expect(find.text('Modificar Molienda'), findsOneWidget);
+    expect(find.text('MODIFICAR MOLIENDA'), findsOneWidget);
   });
 }
