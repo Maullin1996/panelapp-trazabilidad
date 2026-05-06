@@ -62,7 +62,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Registrar pesaje'), findsOneWidget);
+    expect(find.text('REGISTRAR PESAJE'), findsOneWidget);
     expect(
       find.byKey(const Key('stage3-load-form-realWeight0-input')),
       findsOneWidget,
@@ -97,6 +97,6 @@ void main() {
       ),
     );
 
-    expect(find.text('Editar pesaje'), findsOneWidget);
+    expect(find.text('EDITAR PESAJE'), findsOneWidget);
   });
 }

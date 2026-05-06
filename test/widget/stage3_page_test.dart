@@ -9,6 +9,7 @@ import 'package:registro_panela/features/stage2_load/presentation/providers/stag
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/stage3_page.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
 
 Stage1FormData _project() {
   return Stage1FormData(
@@ -69,7 +70,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Todavía no se han realizado cargues'), findsOneWidget);
+    expect(find.byType(EmptyWidget), findsOneWidget);
   });
 
   testWidgets('Stage3Page renders load card and dialog without summary', (

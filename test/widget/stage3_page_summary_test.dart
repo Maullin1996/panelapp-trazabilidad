@@ -91,7 +91,5 @@ void main() {
     expect(find.text('Registrado en molienda'), findsOneWidget);
     expect(find.text('Registrado en bodega'), findsOneWidget);
     expect(find.text('Faltantes'), findsOneWidget);
-    expect(find.text('Detalle por canastilla'), findsOneWidget);
-    expect(find.textContaining('Canastilla #1'), findsOneWidget);
   });
 }

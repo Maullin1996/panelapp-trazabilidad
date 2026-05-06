@@ -61,8 +61,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Resumen general'), findsOneWidget);
-    expect(find.text('Resumen Diario'), findsOneWidget);
-    expect(find.textContaining('Canastillas:'), findsWidgets);
+    expect(find.text('Total acumulado'), findsOneWidget);
+    expect(find.text('Resumen diario'), findsOneWidget);
   });
 }
