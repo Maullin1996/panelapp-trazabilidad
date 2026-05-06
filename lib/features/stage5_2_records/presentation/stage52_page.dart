@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
-import 'package:registro_panela/features/auth/providers/auth_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_summary_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -20,6 +21,8 @@ class Stage52Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final records = ref.watch(stage52ByProjectProvider(projectId));
+    final user = ref.read(authProvider).user;
+    final summary = ref.watch(stage52SummaryProvider(projectId));
     final textTheme = TextTheme.of(context);
 
     if (records.isEmpty) {
@@ -29,9 +32,6 @@ class Stage52Page extends ConsumerWidget {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       );
     }
-
-    final totalUnits = records.fold(0, (s, r) => s + r.unitCount);
-    final totalKg = records.fold(0.0, (s, r) => s + r.panelaWeight);
 
     return Scaffold(
       body: ListView.builder(
@@ -46,14 +46,13 @@ class Stage52Page extends ConsumerWidget {
           // Primer ítem: barra de resumen
           if (i == 0) {
             return _SummaryBar(
-              recordCount: records.length,
-              totalUnits: totalUnits,
-              totalKg: totalKg,
+              recordCount: summary.count,
+              totalUnits: summary.units,
+              totalKg: summary.kg,
             );
           }
 
           final r = records[i - 1];
-          final user = ref.read(authProvider).user;
 
           return Dismissible(
             key: Key('data-selector-dismissible-${r.id}'),

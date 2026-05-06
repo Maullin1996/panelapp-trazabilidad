@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
-import 'package:registro_panela/features/auth/providers/auth_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
@@ -15,6 +15,7 @@ import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
 import 'package:registro_panela/shared/widgets/dismissble_backgraound_container.dart';
 import 'package:registro_panela/shared/widgets/empty_widget.dart';
 import 'package:registro_panela/shared/widgets/error_widget_custom.dart';
+import 'package:registro_panela/shared/widgets/icon_decoration.dart';
 
 class Stage2Page extends ConsumerWidget {
   final String projectId;
@@ -177,28 +178,49 @@ class Stage2Page extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: double.infinity,
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: AppSpacing.small,
+                              right: AppSpacing.small,
+                              top: AppSpacing.xSmall,
+                            ),
+                            child: Row(
+                              children: [
+                                IconDecoration(
+                                  icon: Icons.unarchive,
+                                  iconColor: AppColors.alert,
+                                ),
+                                SizedBox(width: AppSpacing.xSmall),
+                                Expanded(
+                                  child: Text(
+                                    DateFormat.yMd().format(load.date),
+                                    style: textTheme.bodyLarge?.copyWith(
+                                      color: AppColors.secondaryDarkPanela,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
                             padding: const EdgeInsets.symmetric(
-                              vertical: AppSpacing.xSmall,
                               horizontal: AppSpacing.small,
+                              vertical: AppSpacing.xSmall,
                             ),
-                            decoration: BoxDecoration(
-                              color: AppColors.secondaryDarkPanela,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(AppRadius.medium),
-                                topRight: Radius.circular(AppRadius.medium),
-                              ),
-                            ),
-                            child: Text(
-                              DateFormat.yMd().format(load.date),
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: AppColors.textLight,
+                            child: Divider(
+                              height: 1,
+                              thickness: 1,
+                              color: AppColors.secondaryDarkPanela.withAlpha(
+                                45,
                               ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(AppSpacing.small),
+                            padding: const EdgeInsets.only(
+                              left: AppSpacing.small,
+                              right: AppSpacing.small,
+                              bottom: AppSpacing.small,
+                            ),
                             child: Column(
                               children: [
                                 CustomRichText(
@@ -240,35 +262,30 @@ class Stage2Page extends ConsumerWidget {
             ),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.smallLarge),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.smallLarge,
+            AppSpacing.xSmall,
+            AppSpacing.smallLarge,
+            AppSpacing.small,
+          ),
           child: SizedBox(
             width: double.infinity,
-            height: 55,
+            height: 52,
             child: ElevatedButton.icon(
-              key: Key('stage2-page-create-load-button'),
+              key: const Key('stage2-page-create-load-button'),
+              onPressed: () => showStage2LoadModal(context, project),
+              icon: const Icon(
+                Icons.add_rounded,
+                color: AppColors.cardBackground,
+                size: 22,
+              ),
               label: Text(
                 'Nuevo cargue',
-                style: textTheme.headlineLarge?.copyWith(
-                  color: AppColors.textLight,
+                style: textTheme.headlineMedium?.copyWith(
+                  color: AppColors.cardBackground,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              icon: const Icon(
-                Icons.add_outlined,
-                color: AppColors.textLight,
-                size: 30,
-              ),
-              onPressed: () {
-                showModalBottomSheet(
-                  context: context,
-                  backgroundColor: AppColors.cardBackground,
-                  isScrollControlled: true,
-                  builder: (context) => Padding(
-                    padding: MediaQuery.viewInsetsOf(context),
-                    child: Stage2LoadForm(isNew: true, project: project),
-                  ),
-                );
-              },
             ),
           ),
         ),

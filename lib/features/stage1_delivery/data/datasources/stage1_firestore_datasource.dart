@@ -15,29 +15,20 @@ class Stage1FirestoreDatasource {
     await _firestore.collection('stage1').doc(model.id).update(model.toJson());
   }
 
-  Future<List<Stage1FormModel>> getAll() async {
-    final querySnapshot = await _firestore
-        .collection('stage1')
-        .orderBy('date', descending: true)
-        .get();
-    return querySnapshot.docs
-        .map((doc) => Stage1FormModel.fromJson(doc.data()))
-        .toList();
-  }
-
   Future<void> delete(String id) async {
     await _firestore.collection('stage1').doc(id).delete();
   }
 
-  Stream<List<Stage1FormModel>> watchAll() {
+  Stream<List<Stage1FormModel>> watchAll({int limit = 10}) {
     return _firestore
         .collection('stage1')
         .orderBy('date', descending: true)
+        .limit(limit)
         .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
+        .map((snapshot) {
+          return snapshot.docs
               .map((doc) => Stage1FormModel.fromJson(doc.data()))
-              .toList(),
-        );
+              .toList();
+        });
   }
 }

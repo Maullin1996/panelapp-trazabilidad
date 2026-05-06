@@ -6,7 +6,7 @@ class WatchStage1Projects {
 
   WatchStage1Projects(this.repository);
 
-  Stream<List<Stage1FormData>> call() {
-    return repository.watch();
+  Stream<List<Stage1FormData>> call({int limit = 10}) {
+    return repository.watch(limit: limit);
   }
 }

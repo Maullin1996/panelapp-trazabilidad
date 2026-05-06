@@ -101,7 +101,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                 _SectionLabel(label: 'Insumos'),
                 const SizedBox(height: 6),
                 _InsumoCard(
-                  icon: AppIcons.collect,
+                  icon: Icons.shopping_basket,
                   iconColor: AppColors.register,
                   iconBg: AppColors.register.withAlpha(25),
                   title: 'Canastillas',
@@ -126,8 +126,8 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                 const SizedBox(height: 10),
                 _InsumoCard(
                   icon: Icons.water_drop_rounded,
-                  iconColor: AppColors.accentLightPanela,
-                  iconBg: AppColors.accentLightPanela.withAlpha(38),
+                  iconColor: AppColors.accepted,
+                  iconBg: AppColors.accepted.withAlpha(25),
                   title: 'Tarros de cal',
                   supplied: project.limeJars,
                   returned: returns.returnedLimeJars,

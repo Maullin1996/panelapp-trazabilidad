@@ -32,32 +32,39 @@ class SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.xSmall,
-              horizontal: AppSpacing.small,
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.xSmall,
             ),
-            decoration: BoxDecoration(
-              color: AppColors.secondaryDarkPanela,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(AppRadius.medium),
-                topRight: Radius.circular(AppRadius.medium),
-              ),
-            ),
-            child: Center(
-              child: Text(
-                title,
-                style: textTheme.headlineMedium?.copyWith(
-                  color: AppColors.textLight,
-                  fontWeight: FontWeight.w600,
-                ),
+            child: Text(
+              title,
+              style: textTheme.headlineMedium?.copyWith(
+                color: AppColors.primaryPanelaBrown,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(AppSpacing.small),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.xSmall,
+            ),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.secondaryDarkPanela.withAlpha(45),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              bottom: AppSpacing.small,
+            ),
             child: Column(
               children: [
                 CustomRichText(

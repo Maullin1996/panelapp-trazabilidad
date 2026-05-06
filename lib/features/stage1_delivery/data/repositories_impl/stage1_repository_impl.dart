@@ -20,21 +20,15 @@ class Stage1RepositoryImpl implements Stage1Repository {
   }
 
   @override
-  Future<List<Stage1FormData>> getAll() async {
-    final models = await datasource.getAll();
-    return models.map((model) => model.toEntity()).toList();
-  }
-
-  @override
   Future<void> update(Stage1FormData data) {
     final model = Stage1FormModel.fromEntity(data);
     return datasource.update(model);
   }
 
   @override
-  Stream<List<Stage1FormData>> watch() {
-    return datasource.watchAll().map(
-      (models) => models.map((m) => m.toEntity()).toList(),
-    );
+  Stream<List<Stage1FormData>> watch({int limit = 10}) {
+    return datasource
+        .watchAll(limit: limit)
+        .map((models) => models.map((m) => m.toEntity()).toList());
   }
 }

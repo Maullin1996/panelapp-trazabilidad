@@ -41,7 +41,7 @@ final class Stage5PriceFormProvider
   }
 }
 
-String _$stage5PriceFormHash() => r'79d2a0604d4f545e11cd7c8bddd0c283d310842a';
+String _$stage5PriceFormHash() => r'da00cfae5951cdfc06d5697492233ba2fe958de9';
 
 abstract class _$Stage5PriceForm extends $Notifier<Stage5PriceFormState> {
   Stage5PriceFormState build();

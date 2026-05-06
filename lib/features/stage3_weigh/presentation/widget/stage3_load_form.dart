@@ -34,6 +34,7 @@ class Stage3LoadForm extends ConsumerStatefulWidget {
 
 class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
   final _formKey = GlobalKey<FormBuilderState>();
+
   late List<int> _indices;
   late double _refWeightPerBasket;
   late int _totalBaskets;
@@ -85,17 +86,134 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
         initMap['quality_${b.sequence}'] = b.quality.name;
       }
     }
-    return Column(
-      children: [
-        Expanded(
-          child: FormBuilder(
-            key: _formKey,
-            initialValue: initMap,
+    return FormBuilder(
+      key: _formKey,
+      initialValue: initMap,
+      child: Column(
+        children: [
+          Expanded(
             child: ListView.separated(
               separatorBuilder: (_, _) =>
                   const SizedBox(height: AppSpacing.small),
-              itemCount: _indices.length,
+              itemCount: _indices.length + 1,
               itemBuilder: (BuildContext context, int index) {
+                if (index == _indices.length) {
+                  return SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: AppSpacing.small,
+                        right: AppSpacing.small,
+                        top: AppSpacing.small,
+                        bottom: AppSpacing.small,
+                      ),
+                      child: SizedBox(
+                        height: 55,
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          key: Key('stage3-load-form-submmit-button'),
+                          onPressed:
+                              formState.status == Stage3FormStatus.submitting
+                              ? null
+                              : () async {
+                                  if (!(_formKey.currentState
+                                          ?.saveAndValidate() ??
+                                      false)) {
+                                    return;
+                                  }
+                                  final values = _formKey.currentState!.value;
+                                  final existingMap = <int, BasketWeighData>{
+                                    for (var b
+                                        in widget.initialData?.baskets ?? [])
+                                      b.sequence: b,
+                                  };
+
+                                  final baskets = <BasketWeighData>[];
+
+                                  for (final i in _indices) {
+                                    final raw = values['realWeight_$i'];
+                                    final qualStr =
+                                        values['quality_$i'] as String?;
+
+                                    double? realWeight;
+                                    if (raw is num) {
+                                      realWeight = raw.toDouble();
+                                    } else if (raw is String) {
+                                      realWeight = double.tryParse(
+                                        raw.replaceAll(',', '.'),
+                                      );
+                                    }
+
+                                    final hasWeight = realWeight != null;
+                                    final hasQuality =
+                                        (qualStr?.isNotEmpty == true);
+
+                                    final prev = existingMap[i];
+
+                                    if (hasWeight && hasQuality) {
+                                      baskets.add(
+                                        BasketWeighData(
+                                          id: prev?.id ?? _uuid.v4(),
+                                          sequence: i,
+                                          referenceWeight: _refWeightPerBasket,
+                                          realWeight: realWeight,
+                                          quality: BasketQuality.values
+                                              .firstWhere(
+                                                (q) => q.name == qualStr,
+                                              ),
+                                          photoPath: _photoPaths[i] ?? '',
+                                        ),
+                                      );
+                                    } else if (prev != null) {
+                                      baskets.add(prev);
+                                    }
+                                  }
+
+                                  final formData = Stage3FormData(
+                                    id: widget.initialData?.id ?? _uuid.v4(),
+                                    projectId: widget.project.id,
+                                    stage2LoadId: widget.load2.id,
+                                    date:
+                                        widget.initialData?.date ??
+                                        DateTime.now(),
+                                    baskets: baskets,
+                                  );
+                                  formNotifier.submit(
+                                    formData,
+                                    isNew: widget.isNew,
+                                  );
+                                },
+                          child: formState.status == Stage3FormStatus.submitting
+                              ? Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    LinearProgressIndicator(
+                                      value: formState.uploadProgress,
+                                      backgroundColor: AppColors.textDark
+                                          .withAlpha(50),
+                                      color: AppColors.textDark,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      formState.totalPhotos == 0
+                                          ? 'Guardando...'
+                                          : 'Fotos: ${formState.uploadedPhotos}/${formState.totalPhotos}',
+                                      style: textTheme.bodySmall?.copyWith(
+                                        color: AppColors.textLight,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  widget.isNew ? 'Register' : 'Actualizar',
+                                  style: textTheme.headlineMedium?.copyWith(
+                                    color: AppColors.textLight,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  );
+                }
                 return CustomCard(
                   child: Container(
                     padding: const EdgeInsets.all(AppSpacing.smallLarge),
@@ -220,111 +338,8 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
               },
             ),
           ),
-        ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: AppSpacing.small,
-              right: AppSpacing.small,
-              top: AppSpacing.small,
-              bottom: AppSpacing.small,
-            ),
-            child: SizedBox(
-              height: 55,
-              width: double.infinity,
-              child: ElevatedButton(
-                key: Key('stage3-load-form-submmit-button'),
-                onPressed: formState.status == Stage3FormStatus.submitting
-                    ? null
-                    : () async {
-                        if (!(_formKey.currentState?.saveAndValidate() ??
-                            false)) {
-                          return;
-                        }
-                        final values = _formKey.currentState!.value;
-                        final existingMap = <int, BasketWeighData>{
-                          for (var b in widget.initialData?.baskets ?? [])
-                            b.sequence: b,
-                        };
-
-                        final baskets = <BasketWeighData>[];
-
-                        for (final i in _indices) {
-                          final raw = values['realWeight_$i'];
-                          final qualStr = values['quality_$i'] as String?;
-
-                          double? realWeight;
-                          if (raw is num) {
-                            realWeight = raw.toDouble();
-                          } else if (raw is String) {
-                            realWeight = double.tryParse(
-                              raw.replaceAll(',', '.'),
-                            );
-                          }
-
-                          final hasWeight = realWeight != null;
-                          final hasQuality = (qualStr?.isNotEmpty == true);
-
-                          final prev = existingMap[i];
-
-                          if (hasWeight && hasQuality) {
-                            baskets.add(
-                              BasketWeighData(
-                                id: prev?.id ?? _uuid.v4(),
-                                sequence: i,
-                                referenceWeight: _refWeightPerBasket,
-                                realWeight: realWeight,
-                                quality: BasketQuality.values.firstWhere(
-                                  (q) => q.name == qualStr,
-                                ),
-                                photoPath: _photoPaths[i] ?? '',
-                              ),
-                            );
-                          } else if (prev != null) {
-                            baskets.add(prev);
-                          }
-                        }
-
-                        final formData = Stage3FormData(
-                          id: widget.initialData?.id ?? _uuid.v4(),
-                          projectId: widget.project.id,
-                          stage2LoadId: widget.load2.id,
-                          date: widget.initialData?.date ?? DateTime.now(),
-                          baskets: baskets,
-                        );
-                        formNotifier.submit(formData, isNew: widget.isNew);
-                      },
-                child: formState.status == Stage3FormStatus.submitting
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          LinearProgressIndicator(
-                            value: formState.uploadProgress,
-                            backgroundColor: AppColors.textDark.withAlpha(50),
-                            color: AppColors.textDark,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            formState.totalPhotos == 0
-                                ? 'Guardando...'
-                                : 'Fotos: ${formState.uploadedPhotos}/${formState.totalPhotos}',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: AppColors.textLight,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Text(
-                        widget.isNew ? 'Register' : 'Actualizar',
-                        style: textTheme.headlineMedium?.copyWith(
-                          color: AppColors.textLight,
-                        ),
-                      ),
-              ),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

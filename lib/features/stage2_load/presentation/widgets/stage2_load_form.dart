@@ -14,6 +14,7 @@ class Stage2LoadForm extends ConsumerStatefulWidget {
   final Stage1FormData project;
   final Stage2LoadData? initialData;
   final bool isNew;
+
   const Stage2LoadForm({
     this.isNew = true,
     required this.project,
@@ -32,12 +33,17 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
   @override
   void initState() {
     super.initState();
-    _uuid = Uuid();
+    _uuid = const Uuid();
   }
 
   @override
   Widget build(BuildContext context) {
     final init = widget.initialData;
+    final formState = ref.watch(stage2FormProvider);
+    final formNotifier = ref.read(stage2FormProvider.notifier);
+    final textTheme = TextTheme.of(context);
+    final isSubmitting = formState.status == Stage2FormStatus.submitting;
+
     final Map<String, dynamic> initialMap = init != null
         ? {
             'referenceWeight': init.baskets.referenceWeight,
@@ -46,147 +52,269 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
           }
         : {};
 
-    final formState = ref.watch(stage2FormProvider);
-
-    final formNotifier = ref.read(stage2FormProvider.notifier);
-
-    final textTheme = TextTheme.of(context);
-
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: AppSpacing.mediumSmall,
-          horizontal: AppSpacing.smallLarge,
-        ),
-        child: FormBuilder(
-          key: _formKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          initialValue: initialMap,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Peso de referencia de la gavera',
-                style: textTheme.headlineMedium,
+    return FormBuilder(
+      key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      initialValue: initialMap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // ── Handle del modal ───────────────────────────────────────
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: AppSpacing.small),
+              decoration: BoxDecoration(
+                color: AppColors.secondaryDarkPanela.withAlpha(60),
+                borderRadius: BorderRadius.circular(2),
               ),
-              const SizedBox(height: AppSpacing.small),
-              CustomFromDropdown<double>(
-                key: Key('stage2-load-form-refweight-input'),
-                name: 'referenceWeight',
-                items: widget.project.gaveras
-                    .map(
-                      (g) => DropdownMenuItem(
-                        key: Key('${g.referenceWeight}'),
-                        value: g.referenceWeight,
-                        child: Text(
-                          '${g.referenceWeight} g',
-                          style: textTheme.bodyLarge,
-                        ),
-                      ),
-                    )
-                    .toList(),
-                validator: FormBuilderValidators.required(
-                  errorText: "Este campo es obligatorio",
+            ),
+          ),
+
+          // ── Header ─────────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.small,
+              0,
+              AppSpacing.small,
+              AppSpacing.small,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryPanelaBrown.withAlpha(20),
+                    borderRadius: BorderRadius.circular(AppRadius.small),
+                  ),
+                  child: const Icon(
+                    Icons.inbox_outlined,
+                    size: 18,
+                    color: AppColors.primaryPanelaBrown,
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: AppSpacing.smallLarge),
-              Column(
-                children: [
-                  Row(
+                const SizedBox(width: AppSpacing.xSmall),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Canastillas',
-                              style: textTheme.headlineMedium,
-                            ),
-                            AppFormTextFild(
-                              key: Key('stage2-load-form-basketsCount-input'),
-                              name: 'basketsCount',
-                              keyboardType: TextInputType.number,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                  errorText: "Este campo es obligatorio",
-                                ),
-                                FormBuilderValidators.integer(
-                                  errorText: "Debe de ser un valor entero",
-                                ),
-                                FormBuilderValidators.min(1),
-                              ]),
-                            ),
-                          ],
+                      Text(
+                        widget.isNew ? 'Nuevo cargue' : 'Editar cargue',
+                        style: textTheme.headlineMedium?.copyWith(
+                          color: AppColors.primaryPanelaBrown,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(width: AppSpacing.smallLarge),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Peso (kg)', style: textTheme.headlineMedium),
-                            AppFormTextFild(
-                              key: Key('stage2-load-form-basketWeight-input'),
-                              name: 'basketWeight',
-                              keyboardType: TextInputType.number,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(
-                                  errorText: "Este campo es obligatorio",
-                                ),
-                                FormBuilderValidators.numeric(
-                                  errorText:
-                                      "debe ser un valor númerico y si es decimal debe de ser punto",
-                                ),
-                                FormBuilderValidators.min(1),
-                              ]),
-                            ),
-                          ],
+                      Text(
+                        widget.project.name,
+                        style: textTheme.bodySmall?.copyWith(
+                          color: AppColors.textDark.withAlpha(140),
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.mediumSmall),
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  key: Key('stage2-load-form-summit-button'),
-                  onPressed: formState.status == Stage2FormStatus.submitting
-                      ? null
-                      : () {
-                          if (!(_formKey.currentState?.saveAndValidate() ??
-                              false)) {
-                            return;
-                          }
-                          final values = _formKey.currentState!.value;
-                          final data = Stage2LoadData(
-                            id: init?.id ?? _uuid.v4(),
-                            projectId: widget.project.id,
-                            date: init?.date ?? DateTime.now(),
-                            baskets: BasketLoadData(
-                              referenceWeight:
-                                  values['referenceWeight'] as double,
-                              count: int.parse(values['basketsCount']),
-                              realWeight: double.parse(
-                                values['basketWeight'] as String,
-                              ),
-                            ),
-                          );
-                          formNotifier.submit(data, isNew: widget.isNew);
-                        },
-                  child: formState.status == Stage2FormStatus.submitting
-                      ? const CircularProgressIndicator(strokeWidth: 2)
-                      : Text('Guardar cargue', style: textTheme.headlineLarge),
                 ),
-              ),
-              const SizedBox(height: AppSpacing.medium),
-            ],
+              ],
+            ),
           ),
-        ),
+
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: AppColors.secondaryDarkPanela.withAlpha(30),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.small,
+              AppSpacing.small,
+              AppSpacing.small,
+              AppSpacing.medium,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Gavera ──────────────────────────────────────────
+                _FieldLabel(textTheme, 'Peso de referencia de la gavera'),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomFromDropdown<double>(
+                  key: const Key('stage2-load-form-refweight-input'),
+                  name: 'referenceWeight',
+                  items: widget.project.gaveras
+                      .map(
+                        (g) => DropdownMenuItem(
+                          key: Key('${g.referenceWeight}'),
+                          value: g.referenceWeight,
+                          child: Text(
+                            '${g.referenceWeight} g',
+                            style: textTheme.bodyLarge,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Este campo es obligatorio',
+                  ),
+                ),
+
+                const SizedBox(height: AppSpacing.small),
+
+                // ── Canastillas y peso ───────────────────────────────
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _FieldLabel(textTheme, 'Canastillas'),
+                          const SizedBox(height: AppSpacing.xSmall),
+                          AppFormTextFild(
+                            key: const Key(
+                              'stage2-load-form-basketsCount-input',
+                            ),
+                            name: 'basketsCount',
+                            hintText: '0',
+                            keyboardType: TextInputType.number,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                errorText: 'Obligatorio',
+                              ),
+                              FormBuilderValidators.integer(
+                                errorText: 'Valor entero',
+                              ),
+                              FormBuilderValidators.min(1),
+                            ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xSmall),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _FieldLabel(textTheme, 'Peso (kg)'),
+                          const SizedBox(height: AppSpacing.xSmall),
+                          AppFormTextFild(
+                            key: const Key(
+                              'stage2-load-form-basketWeight-input',
+                            ),
+                            name: 'basketWeight',
+                            hintText: '0.0',
+                            keyboardType: TextInputType.number,
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                errorText: 'Obligatorio',
+                              ),
+                              FormBuilderValidators.numeric(
+                                errorText: 'Use punto decimal',
+                              ),
+                              FormBuilderValidators.min(1),
+                            ]),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: AppSpacing.mediumSmall),
+
+                // ── Botón guardar ────────────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: ElevatedButton(
+                    key: const Key('stage2-load-form-summit-button'),
+                    onPressed: isSubmitting
+                        ? null
+                        : () {
+                            if (!(_formKey.currentState?.saveAndValidate() ??
+                                false)) {
+                              return;
+                            }
+                            final values = _formKey.currentState!.value;
+                            final data = Stage2LoadData(
+                              id: init?.id ?? _uuid.v4(),
+                              projectId: widget.project.id,
+                              date: init?.date ?? DateTime.now(),
+                              baskets: BasketLoadData(
+                                referenceWeight:
+                                    values['referenceWeight'] as double,
+                                count: int.parse(values['basketsCount']),
+                                realWeight: double.parse(
+                                  values['basketWeight'] as String,
+                                ),
+                              ),
+                            );
+                            formNotifier.submit(data, isNew: widget.isNew);
+                          },
+                    child: isSubmitting
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: AppColors.cardBackground,
+                            ),
+                          )
+                        : Text(
+                            'Guardar cargue',
+                            style: textTheme.headlineMedium?.copyWith(
+                              color: AppColors.cardBackground,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
+}
+
+class _FieldLabel extends StatelessWidget {
+  final TextTheme textTheme;
+  final String label;
+
+  const _FieldLabel(this.textTheme, this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: textTheme.bodyMedium?.copyWith(
+        color: AppColors.textDark.withAlpha(180),
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+}
+
+/// Abre el modal de Stage2LoadForm con el diseño actualizado.
+/// Úsalo en el `bottomNavigationBar` de la página Stage2.
+void showStage2LoadModal(BuildContext context, Stage1FormData project) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: AppColors.cardBackground,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(AppRadius.large),
+      ),
+    ),
+    builder: (context) => Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.viewInsetsOf(context).bottom,
+        top: AppSpacing.small,
+      ),
+      child: Stage2LoadForm(isNew: true, project: project),
+    ),
+  );
 }

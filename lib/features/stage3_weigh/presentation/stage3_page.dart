@@ -69,34 +69,48 @@ class Stage3Page extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xSmall,
-                            horizontal: AppSpacing.small,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            top: AppSpacing.xSmall,
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.secondaryDarkPanela,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(AppRadius.medium),
-                              topRight: Radius.circular(AppRadius.medium),
-                            ),
-                          ),
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                'Registrado en Molienda',
-                                style: textTheme.headlineMedium?.copyWith(
-                                  color: AppColors.textLight,
-                                  fontWeight: FontWeight.w600,
+                          child: Row(
+                            children: [
+                              IconDecoration(
+                                icon: Icons.unarchive,
+                                iconColor: AppColors.alert,
+                              ),
+                              SizedBox(width: AppSpacing.xSmall),
+                              Expanded(
+                                child: Text(
+                                  'Registrado en Molienda',
+                                  style: textTheme.headlineMedium?.copyWith(
+                                    color: AppColors.primaryPanelaBrown,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(AppRadius.small),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.small,
+                            vertical: AppSpacing.xSmall,
+                          ),
+                          child: Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: AppColors.secondaryDarkPanela.withAlpha(45),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            bottom: AppSpacing.smallLarge,
+                          ),
                           child: Column(
                             children: [
                               CustomRichText(
@@ -133,30 +147,49 @@ class Stage3Page extends ConsumerWidget {
                           ),
                         ),
 
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xSmall,
-                            horizontal: AppSpacing.small,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            top: AppSpacing.xSmall,
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.secondaryDarkPanela,
-                          ),
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                'Registrado en bodega',
-                                style: textTheme.headlineMedium?.copyWith(
-                                  color: AppColors.textLight,
-                                  fontWeight: FontWeight.w600,
+                          child: Row(
+                            children: [
+                              IconDecoration(
+                                icon: Icons.warehouse,
+                                iconColor: AppColors.register,
+                                backgroundColor: AppColors.register,
+                              ),
+                              SizedBox(width: AppSpacing.xSmall),
+                              Expanded(
+                                child: Text(
+                                  'Registrado en bodega',
+                                  style: textTheme.headlineMedium?.copyWith(
+                                    color: AppColors.primaryPanelaBrown,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(AppSpacing.small),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.small,
+                            vertical: AppSpacing.xSmall,
+                          ),
+                          child: Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: AppColors.secondaryDarkPanela.withAlpha(45),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            bottom: AppSpacing.smallLarge,
+                          ),
                           child: Column(
                             children: [
                               CustomRichText(
@@ -177,30 +210,49 @@ class Stage3Page extends ConsumerWidget {
                             ],
                           ),
                         ),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xSmall,
-                            horizontal: AppSpacing.small,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            top: AppSpacing.xSmall,
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.secondaryDarkPanela,
-                          ),
-                          child: Center(
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                'Canastillas y Peso faltante',
-                                style: textTheme.headlineMedium?.copyWith(
-                                  color: AppColors.textLight,
-                                  fontWeight: FontWeight.w600,
+                          child: Row(
+                            children: [
+                              IconDecoration(
+                                icon: Icons.error_outlined,
+                                iconColor: AppColors.error,
+                                backgroundColor: AppColors.error,
+                              ),
+                              SizedBox(width: AppSpacing.xSmall),
+                              Expanded(
+                                child: Text(
+                                  'Canastillas y Peso faltante',
+                                  style: textTheme.headlineMedium?.copyWith(
+                                    color: AppColors.error,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(AppSpacing.small),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.small,
+                            vertical: AppSpacing.xSmall,
+                          ),
+                          child: Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: AppColors.secondaryDarkPanela.withAlpha(45),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            bottom: AppSpacing.xSmall,
+                          ),
                           child: Column(
                             children: [
                               CustomRichText(

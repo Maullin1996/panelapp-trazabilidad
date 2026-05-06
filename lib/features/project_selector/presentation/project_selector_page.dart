@@ -7,7 +7,8 @@ import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
-import 'package:registro_panela/features/auth/providers/auth_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
@@ -23,6 +24,33 @@ class ProjectSelectorPage extends ConsumerStatefulWidget {
 
 class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
   Set<String> isSelected = {};
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (!_scrollController.hasClients) return;
+    final position = _scrollController.position;
+    final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
+    if (isNearBottom) {
+      final notifier = ref.read(stage1ProjectsProvider.notifier);
+      final projects = ref.read(syncStage1ProjectsProvider);
+
+      if (notifier.canLoadMore(projects)) {
+        notifier.loadMore();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +205,9 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
   }
 
   Widget _buildProjectList<T>(List<T> projects, TextTheme textTheme) {
+    final typedProjects = projects.cast<Stage1FormData>();
     return ListView.separated(
+      controller: _scrollController,
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.small),
       padding: const EdgeInsets.only(
         bottom: AppSpacing.small,
@@ -185,7 +215,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
         right: AppSpacing.small,
         top: AppSpacing.smallLarge,
       ),
-      itemCount: projects.length,
+      itemCount: typedProjects.length,
       itemBuilder: (context, i) {
         final p = projects[i] as dynamic;
         final user = ref.read(authProvider).user;
@@ -239,29 +269,31 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(AppSpacing.xSmall),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondaryDarkPanela,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppRadius.medium),
-                        topRight: Radius.circular(AppRadius.medium),
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: AppSpacing.small,
+                      right: AppSpacing.small,
+                      top: AppSpacing.xSmall,
                     ),
                     child: Row(
                       children: [
+                        IconDecoration(
+                          icon: Icons.settings_suggest,
+                          iconColor: AppColors.primaryPanelaBrown,
+                        ),
+                        SizedBox(width: AppSpacing.xSmall),
                         Expanded(
                           child: Text(
                             p.name,
                             style: textTheme.headlineMedium?.copyWith(
-                              color: AppColors.backgroundCrema,
+                              color: AppColors.primaryPanelaBrown,
                             ),
                           ),
                         ),
                         Text(
                           DateFormat.yMd().format(p.date),
                           style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.backgroundCrema,
+                            color: AppColors.primaryPanelaBrown,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -270,7 +302,22 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(AppSpacing.small),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.small,
+                      vertical: AppSpacing.xSmall,
+                    ),
+                    child: Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: AppColors.secondaryDarkPanela.withAlpha(45),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: AppSpacing.small,
+                      left: AppSpacing.small,
+                      right: AppSpacing.small,
+                    ),
                     child: Column(
                       children: [
                         Row(

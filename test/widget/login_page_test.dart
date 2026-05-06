@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/presentation/login_page.dart';
-import 'package:registro_panela/features/auth/providers/auth_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 
 class _TestAuth extends Auth {
   _TestAuth(this.initialStatus);
@@ -41,9 +41,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => auth),
-        ],
+        overrides: [authProvider.overrideWith(() => auth)],
         child: const MaterialApp(home: LoginPage()),
       ),
     );
@@ -60,9 +58,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => auth),
-        ],
+        overrides: [authProvider.overrideWith(() => auth)],
         child: const MaterialApp(home: LoginPage()),
       ),
     );
@@ -90,9 +86,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => auth),
-        ],
+        overrides: [authProvider.overrideWith(() => auth)],
         child: const MaterialApp(home: LoginPage()),
       ),
     );
@@ -108,9 +102,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => auth),
-        ],
+        overrides: [authProvider.overrideWith(() => auth)],
         child: const MaterialApp(home: LoginPage()),
       ),
     );
@@ -138,9 +130,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => auth),
-        ],
+        overrides: [authProvider.overrideWith(() => auth)],
         child: const MaterialApp(home: LoginPage()),
       ),
     );

@@ -1,45 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:registro_panela/features/auth/presentation/widgets/login_form.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
+import 'package:registro_panela/shared/widgets/custom_card.dart';
 
-/// Pantalla de inicio de sesión.
-///
-/// Contiene un título de bienvenida y el widget [LoginForm].
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.sizeOf(context);
+    final textTheme = TextTheme.of(context);
 
     return GestureDetector(
-      // Cierra el teclado al tocar fuera de los campos.
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.medium,
-              horizontal: AppSpacing.mediumSmall,
-            ),
-            child: Column(
-              children: [
-                SizedBox(height: screenSize.height * 0.18),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: screenSize.height),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.mediumSmall,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenSize.height * 0.12),
 
-                // Título de bienvenida
-                Text(
-                  key: Key('login-message'),
-                  'Bienvenido',
-                  style: TextTheme.of(
-                    context,
-                  ).headlineLarge?.copyWith(fontSize: AppTypography.h1),
-                ),
+                  // ── Logo ──────────────────────────────────────────
+                  Hero(
+                    tag: 'app-logo',
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: 110,
+                      height: 110,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
 
-                const SizedBox(height: AppSpacing.medium),
+                  const SizedBox(height: AppSpacing.small),
 
-                // Formulario de login
-                const LoginForm(),
-              ],
+                  // ── Título ────────────────────────────────────────
+                  Text(
+                    key: const Key('login-message'),
+                    'Registro Panela',
+                    style: textTheme.headlineLarge?.copyWith(
+                      color: AppColors.primaryPanelaBrown,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+
+                  const SizedBox(height: AppSpacing.xSmall),
+
+                  Text(
+                    'Inicia sesión para continuar',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textDark.withAlpha(140),
+                    ),
+                  ),
+
+                  SizedBox(height: screenSize.height * 0.06),
+
+                  // ── Tarjeta del formulario ─────────────────────────
+                  CustomCard(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.small),
+                      child: const LoginForm(),
+                    ),
+                  ),
+
+                  const SizedBox(height: AppSpacing.medium),
+                ],
+              ),
             ),
           ),
         ),

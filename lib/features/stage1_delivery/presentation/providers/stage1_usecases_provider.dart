@@ -19,10 +19,6 @@ final updateStage1DataProvider = Provider<UpdateStage1Data>((ref) {
   return UpdateStage1Data(ref.read(stage1RepositoryProvider));
 });
 
-final getStage1ProjectsProvider = Provider<GetStage1Projects>((ref) {
-  return GetStage1Projects(ref.read(stage1RepositoryProvider));
-});
-
 final watchStage1ProjectsProvider = Provider<WatchStage1Projects>((ref) {
   return WatchStage1Projects(ref.read(stage1RepositoryProvider));
 });

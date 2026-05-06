@@ -32,40 +32,49 @@ class AppFormTextFild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.smallLarge,
-        vertical: AppSpacing.xSmall,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(1, 1),
-            color: Colors.black.withAlpha(50),
-            blurRadius: 2,
-            spreadRadius: 1,
-          ),
-        ],
-        borderRadius: BorderRadius.circular(AppRadius.small),
-        border: Border.all(color: AppColors.secondaryDarkPanela, width: 2),
-      ),
-      child: FormBuilderTextField(
-        name: name,
-        decoration: InputDecoration(
-          suffixIcon: iconButton,
-          hintText: hintText,
-          border: InputBorder.none,
+    return FormBuilderTextField(
+      name: name,
+      decoration: InputDecoration(
+        suffixIcon: iconButton,
+        hintText: hintText,
+        hintStyle: TextStyle(color: AppColors.textDark.withAlpha(80)),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.smallLarge,
+          vertical: AppSpacing.small,
         ),
-        initialValue: initialValue,
-        obscureText: obscureText,
-        keyboardType: keyboardType,
-        validator: validator,
-        style: Theme.of(context).textTheme.bodyLarge,
-        onChanged: onChanged,
-        inputFormatters: inputFormatters,
-        valueTransformer: valueTransformer,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(
+            color: AppColors.secondaryDarkPanela,
+            width: 2,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(
+            color: AppColors.primaryPanelaBrown,
+            width: 2.5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.error, width: 2),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.error, width: 2.5),
+        ),
       ),
+      initialValue: initialValue,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      style: Theme.of(context).textTheme.bodyLarge,
+      onChanged: onChanged,
+      inputFormatters: inputFormatters,
+      valueTransformer: valueTransformer,
     );
   }
 }

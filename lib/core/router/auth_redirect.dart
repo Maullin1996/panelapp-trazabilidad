@@ -4,7 +4,7 @@ import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
-import '../../features/auth/providers/auth_provider.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
 
 /// Control de acceso por estado de auth y rol
 String? authRedirect(Ref ref, GoRouterState state) {

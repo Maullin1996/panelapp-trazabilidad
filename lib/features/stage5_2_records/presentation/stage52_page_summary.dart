@@ -54,28 +54,39 @@ class Stage52SummaryPage extends ConsumerWidget {
             const SizedBox(height: AppSpacing.smallLarge),
             CustomCard(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(AppSpacing.small),
-                    decoration: BoxDecoration(
-                      color: AppColors.secondaryDarkPanela,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppSpacing.smallLarge),
-                        topRight: Radius.circular(AppSpacing.smallLarge),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: AppSpacing.small,
+                      right: AppSpacing.small,
+                      top: AppSpacing.xSmall,
+                    ),
+                    child: Text(
+                      DateFormat.yMd().format(record.date),
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: AppColors.primaryPanelaBrown,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    child: CustomRichText(
-                      icon: Icons.calendar_month,
-                      iconColor: AppColors.backgroundCrema,
-                      firstTextColor: AppColors.backgroundCrema,
-                      secondTextColor: AppColors.backgroundCrema,
-                      firstText: 'Fecha: ',
-                      secondText: DateFormat.yMd().format(record.date),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.small,
+                      vertical: AppSpacing.xSmall,
+                    ),
+                    child: Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: AppColors.secondaryDarkPanela.withAlpha(45),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.small),
                   Padding(
-                    padding: const EdgeInsets.all(AppSpacing.xSmall),
+                    padding: const EdgeInsets.only(
+                      left: AppSpacing.small,
+                      right: AppSpacing.small,
+                      bottom: AppSpacing.small,
+                    ),
                     child: Column(
                       children: [
                         CustomRichText(

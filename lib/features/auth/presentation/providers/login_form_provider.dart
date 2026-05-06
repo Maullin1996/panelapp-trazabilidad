@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registro_panela/features/auth/providers/auth_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'login_form_provider.freezed.dart';

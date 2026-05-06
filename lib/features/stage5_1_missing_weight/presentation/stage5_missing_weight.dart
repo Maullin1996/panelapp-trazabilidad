@@ -144,7 +144,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Moliendas registradas',
+                          'Canastillas registradas',
                           style: textTheme.bodySmall?.copyWith(
                             color: Colors.grey,
                           ),

@@ -5,7 +5,7 @@ import 'package:registro_panela/features/auth/domin/entities/authenticated_user.
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
 import 'package:registro_panela/features/auth/domin/repositories/auth_repository.dart';
-import 'package:registro_panela/features/auth/providers/auth_repository_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_provider.g.dart';

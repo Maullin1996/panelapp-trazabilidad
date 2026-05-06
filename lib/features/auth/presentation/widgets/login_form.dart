@@ -5,15 +5,11 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
-import 'package:registro_panela/features/auth/providers/auth_provider.dart';
-import 'package:registro_panela/features/auth/providers/login_form_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
+import 'package:registro_panela/features/auth/presentation/providers/login_form_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 
-/// Formulario de inicio de sesión.
-///
-/// Usa `loginFormProvider` para manejar el estado de los campos y
-/// `authProvider` para ejecutar el login.
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
 
@@ -23,22 +19,18 @@ class LoginForm extends ConsumerStatefulWidget {
 
 class _LoginFormState extends ConsumerState<LoginForm> {
   final _fbkey = GlobalKey<FormBuilderState>();
-  bool obscure = true; // Controla visibilidad de la contraseña
+  bool _obscure = true;
 
   @override
   Widget build(BuildContext context) {
-    // Escucha cambios de estado de autenticación
     ref.listen<AuthParams>(authProvider, (previous, next) {
-      if (previous?.authStatus != next.authStatus) {
-        if (next.authStatus == AuthStatus.checking) {
-        } else if (next.authStatus == AuthStatus.notAuthenticated) {
-          // Muestra mensaje de error
-          CustomSnackBar.show(
-            context,
-            message: 'Usuario invalido o revisar conexión',
-            status: SnackbarStatus.error,
-          );
-        }
+      if (previous?.authStatus != next.authStatus &&
+          next.authStatus == AuthStatus.notAuthenticated) {
+        CustomSnackBar.show(
+          context,
+          message: 'Usuario inválido o revisar conexión',
+          status: SnackbarStatus.error,
+        );
       }
     });
 
@@ -46,85 +38,120 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final formState = ref.watch(loginFormProvider);
     final formNotifier = ref.read(loginFormProvider.notifier);
     final authNotifier = ref.read(authProvider.notifier);
+    final isChecking =
+        ref.watch(authProvider).authStatus == AuthStatus.checking;
+    final isSubmitting = formState.isSubmitting || isChecking;
 
     return FormBuilder(
       key: _fbkey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Campo usuario
-          Text('Usuario:', style: textTheme.headlineLarge),
-          const SizedBox(height: AppSpacing.small),
+          // ── Campo: correo ──────────────────────────────────────────
+          _FieldLabel(textTheme, 'Correo electrónico'),
+          const SizedBox(height: AppSpacing.xSmall),
           AppFormTextFild(
-            key: Key("login-email-input"),
+            key: const Key('login-email-input'),
             name: 'email',
             hintText: 'correo@dominio.com',
             keyboardType: TextInputType.emailAddress,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-              FormBuilderValidators.email(),
+              FormBuilderValidators.required(
+                errorText: 'Este campo es obligatorio',
+              ),
+              FormBuilderValidators.email(
+                errorText: 'Ingresa un correo válido',
+              ),
             ]),
             onChanged: (v) => formNotifier.onEmailChanged(v ?? ''),
           ),
 
-          const SizedBox(height: AppSpacing.medium),
-
-          // Campo contraseña
-          Text('Contraseña:', style: textTheme.headlineLarge),
           const SizedBox(height: AppSpacing.small),
+
+          // ── Campo: contraseña ──────────────────────────────────────
+          _FieldLabel(textTheme, 'Contraseña'),
+          const SizedBox(height: AppSpacing.xSmall),
           AppFormTextFild(
-            key: Key("login-password-input"),
+            key: const Key('login-password-input'),
             name: 'password',
-            obscureText: obscure,
+            obscureText: _obscure,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-              FormBuilderValidators.minLength(6),
+              FormBuilderValidators.required(
+                errorText: 'Este campo es obligatorio',
+              ),
+              FormBuilderValidators.minLength(
+                6,
+                errorText: 'Mínimo 6 caracteres',
+              ),
             ]),
             onChanged: (v) => formNotifier.onPasswordChanged(v ?? ''),
             iconButton: IconButton(
-              onPressed: () => setState(() => obscure = !obscure),
+              onPressed: () => setState(() => _obscure = !_obscure),
               icon: Icon(
-                obscure
+                _obscure
                     ? Icons.visibility_outlined
                     : Icons.visibility_off_outlined,
+                color: AppColors.secondaryDarkPanela,
+                size: 20,
               ),
             ),
           ),
 
-          const SizedBox(height: AppSpacing.mediumLarge),
+          const SizedBox(height: AppSpacing.medium),
 
-          // Botón de envío o indicador de carga
-          formState.isSubmitting
-              ? const Center(child: CircularProgressIndicator())
-              : Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 60,
-                    child: ElevatedButton(
-                      key: Key('login-enter-button'),
-                      onPressed: formState.isValid
-                          ? () async {
-                              if (_fbkey.currentState?.saveAndValidate() ??
-                                  false) {
-                                await authNotifier.login(
-                                  email: formState.email,
-                                  password: formState.password,
-                                );
-                              }
-                            }
-                          : null,
-                      child:
-                          ref.watch(authProvider).authStatus ==
-                              AuthStatus.checking
-                          ? CircularProgressIndicator(color: AppColors.textDark)
-                          : Text(
-                              'Iniciar sesión',
-                              style: textTheme.headlineLarge,
-                            ),
+          // ── Botón: iniciar sesión ──────────────────────────────────
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: ElevatedButton(
+              key: const Key('login-enter-button'),
+              onPressed: (formState.isValid && !isSubmitting)
+                  ? () async {
+                      if (_fbkey.currentState?.saveAndValidate() ?? false) {
+                        await authNotifier.login(
+                          email: formState.email,
+                          password: formState.password,
+                        );
+                      }
+                    }
+                  : null,
+              child: isSubmitting
+                  ? const SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: AppColors.cardBackground,
+                      ),
+                    )
+                  : Text(
+                      'Iniciar sesión',
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: AppColors.cardBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _FieldLabel extends StatelessWidget {
+  final TextTheme textTheme;
+  final String label;
+
+  const _FieldLabel(this.textTheme, this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: textTheme.bodyMedium?.copyWith(
+        color: AppColors.textDark.withAlpha(180),
+        fontWeight: FontWeight.w600,
       ),
     );
   }

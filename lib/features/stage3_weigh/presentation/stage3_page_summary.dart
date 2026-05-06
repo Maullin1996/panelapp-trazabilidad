@@ -13,7 +13,7 @@ import 'package:registro_panela/features/stage3_weigh/presentation/widget/summar
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
-class Stage3PageSummary extends ConsumerWidget {
+class Stage3PageSummary extends ConsumerStatefulWidget {
   final String projectId;
   final String load2Id;
   const Stage3PageSummary({
@@ -23,9 +23,39 @@ class Stage3PageSummary extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final project = ref.watch(stage1ProjectByIdProvider(projectId))!;
-    final load2 = ref.watch(stage2LoadsByIdProvider(load2Id))!;
+  ConsumerState<Stage3PageSummary> createState() => _Stage3PageSummaryState();
+}
+
+class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
+  int _loadedCount = 15;
+  int _totalBaskets = 0;
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      if (_loadedCount < _totalBaskets) {
+        setState(() => _loadedCount += 15);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final project = ref.watch(stage1ProjectByIdProvider(widget.projectId))!;
+    final load2 = ref.watch(stage2LoadsByIdProvider(widget.load2Id))!;
     final entry3 = ref
         .watch(syncStage3ProjectsProvider)
         .firstWhereOrNull(
@@ -35,7 +65,13 @@ class Stage3PageSummary extends ConsumerWidget {
       return const Scaffold(body: Center(child: Text('Resumen no disponible')));
     }
 
-    final summaryCalculus = ref.watch(loadSummaryProvider(load2Id));
+    final summaryCalculus = ref.watch(loadSummaryProvider(widget.load2Id));
+
+    final visibleBaskets = entry3.baskets.take(_loadedCount).toList();
+
+    if (_totalBaskets != entry3.baskets.length) {
+      _totalBaskets = entry3.baskets.length;
+    }
 
     final textTheme = TextTheme.of(context);
 
@@ -45,6 +81,7 @@ class Stage3PageSummary extends ConsumerWidget {
         leading: BackButton(onPressed: () => context.pop()),
       ),
       body: CustomScrollView(
+        controller: _scrollController,
         slivers: [
           // ── Sección resumen (estático, no cambia) ──
           SliverToBoxAdapter(
@@ -122,9 +159,9 @@ class Stage3PageSummary extends ConsumerWidget {
           SliverList.separated(
             separatorBuilder: (_, _) =>
                 const SizedBox(height: AppSpacing.small),
-            itemCount: entry3.baskets.length,
+            itemCount: visibleBaskets.length,
             itemBuilder: (context, index) {
-              final b = entry3.baskets[index];
+              final b = visibleBaskets[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.small,
