@@ -8,6 +8,7 @@ import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/stage2_load_form_provider.dart';
 import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
+import 'package:registro_panela/shared/widgets/field_label.dart';
 import 'package:uuid/uuid.dart';
 
 class Stage2LoadForm extends ConsumerStatefulWidget {
@@ -137,7 +138,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ── Gavera ──────────────────────────────────────────
-                _FieldLabel(textTheme, 'Peso de referencia de la gavera'),
+                FieldLabel(textTheme, 'Peso de referencia de la gavera'),
                 const SizedBox(height: AppSpacing.xSmall),
                 CustomFromDropdown<double>(
                   key: const Key('stage2-load-form-refweight-input'),
@@ -169,7 +170,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _FieldLabel(textTheme, 'Canastillas'),
+                          FieldLabel(textTheme, 'Canastillas'),
                           const SizedBox(height: AppSpacing.xSmall),
                           AppFormTextFild(
                             key: const Key(
@@ -196,7 +197,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _FieldLabel(textTheme, 'Peso (kg)'),
+                          FieldLabel(textTheme, 'Peso (kg)'),
                           const SizedBox(height: AppSpacing.xSmall),
                           AppFormTextFild(
                             key: const Key(
@@ -279,26 +280,6 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
   }
 }
 
-class _FieldLabel extends StatelessWidget {
-  final TextTheme textTheme;
-  final String label;
-
-  const _FieldLabel(this.textTheme, this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: textTheme.bodyMedium?.copyWith(
-        color: AppColors.textDark.withAlpha(180),
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-}
-
-/// Abre el modal de Stage2LoadForm con el diseño actualizado.
-/// Úsalo en el `bottomNavigationBar` de la página Stage2.
 void showStage2LoadModal(BuildContext context, Stage1FormData project) {
   showModalBottomSheet(
     context: context,

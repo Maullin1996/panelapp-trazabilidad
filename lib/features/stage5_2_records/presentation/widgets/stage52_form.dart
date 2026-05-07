@@ -12,6 +12,8 @@ import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
+import 'package:registro_panela/shared/widgets/field_label.dart';
+import 'package:registro_panela/shared/widgets/section_card.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -46,6 +48,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
     final formNotifier = ref.read(stage52FormProvider.notifier);
     final textTheme = TextTheme.of(context);
     final bool isNew = widget.initialRecord == null;
+    final bool isSubmitting = formState.status == Stage52FormStatus.submitting;
 
     return FormBuilder(
       key: _formKey,
@@ -60,156 +63,244 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Gavera', style: textTheme.headlineMedium),
-          const SizedBox(height: AppSpacing.small),
-          // 1) Selector de gaveraWeight
-          CustomFromDropdown<double>(
-            key: Key('stage52-form-gavera-input'),
-            name: 'gaveras',
-            items: project.gaveras
-                .map(
-                  (g) => DropdownMenuItem(
-                    key: Key('stage52-form-gavera-${g.referenceWeight}'),
-                    value: g.referenceWeight,
-                    child: Text('${g.referenceWeight} g'),
+          // ── Sección: Gavera ───────────────────────────────────────────
+          SectionCard(
+            icon: Icons.scale,
+            iconColor: AppColors.weight,
+            title: 'Gavera',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FieldLabel(textTheme, 'Seleccionar gavera'),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomFromDropdown<double>(
+                  key: const Key('stage52-form-gavera-input'),
+                  name: 'gaveras',
+                  items: project.gaveras
+                      .map(
+                        (g) => DropdownMenuItem(
+                          key: Key('stage52-form-gavera-${g.referenceWeight}'),
+                          value: g.referenceWeight,
+                          child: Text('${g.referenceWeight} g'),
+                        ),
+                      )
+                      .toList(),
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Este campo es obligatorio',
                   ),
-                )
-                .toList(),
-            validator: FormBuilderValidators.required(
-              errorText: "Este campo es obligatorio",
+                ),
+              ],
             ),
           ),
 
-          const SizedBox(height: AppSpacing.smallLarge),
-          Text('Peso de panela (kg)', style: textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.small),
-          // 2) Peso de panela
-          AppFormTextFild(
-            key: Key('stage52-form-panela-weight-input'),
-            name: 'panelaWeight',
-            keyboardType: TextInputType.number,
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                errorText: "Este campo es obligatorio",
-              ),
-              FormBuilderValidators.numeric(
-                errorText:
-                    "Debe de ser un número y si es decimal debe se ser punto en vez de coma",
-              ),
-            ]),
+
+          // ── Sección: Panela ───────────────────────────────────────────
+          SectionCard(
+            icon: Icons.inventory_2_outlined,
+            iconColor: AppColors.primaryPanelaBrown,
+            title: 'Panela',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FieldLabel(textTheme, 'Peso (kg)'),
+                const SizedBox(height: AppSpacing.xSmall),
+                AppFormTextFild(
+                  key: const Key('stage52-form-panela-weight-input'),
+                  name: 'panelaWeight',
+                  hintText: 'Ej. 12.5',
+                  keyboardType: TextInputType.number,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Este campo es obligatorio',
+                    ),
+                    FormBuilderValidators.numeric(
+                      errorText: 'Solo números, use punto para decimales',
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: AppSpacing.smallLarge),
+                FieldLabel(textTheme, 'Unidades'),
+                const SizedBox(height: AppSpacing.xSmall),
+                AppFormTextFild(
+                  key: const Key('stage52-form-panela-unit-input'),
+                  name: 'unitCount',
+                  hintText: 'Ej. 10',
+                  keyboardType: TextInputType.number,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: 'Este campo es obligatorio',
+                    ),
+                    FormBuilderValidators.integer(
+                      errorText: 'Debe ser un número entero',
+                    ),
+                  ]),
+                ),
+              ],
+            ),
           ),
 
-          const SizedBox(height: AppSpacing.smallLarge),
-          Text('Unidades de panela', style: textTheme.headlineMedium),
           const SizedBox(height: AppSpacing.small),
-          // 3) Unidades
-          AppFormTextFild(
-            key: Key('stage52-form-panela-unit-input'),
-            name: 'unitCount',
-            keyboardType: TextInputType.number,
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                errorText: "Este campo es obligatorio",
-              ),
-              FormBuilderValidators.integer(
-                errorText: "Debe de ser un número entero",
-              ),
-            ]),
-          ),
 
-          const SizedBox(height: AppSpacing.smallLarge),
-          Text('Calidad', style: textTheme.headlineMedium),
-          const SizedBox(height: AppSpacing.small),
-          // 4) Calidad
-          CustomFromDropdown(
-            key: Key('stage52-form-quality-input'),
-            name: 'quality',
-            items: BasketQuality.values
-                .map(
-                  (q) => DropdownMenuItem(
-                    key: Key('stage52-form-quality-${q.name}'),
-                    value: q.name,
-                    child: Text(q.name.toUpperCase()),
+          // ── Sección: Calidad ──────────────────────────────────────────
+          SectionCard(
+            icon: Icons.verified_outlined,
+            iconColor: AppColors.accepted,
+            title: 'Calidad',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FieldLabel(textTheme, 'Tipo de calidad'),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomFromDropdown(
+                  key: const Key('stage52-form-quality-input'),
+                  name: 'quality',
+                  items: BasketQuality.values
+                      .map(
+                        (q) => DropdownMenuItem(
+                          key: Key('stage52-form-quality-${q.name}'),
+                          value: q.name,
+                          child: Text(q.name.toUpperCase()),
+                        ),
+                      )
+                      .toList(),
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Este campo es obligatorio',
                   ),
-                )
-                .toList(),
-            validator: FormBuilderValidators.required(
-              errorText: "Este campo es obligatorio",
+                ),
+              ],
             ),
           ),
 
-          const SizedBox(height: AppSpacing.mediumLarge),
-          // 5) Foto
-          SizedBox(
-            width: double.infinity,
-            height: 60,
-            child: ElevatedButton.icon(
-              key: Key('stage52-form-photo-button'),
-              onPressed: () async {
-                _onPickImage(textTheme);
-              },
-              icon: const Icon(
-                Icons.camera_alt,
-                color: AppColors.textDark,
-                size: 30,
-              ),
-              label: Text('Tomar foto', style: textTheme.headlineMedium),
+          const SizedBox(height: AppSpacing.small),
+
+          // ── Sección: Foto ─────────────────────────────────────────────
+          SectionCard(
+            icon: Icons.camera_alt_outlined,
+            iconColor: AppColors.error,
+            title: 'Registro fotográfico',
+            child: Column(
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    key: const Key('stage52-form-photo-button'),
+                    onPressed: () => _onPickImage(textTheme),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.small),
+                      ),
+                      backgroundColor: AppColors.primaryPanelaBrown,
+                    ),
+                    icon: const Icon(
+                      Icons.camera_alt_outlined,
+                      color: AppColors.textLight,
+                      size: 20,
+                    ),
+                    label: Text(
+                      _photoPath == null ? 'Tomar foto' : 'Cambiar foto',
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: AppColors.textLight,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                if (_photoPath != null) ...[
+                  const SizedBox(height: AppSpacing.small),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
+                    child: StageImageWidget(
+                      imagePath: _photoPath!,
+                      width: double.infinity,
+                      height: 220,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (_photoPath != null) ...[
-            const SizedBox(height: AppSpacing.mediumLarge),
-            Center(
-              child: StageImageWidget(
-                imagePath: _photoPath!,
-                width: 300,
-                height: 300,
-                fit: BoxFit.contain,
+
+          const SizedBox(height: AppSpacing.medium),
+
+          // ── Error ─────────────────────────────────────────────────────
+          if (formState.status == Stage52FormStatus.error) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(AppSpacing.small),
+              decoration: BoxDecoration(
+                color: AppColors.error.withAlpha(20),
+                borderRadius: BorderRadius.circular(AppRadius.medium),
+                border: Border.all(color: AppColors.error.withAlpha(60)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.error_outline, color: AppColors.error, size: 18),
+                  const SizedBox(width: AppSpacing.xSmall),
+                  Expanded(
+                    child: Text(
+                      formState.errorMessage ?? 'Error desconocido',
+                      style: textTheme.bodySmall?.copyWith(
+                        color: AppColors.error,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            const SizedBox(height: AppSpacing.small),
           ],
 
-          const SizedBox(height: AppSpacing.mediumSmall),
-          Center(
-            child: SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton(
-                key: Key('stage52-form-submmit-button'),
-                onPressed: formState.status == Stage52FormStatus.submitting
-                    ? null
-                    : () {
-                        if (!(_formKey.currentState?.saveAndValidate() ??
-                            false)) {
-                          return;
-                        }
-                        final v = _formKey.currentState!.value;
-                        final record = Stage52RecordData(
-                          id: widget.initialRecord?.id ?? _uuid.v4(),
-                          projectId: widget.projectId,
-                          date: widget.initialRecord?.date ?? DateTime.now(),
-                          gaveraWeight: v['gaveras'] as double,
-                          panelaWeight: double.parse(v['panelaWeight']),
-                          unitCount: int.parse(v['unitCount']),
-                          quality: BasketQuality.values.firstWhere(
-                            (q) => q.name == v['quality'],
-                          ),
-                          photoPath: _photoPath ?? '',
-                        );
-                        formNotifier.submit(data: record, isNew: isNew);
-                      },
-                child: Text(
-                  'Guardar registro',
-                  style: textTheme.headlineMedium,
-                ),
-              ),
+          // ── Botón guardar ─────────────────────────────────────────────
+          SizedBox(
+            width: double.infinity,
+            height: 52,
+            child: ElevatedButton(
+              key: const Key('stage52-form-submmit-button'),
+              onPressed: isSubmitting
+                  ? null
+                  : () => _onSubmit(formNotifier, isNew),
+              child: isSubmitting
+                  ? const SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.5,
+                        color: AppColors.cardBackground,
+                      ),
+                    )
+                  : Text(
+                      isNew ? 'Guardar registro' : 'Actualizar registro',
+                      style: textTheme.headlineMedium?.copyWith(
+                        color: AppColors.cardBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
             ),
           ),
 
-          if (formState.status == Stage52FormStatus.error)
-            Text('Error: ${formState.errorMessage}'),
+          const SizedBox(height: AppSpacing.medium),
         ],
       ),
     );
+  }
+
+  void _onSubmit(Stage52Form formNotifier, bool isNew) {
+    if (!(_formKey.currentState?.saveAndValidate() ?? false)) return;
+    final v = _formKey.currentState!.value;
+    final record = Stage52RecordData(
+      id: widget.initialRecord?.id ?? _uuid.v4(),
+      projectId: widget.projectId,
+      date: widget.initialRecord?.date ?? DateTime.now(),
+      gaveraWeight: v['gaveras'] as double,
+      panelaWeight: double.parse(v['panelaWeight']),
+      unitCount: int.parse(v['unitCount']),
+      quality: BasketQuality.values.firstWhere((q) => q.name == v['quality']),
+      photoPath: _photoPath ?? '',
+    );
+    formNotifier.submit(data: record, isNew: isNew);
   }
 
   void _onPickImage(TextTheme textTheme) {

@@ -10,6 +10,8 @@ import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_form_provider.dart';
+import 'package:registro_panela/shared/widgets/field_label.dart';
+import 'package:registro_panela/shared/widgets/section_card.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 import 'package:uuid/uuid.dart';
 
@@ -75,14 +77,14 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Sección: Información general ──────────────────────────────
-          _SectionCard(
+          SectionCard(
             icon: Icons.storefront_outlined,
             iconColor: AppColors.primaryPanelaBrown,
             title: 'Información general',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _FieldLabel(textTheme, 'Nombre molienda'),
+                FieldLabel(textTheme, 'Nombre molienda'),
                 const SizedBox(height: AppSpacing.xSmall),
                 AppFormTextFild(
                   key: const Key('stage1-load-form-molienda-name-input'),
@@ -99,7 +101,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           const SizedBox(height: AppSpacing.small),
 
           // ── Sección: Gaveras ──────────────────────────────────────────
-          _SectionCard(
+          SectionCard(
             icon: Icons.storage,
             iconColor: AppColors.weight,
             title: 'Gaveras',
@@ -226,14 +228,14 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           const SizedBox(height: AppSpacing.small),
 
           // ── Sección: Canastillas ──────────────────────────────────────
-          _SectionCard(
+          SectionCard(
             iconColor: AppColors.register,
             icon: Icons.shopping_basket,
             title: 'Canastillas',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _FieldLabel(textTheme, 'Cantidad de canastillas'),
+                FieldLabel(textTheme, 'Cantidad de canastillas'),
                 const SizedBox(height: AppSpacing.xSmall),
                 AppFormTextFild(
                   key: const Key('stage1-load-form-baskets-quantity'),
@@ -255,7 +257,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           const SizedBox(height: AppSpacing.small),
 
           // ── Sección: Suministros ──────────────────────────────────────
-          _SectionCard(
+          SectionCard(
             icon: Icons.science_rounded,
             title: 'Suministros',
             iconColor: AppColors.accepted,
@@ -285,14 +287,14 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           const SizedBox(height: AppSpacing.small),
 
           // ── Sección: Contacto ─────────────────────────────────────────
-          _SectionCard(
+          SectionCard(
             icon: Icons.phone,
             iconColor: AppColors.weight,
             title: 'Contacto',
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _FieldLabel(textTheme, 'Teléfono'),
+                FieldLabel(textTheme, 'Teléfono'),
                 const SizedBox(height: AppSpacing.xSmall),
                 AppFormTextFild(
                   key: const Key('stage1-load-form-phone-input'),
@@ -315,7 +317,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           const SizedBox(height: AppSpacing.small),
 
           // ── Sección: Foto ─────────────────────────────────────────────
-          _SectionCard(
+          SectionCard(
             iconColor: AppColors.error,
             icon: Icons.camera_alt,
             title: 'Registro fotográfico',
@@ -485,106 +487,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
       final compressed = await compressFile(path);
       if (compressed != null) setState(() => _photoPath = compressed);
     }
-  }
-}
-
-// ── Widgets de apoyo ────────────────────────────────────────────────────────
-
-class _SectionCard extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final Widget child;
-  final Widget? trailing;
-
-  const _SectionCard({
-    required this.icon,
-    required this.title,
-    required this.child,
-    this.trailing,
-    required this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = TextTheme.of(context);
-    return CustomCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header de sección
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.small,
-              AppSpacing.small,
-              AppSpacing.small,
-              0,
-            ),
-            child: Row(
-              children: [
-                IconDecoration(
-                  icon: icon,
-                  iconColor: iconColor,
-                  backgroundColor: iconColor,
-                ),
-                const SizedBox(width: AppSpacing.xSmall),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: textTheme.headlineSmall?.copyWith(
-                      color: AppColors.primaryPanelaBrown,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
-                ?trailing,
-              ],
-            ),
-          ),
-          // Divider
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.small,
-              vertical: AppSpacing.xSmall,
-            ),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-              color: AppColors.secondaryDarkPanela.withAlpha(30),
-            ),
-          ),
-          // Contenido
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.small,
-              0,
-              AppSpacing.small,
-              AppSpacing.small,
-            ),
-            child: child,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  final TextTheme textTheme;
-  final String label;
-
-  const _FieldLabel(this.textTheme, this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: textTheme.bodyMedium?.copyWith(
-        color: AppColors.textDark.withAlpha(180),
-        fontWeight: FontWeight.w600,
-      ),
-    );
   }
 }
 

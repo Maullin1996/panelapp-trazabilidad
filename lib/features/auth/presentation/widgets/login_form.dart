@@ -9,6 +9,7 @@ import 'package:registro_panela/features/auth/presentation/providers/auth_provid
 import 'package:registro_panela/features/auth/presentation/providers/login_form_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
+import 'package:registro_panela/shared/widgets/field_label.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
@@ -48,7 +49,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // ── Campo: correo ──────────────────────────────────────────
-          _FieldLabel(textTheme, 'Correo electrónico'),
+          FieldLabel(textTheme, 'Correo electrónico'),
           const SizedBox(height: AppSpacing.xSmall),
           AppFormTextFild(
             key: const Key('login-email-input'),
@@ -69,7 +70,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           const SizedBox(height: AppSpacing.small),
 
           // ── Campo: contraseña ──────────────────────────────────────
-          _FieldLabel(textTheme, 'Contraseña'),
+          FieldLabel(textTheme, 'Contraseña'),
           const SizedBox(height: AppSpacing.xSmall),
           AppFormTextFild(
             key: const Key('login-password-input'),
@@ -134,24 +135,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  final TextTheme textTheme;
-  final String label;
-
-  const _FieldLabel(this.textTheme, this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: textTheme.bodyMedium?.copyWith(
-        color: AppColors.textDark.withAlpha(180),
-        fontWeight: FontWeight.w600,
       ),
     );
   }

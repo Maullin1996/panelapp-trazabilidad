@@ -429,7 +429,7 @@ class _NewRecordFab extends StatelessWidget {
             'Nuevo registro',
             style: TextTheme.of(
               context,
-            ).headlineSmall?.copyWith(color: AppColors.textLight),
+            ).headlineMedium?.copyWith(color: AppColors.textLight),
           ),
         ),
       ),

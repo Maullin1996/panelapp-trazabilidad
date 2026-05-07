@@ -81,6 +81,9 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             position: PopupMenuPosition.under,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xSmall),
             borderRadius: BorderRadius.circular(AppRadius.large),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.medium),
+            ),
             color: AppColors.cardBackground,
             icon: const Icon(Icons.more_vert),
             onSelected: (value) async {

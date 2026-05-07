@@ -7,6 +7,7 @@ import 'package:registro_panela/features/admin/domain/entities/app_user.dart';
 import 'package:registro_panela/features/admin/providers/admin_provider.dart';
 import 'package:registro_panela/features/admin/providers/change_password_controller_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
+import 'package:registro_panela/shared/widgets/section_card.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
 import '../../auth/presentation/providers/auth_provider.dart'; // tu provider de Auth
@@ -93,7 +94,7 @@ class _AdminResetPasswordPageState
         ),
         child: Column(
           children: [
-            _SectionCard(
+            SectionCard(
               icon: Icons.person_outline,
               title: 'Usuario',
               iconColor: AppColors.primaryPanelaBrown,
@@ -118,7 +119,7 @@ class _AdminResetPasswordPageState
                 ],
               ),
             ),
-            _SectionCard(
+            SectionCard(
               icon: Icons.lock_outline,
               title: 'Nueva contraseña',
               iconColor: AppColors.weight,
@@ -256,83 +257,6 @@ class _AdminResetPasswordPageState
         );
       },
       loading: () {}, // ya está deshabilitado el botón
-    );
-  }
-}
-
-class _SectionCard extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final Widget child;
-
-  const _SectionCard({
-    required this.icon,
-    required this.title,
-    required this.child,
-    required this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = TextTheme.of(context);
-    return CustomCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header de sección
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.small,
-              AppSpacing.small,
-              AppSpacing.small,
-              0,
-            ),
-            child: Row(
-              children: [
-                IconDecoration(
-                  icon: icon,
-                  iconColor: iconColor,
-                  backgroundColor: iconColor,
-                ),
-                const SizedBox(width: AppSpacing.xSmall),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: textTheme.headlineSmall?.copyWith(
-                      color: AppColors.primaryPanelaBrown,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Divider
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.small,
-              vertical: AppSpacing.xSmall,
-            ),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-              color: AppColors.secondaryDarkPanela.withAlpha(30),
-            ),
-          ),
-          // Contenido
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.small,
-              0,
-              AppSpacing.small,
-              AppSpacing.small,
-            ),
-            child: child,
-          ),
-        ],
-      ),
     );
   }
 }
