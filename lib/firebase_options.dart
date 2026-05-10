@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBM7vPO0QyY2-sAmSuzIR_Mr94NB5CgyZ4',
-    appId: '1:55019937253:android:507b13425535451eeb630c',
-    messagingSenderId: '55019937253',
-    projectId: 'registro-panela',
-    storageBucket: 'registro-panela.firebasestorage.app',
+    apiKey: 'AIzaSyBYcAPnheZkp2vJESK90OLF0xOKgjT7NoI',
+    appId: '1:27377303448:android:0cfaac0564536283fcf5ed',
+    messagingSenderId: '27377303448',
+    projectId: 'registro-panelera',
+    storageBucket: 'registro-panelera.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBJS3l-nK4P38dDWss9_T4pL5wSkKFOeJU',
-    appId: '1:55019937253:ios:3e73d28f1bd41b91eb630c',
-    messagingSenderId: '55019937253',
-    projectId: 'registro-panela',
-    storageBucket: 'registro-panela.firebasestorage.app',
+    apiKey: 'AIzaSyBcTPITnrSfS_Qaacme2InuowdJkY0wKOY',
+    appId: '1:27377303448:ios:80cbdc1f6c9f3f41fcf5ed',
+    messagingSenderId: '27377303448',
+    projectId: 'registro-panelera',
+    storageBucket: 'registro-panelera.firebasestorage.app',
     iosBundleId: 'com.example.registroPanela',
   );
 

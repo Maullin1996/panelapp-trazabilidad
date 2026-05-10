@@ -8,10 +8,11 @@ import 'package:registro_panela/features/stage5_2_records/domain/entities/stage5
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_summary_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/widgets/stage52_shimmer.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/empty_widget.dart';
 import 'package:registro_panela/shared/widgets/icon_decoration.dart';
+import 'package:registro_panela/shared/widgets/selection_source_title.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 
 class Stage52Page extends ConsumerWidget {
@@ -24,6 +25,15 @@ class Stage52Page extends ConsumerWidget {
     final user = ref.read(authProvider).user;
     final summary = ref.watch(stage52SummaryProvider(projectId));
     final textTheme = TextTheme.of(context);
+
+    final isLoading = ref.watch(stage52LoadingProvider);
+    if (isLoading && records.isEmpty) {
+      return Scaffold(
+        body: const Stage52Shimmer(itemCount: 6),
+        floatingActionButton: _NewRecordFab(projectId: projectId),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      );
+    }
 
     if (records.isEmpty) {
       return Scaffold(
@@ -449,11 +459,9 @@ class _RecordActionDialog extends StatelessWidget {
     final textTheme = TextTheme.of(context);
     return AlertDialog(
       backgroundColor: AppColors.backgroundCrema,
-      title: Center(
-        child: Text('¿Qué quieres hacer?', style: textTheme.headlineMedium),
-      ),
+      title: Text('¿Qué quieres hacer?', style: textTheme.headlineMedium),
       actions: [
-        _ActionTile(
+        SelectionSourceTile(
           icon: Icons.article_outlined,
           label: 'Ver resumen',
           onTap: () {
@@ -463,8 +471,8 @@ class _RecordActionDialog extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 8),
-        _ActionTile(
+        const SizedBox(height: AppSpacing.xSmall),
+        SelectionSourceTile(
           icon: Icons.edit_outlined,
           label: 'Editar registro',
           onTap: () {
@@ -473,33 +481,6 @@ class _RecordActionDialog extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-}
-
-class _ActionTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  const _ActionTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomCard(
-      child: ListTile(
-        onTap: onTap,
-        leading: Icon(icon, color: AppColors.textDark),
-        title: Text(label, style: TextTheme.of(context).headlineSmall),
-        trailing: const Icon(
-          Icons.chevron_right,
-          color: AppColors.textDark,
-          size: 20,
-        ),
-      ),
     );
   }
 }

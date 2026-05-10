@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyBJS3l-nK4P38dDWss9_T4pL5wSkKFOeJU</string>
+	<string>AIzaSyBcTPITnrSfS_Qaacme2InuowdJkY0wKOY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>55019937253</string>
+	<string>27377303448</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.registroPanela</string>
 	<key>PROJECT_ID</key>
-	<string>registro-panela</string>
+	<string>registro-panelera</string>
 	<key>STORAGE_BUCKET</key>
-	<string>registro-panela.firebasestorage.app</string>
+	<string>registro-panelera.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:55019937253:ios:3e73d28f1bd41b91eb630c</string>
+	<string>1:27377303448:ios:80cbdc1f6c9f3f41fcf5ed</string>
 </dict>
 </plist>

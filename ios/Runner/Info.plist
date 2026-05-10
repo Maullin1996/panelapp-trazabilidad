@@ -68,5 +68,14 @@
 		</array>
 		<key>UIStatusBarHidden</key>
 		<false/>
+
+		<key>NSCameraUsageDescription</key>
+		<string>Necesitamos acceso a la cámara para tomar fotos de la molienda</string>
+
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Necesitamos acceso a la galería para seleccionar fotos</string>
+
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>Necesitamos guardar fotos en tu galería</string>
 	</dict>
 </plist>

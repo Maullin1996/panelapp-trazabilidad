@@ -10,10 +10,10 @@ import 'package:registro_panela/features/stage5_2_records/presentation/providers
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:registro_panela/shared/widgets/field_label.dart';
 import 'package:registro_panela/shared/widgets/section_card.dart';
+import 'package:registro_panela/shared/widgets/selection_source_title.dart';
 import 'package:registro_panela/shared/widgets/stage_image_widget.dart';
 import 'package:uuid/uuid.dart';
 
@@ -313,62 +313,23 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
           style: textTheme.headlineMedium,
         ),
         actions: [
-          GestureDetector(
+          SelectionSourceTile(
             key: Key('stage52-form-camera-button'),
+            icon: Icons.camera_alt,
+            label: 'Cámara',
             onTap: () {
               Navigator.of(context).pop();
               _pickFromCamera();
             },
-            child: CustomCard(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xSmall),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.camera_alt,
-                      color: AppColors.textDark,
-                      size: 30,
-                    ),
-                    SizedBox(width: AppSpacing.small),
-                    Text(
-                      'Cámara',
-                      style: textTheme.headlineMedium,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
-          GestureDetector(
+          const SizedBox(height: AppSpacing.xSmall),
+          SelectionSourceTile(
+            icon: Icons.photo_library_outlined,
+            label: 'Galería',
             onTap: () {
               Navigator.of(context).pop();
               _pickFromGallery();
             },
-            child: CustomCard(
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.xSmall),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.photo_library,
-                      color: AppColors.textDark,
-                      size: 30,
-                    ),
-                    SizedBox(width: AppSpacing.small),
-                    Text(
-                      'Galería',
-                      style: textTheme.headlineMedium,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
           ),
         ],
       ),

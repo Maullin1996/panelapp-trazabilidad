@@ -8,6 +8,7 @@ import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
+import 'package:registro_panela/features/project_selector/widgets/project_selector_shimmer.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -190,6 +191,11 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
   Widget _buildBody<T>(List<T> projects, String? error, TextTheme textTheme) {
     if (error != null) {
       return _buildErrorBody(error);
+    }
+
+    final isLoading = ref.watch(stage1ProjectsLoadingProvider);
+    if (isLoading && projects.isEmpty) {
+      return const ProjectSelectorShimmer(itemCount: 5);
     }
 
     if (projects.isEmpty) {

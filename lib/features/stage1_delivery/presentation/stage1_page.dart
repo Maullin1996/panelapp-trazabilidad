@@ -57,6 +57,7 @@ class Stage1Page extends ConsumerWidget {
         ),
         body: SingleChildScrollView(
           child: SafeArea(
+            bottom: true,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.small,

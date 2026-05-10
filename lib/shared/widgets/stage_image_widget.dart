@@ -18,7 +18,6 @@ class StageImageWidget extends StatelessWidget {
   final BoxFit fit;
 
   /// Widget mostrado mientras carga la imagen remota
-  final Widget placeholder;
 
   /// Widget mostrado en caso de error
   final Widget errorWidget;
@@ -29,7 +28,6 @@ class StageImageWidget extends StatelessWidget {
     this.width,
     this.height,
     this.fit = BoxFit.cover,
-    this.placeholder = const Center(child: CircularProgressIndicator()),
     this.errorWidget = const Center(child: Icon(Icons.broken_image)),
   });
 
@@ -41,7 +39,8 @@ class StageImageWidget extends StatelessWidget {
         borderRadius: BorderRadiusGeometry.circular(AppRadius.large),
         child: CachedNetworkImage(
           imageUrl: imagePath,
-          placeholder: (_, _) => placeholder,
+          placeholder: (_, _) =>
+              _ImageShimmer(width: width ?? 100, height: height ?? 100),
           errorWidget: (_, _, _) => errorWidget,
           width: width,
           height: height,
@@ -57,6 +56,96 @@ class StageImageWidget extends StatelessWidget {
     }
 
     // Si no existe archivo local, mostramos errorWidget
-    return errorWidget;
+    return _ImageError(width: width ?? 100, height: height ?? 100);
+  }
+}
+
+class _ImageShimmer extends StatefulWidget {
+  final double width;
+  final double height;
+  const _ImageShimmer({required this.width, required this.height});
+
+  @override
+  State<_ImageShimmer> createState() => _ImageShimmerState();
+}
+
+class _ImageShimmerState extends State<_ImageShimmer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _animation = Tween<double>(
+      begin: 0.3,
+      end: 0.8,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (_, _) => Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          color: AppColors.secondaryDarkPanela.withAlpha(
+            (_animation.value * 60).round(),
+          ),
+          borderRadius: BorderRadius.circular(AppRadius.large),
+        ),
+        child: Center(
+          child: Icon(
+            Icons.image_outlined,
+            color: AppColors.secondaryDarkPanela.withAlpha(80),
+            size: 32,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ImageError extends StatelessWidget {
+  final double width;
+  final double height;
+  const _ImageError({required this.width, required this.height});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: AppColors.error.withAlpha(20),
+        borderRadius: BorderRadius.circular(AppRadius.large),
+        border: Border.all(color: AppColors.error.withAlpha(40)),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.broken_image_outlined, color: AppColors.error, size: 28),
+            const SizedBox(height: 4),
+            Text(
+              'Sin imagen',
+              style: TextStyle(fontSize: 11, color: AppColors.error),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

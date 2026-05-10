@@ -12,6 +12,7 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_form_provider.dart';
 import 'package:registro_panela/shared/widgets/field_label.dart';
 import 'package:registro_panela/shared/widgets/section_card.dart';
+import 'package:registro_panela/shared/widgets/selection_source_title.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 import 'package:uuid/uuid.dart';
 
@@ -444,7 +445,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _ImageSourceTile(
+            SelectionSourceTile(
               key: const Key('stage1-load-form-camera-button'),
               icon: Icons.camera_alt,
               label: 'Cámara',
@@ -454,7 +455,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
               },
             ),
             const SizedBox(height: AppSpacing.xSmall),
-            _ImageSourceTile(
+            SelectionSourceTile(
               icon: Icons.photo_library_outlined,
               label: 'Galería',
               onTap: () {
@@ -546,47 +547,6 @@ class _AddButton extends StatelessWidget {
                 color: AppColors.primaryPanelaBrown,
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ImageSourceTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _ImageSourceTile({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = TextTheme.of(context);
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadius.medium),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.small,
-          vertical: AppSpacing.xSmall,
-        ),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.secondaryDarkPanela.withAlpha(60),
-          ),
-          borderRadius: BorderRadius.circular(AppRadius.medium),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: AppColors.primaryPanelaBrown, size: 24),
-            const SizedBox(width: AppSpacing.xSmall),
-            Text(label, style: textTheme.headlineSmall),
           ],
         ),
       ),

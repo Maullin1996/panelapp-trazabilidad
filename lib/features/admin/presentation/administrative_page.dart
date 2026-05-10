@@ -26,6 +26,19 @@ class _AdminResetPasswordPageState
   bool obscureNew = true;
   bool obscureConfirme = true;
 
+  // Future<void> _asignarAdmin() async {
+  //   try {
+  //     final result = await FirebaseFunctions.instance
+  //         .httpsCallable('setUserAsAdmin')
+  //         .call({
+  //           'uid': '',
+  //         }); // reemplaza con el UID real
+  //     print('Admin asignado: ${result.data}');
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authProvider);
@@ -53,8 +66,10 @@ class _AdminResetPasswordPageState
           ),
           actions: [
             IconButton(
-              onPressed: () =>
-                  ref.read(adminUsersControllerProvider.notifier).refresh(),
+              onPressed: () {
+                //_asignarAdmin();
+                ref.read(adminUsersControllerProvider.notifier).refresh();
+              },
               icon: const Icon(Icons.refresh),
               tooltip: 'Recargar usuarios',
             ),

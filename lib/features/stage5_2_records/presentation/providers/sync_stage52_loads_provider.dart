@@ -17,3 +17,7 @@ final stage52ByProjectProvider =
           .where((r) => r.projectId == projectId)
           .toList();
     });
+// En sync_stage52_loads_provider.dart agrega:
+final stage52LoadingProvider = Provider<bool>((ref) {
+  return ref.watch(stage52LoadProvider).isLoading;
+});
