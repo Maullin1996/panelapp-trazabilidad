@@ -49,7 +49,9 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
     final missingLimeJars = project.limeJars - returns.returnedLimeJars;
     final missingPreservativesJars =
         project.preservativesJars - returns.returnedPreservativesJars;
-    final missingBaskets = project.basketsQuantity - returns.returnedBaskets;
+    //TODO: CORREGUIR
+    final missingBaskets =
+        project.baskets[0].quantity - returns.returnedBaskets;
 
     final missingGaveras = <MissingGavera>[];
     final returnedByWeight = {

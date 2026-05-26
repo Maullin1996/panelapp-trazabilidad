@@ -105,7 +105,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                   iconColor: AppColors.register,
                   iconBg: AppColors.register.withAlpha(25),
                   title: 'Canastillas',
-                  supplied: project.basketsQuantity,
+                  supplied: project.baskets[0].quantity, //TODO : CORREGIR
                   returned: returns.returnedBaskets,
                   accentColor: AppColors.register,
                   fieldName: 'returnBaskets',

@@ -4,7 +4,7 @@ class Stage1FormModel {
   final String id;
   final String name;
   final List<Map<String, dynamic>> gaveras;
-  final int basketsQuantity;
+  final List<Map<String, dynamic>> baskets; // ← reemplaza basketsQuantity
   final double preservativesWeight;
   final int preservativesJars;
   final double limeWeight;
@@ -17,7 +17,7 @@ class Stage1FormModel {
     required this.id,
     required this.name,
     required this.gaveras,
-    required this.basketsQuantity,
+    required this.baskets,
     required this.preservativesWeight,
     required this.preservativesJars,
     required this.limeWeight,
@@ -36,10 +36,18 @@ class Stage1FormModel {
             (g) => {
               'quantity': g.quantity,
               'referenceWeight': g.referenceWeight,
+              'gaveraType': g.gaveraType.name, // enum → String
             },
           )
           .toList(),
-      basketsQuantity: data.basketsQuantity,
+      baskets: data.baskets
+          .map(
+            (b) => {
+              'size': b.size.name, // enum → String
+              'quantity': b.quantity,
+            },
+          )
+          .toList(),
       preservativesWeight: data.preservativesWeight,
       preservativesJars: data.preservativesJars,
       limeWeight: data.limeWeight,
@@ -57,12 +65,20 @@ class Stage1FormModel {
       gaveras: gaveras
           .map(
             (g) => GaveraData(
-              quantity: g['quantity'],
-              referenceWeight: g['referenceWeight'],
+              quantity: g['quantity'] as int,
+              referenceWeight: g['referenceWeight'] as double,
+              gaveraType: GaveraType.values.byName(g['gaveraType'] as String),
             ),
           )
           .toList(),
-      basketsQuantity: basketsQuantity,
+      baskets: baskets
+          .map(
+            (b) => BasketData(
+              size: BasketSize.values.byName(b['size'] as String),
+              quantity: b['quantity'] as int,
+            ),
+          )
+          .toList(),
       preservativesWeight: preservativesWeight,
       preservativesJars: preservativesJars,
       limeWeight: limeWeight,
@@ -78,7 +94,7 @@ class Stage1FormModel {
       'id': id,
       'name': name,
       'gaveras': gaveras,
-      'basketsQuantity': basketsQuantity,
+      'baskets': baskets,
       'preservativesWeight': preservativesWeight,
       'preservativesJars': preservativesJars,
       'limeWeight': limeWeight,
@@ -94,7 +110,7 @@ class Stage1FormModel {
       id: json['id'] as String,
       name: json['name'] as String? ?? '',
       gaveras: List<Map<String, dynamic>>.from(json['gaveras'] ?? []),
-      basketsQuantity: (json['basketsQuantity'] as num?)?.toInt() ?? 0,
+      baskets: List<Map<String, dynamic>>.from(json['baskets'] ?? []),
       preservativesWeight:
           (json['preservativesWeight'] as num?)?.toDouble() ?? 0.0,
       preservativesJars: (json['preservativesJars'] as num?)?.toInt() ?? 0,
@@ -102,7 +118,7 @@ class Stage1FormModel {
       limeJars: (json['limeJars'] as num?)?.toInt() ?? 0,
       phone: json['phone'] as String? ?? '',
       date: json['date'] != null
-          ? DateTime.parse(json['date'])
+          ? DateTime.parse(json['date'] as String)
           : DateTime.now(),
       photoPath: json['photoPath'] as String?,
     );

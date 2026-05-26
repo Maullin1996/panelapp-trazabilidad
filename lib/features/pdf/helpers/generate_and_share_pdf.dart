@@ -128,7 +128,11 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
                       children: [
                         pw.Text('Canastillas', style: tSection),
                         vspace(10),
-                        pw.Text('${project.basketsQuantity}', style: tHeader),
+                        //todo: Corregir
+                        pw.Text(
+                          '${project.baskets[0].quantity}',
+                          style: tHeader,
+                        ),
                         vspace(4),
                         pw.Text('unidades registradas', style: tNote),
                       ],

@@ -1,17 +1,6 @@
-<!DOCTYPE html><html><head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
+<!DOCTYPE html>
+<html>
+<head>
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -29,17 +18,24 @@
 
   <title>registro_panela</title>
   <link rel="manifest" href="manifest.json">
-  
-  
+
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-  
-  
-  
-  
-  
-  
-  
-  
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyCCrGBmSoCNHiduICMl9KQZuNjTPYQzQFk",
+      authDomain: "registro-panelera.firebaseapp.com",
+      projectId: "registro-panelera",
+      storageBucket: "registro-panelera.firebasestorage.app",
+      messagingSenderId: "27377303448",
+      appId: "1:27377303448:web:53ecfdf253903b93fcf5ed"
+    });
+  </script>
+
   <style id="splash-screen-style">
     html {
       height: 100%
@@ -49,7 +45,7 @@
       margin: 0;
       min-height: 100%;
       background-color: #F5EFE1;
-          background-size: 100% 100%;
+      background-size: 100% 100%;
     }
 
     .center {
@@ -62,19 +58,22 @@
     }
 
     .contain {
-      display:block;
-      width:100%; height:100%;
+      display: block;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
     }
 
     .stretch {
-      display:block;
-      width:100%; height:100%;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .cover {
-      display:block;
-      width:100%; height:100%;
+      display: block;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
     }
 
@@ -98,6 +97,7 @@
       right: 0;
     }
   </style>
+
   <script id="splash-screen-script">
     function removeSplashFromWeb() {
       document.getElementById("splash")?.remove();
@@ -108,16 +108,11 @@
 </head>
 <body>
   <picture id="splash">
-      <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
-      <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
-      <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+    <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+    <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
   </picture>
-  
-  
-  
-  
-  
+
   <script src="flutter_bootstrap.js" async=""></script>
-
-
-</body></html>
+</body>
+</html>

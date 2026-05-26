@@ -39,8 +39,10 @@ class Stage4Ui extends _$Stage4Ui {
     }
 
     final totalBaskets = entries.fold<int>(0, (previousValue, element) {
-      if (previousValue + element.returnedBaskets > project.basketsQuantity) {
-        return project.basketsQuantity;
+      // todo: corregir
+      if (previousValue + element.returnedBaskets >
+          project.baskets[0].quantity) {
+        return project.baskets[0].quantity;
       } else {
         return previousValue + element.returnedBaskets;
       }

@@ -33,7 +33,7 @@ final class Stage1ProjectsProvider
   Stage1Projects create() => Stage1Projects();
 }
 
-String _$stage1ProjectsHash() => r'2be9d6583dabb208611e0e7524746683088e9384';
+String _$stage1ProjectsHash() => r'bc12dc33a1d64a817668f98e0c209f107679d47e';
 
 abstract class _$Stage1Projects extends $StreamNotifier<List<Stage1FormData>> {
   Stream<List<Stage1FormData>> build();

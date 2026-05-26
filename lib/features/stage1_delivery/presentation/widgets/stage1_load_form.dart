@@ -28,6 +28,7 @@ class Stage1LoadForm extends ConsumerStatefulWidget {
 class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   late final GlobalKey<FormBuilderState> _formKey;
   late final List<int> _gaveras;
+  late final List<int> _baskets;
   late final Uuid _uuid;
   String? _photoPath;
 
@@ -36,6 +37,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     super.initState();
     _formKey = GlobalKey<FormBuilderState>();
     _gaveras = widget.initialData?.gaveras.asMap().keys.toList() ?? [0];
+    _baskets = widget.initialData?.baskets.asMap().keys.toList() ?? [0];
     _photoPath = widget.initialData?.photoPath;
     _uuid = const Uuid();
   }
@@ -60,7 +62,12 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
           ? {}
           : {
               'name': initial.name,
-              'basketsQuantity': initial.basketsQuantity.toString(),
+              ...{
+                for (var i = 0; i < initial.baskets.length; i++)
+                  'basketsCantidad_$i': initial.baskets[i].quantity.toString(),
+                for (var i = 0; i < initial.baskets.length; i++)
+                  'basketsTipo_$i': initial.baskets[i].size,
+              },
               'preservativesWeight': initial.preservativesWeight.toString(),
               'preservativesJars': initial.preservativesJars.toString(),
               'limeWeight': initial.limeWeight.toString(),
@@ -72,6 +79,8 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                 for (var i = 0; i < initial.gaveras.length; i++)
                   'gaverasPeso_$i': initial.gaveras[i].referenceWeight
                       .toString(),
+                for (var i = 0; i < initial.gaveras.length; i++)
+                  'gaverasTipo_$i': initial.gaveras[i].gaveraType,
               },
             },
       child: Column(
@@ -112,114 +121,35 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
             ),
             child: Column(
               children: [
-                // Cabeceras de columna
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          'Cantidad',
-                          style: textTheme.bodySmall?.copyWith(
-                            color: AppColors.textDark.withAlpha(140),
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.xSmall),
-                      Expanded(
-                        child: Text(
-                          'Peso gavera (g)',
-                          style: textTheme.bodySmall?.copyWith(
-                            color: AppColors.textDark.withAlpha(140),
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.4,
-                          ),
-                        ),
-                      ),
-                      if (_gaveras.length > 1) const SizedBox(width: 40),
-                    ],
-                  ),
-                ),
                 ..._gaveras.map(
-                  (index) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppSpacing.xSmall),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: AppFormTextFild(
-                            name: 'gaverasCantidad_$index',
-                            hintText: '0',
-                            keyboardType: TextInputType.number,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(
-                                errorText: 'Requerido',
-                              ),
-                              FormBuilderValidators.integer(
-                                errorText: 'Solo números',
-                              ),
-                              FormBuilderValidators.min(1),
-                            ]),
+                  (index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (index != _gaveras.first)
+                        const Divider(height: AppSpacing.medium),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: AppSpacing.xSmall,
+                        ),
+                        child: Text(
+                          'Gavera ${_gaveras.indexOf(index) + 1}',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: AppColors.primaryPanelaBrown,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.4,
                           ),
                         ),
-                        const SizedBox(width: AppSpacing.xSmall),
-                        Expanded(
-                          child: AppFormTextFild(
-                            name: 'gaverasPeso_$index',
-                            hintText: '0.0',
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Requerido';
-                              }
-                              final peso = double.tryParse(value);
-                              if (peso == null || peso <= 0) {
-                                return 'Número > 0';
-                              }
-                              final allValues =
-                                  _formKey.currentState?.instantValue ?? {};
-                              final valoresPesos = allValues.entries
-                                  .where(
-                                    (e) => e.key.startsWith('gaverasPeso_'),
-                                  )
-                                  .map(
-                                    (e) => double.tryParse(e.value.toString()),
-                                  )
-                                  .whereType<double>()
-                                  .toList();
-                              if (valoresPesos.where((p) => p == peso).length >
-                                  1) {
-                                return 'Peso duplicado';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                        if (_gaveras.length > 1)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4, top: 2),
-                            child: InkWell(
-                              key: Key(
-                                'stage1-load-form-remove-gaveras-button$index',
-                              ),
-                              onTap: () => _removeGavera(index),
-                              borderRadius: BorderRadius.circular(20),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Icon(
-                                  Icons.remove_circle_outline,
-                                  color: AppColors.error,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                          )
-                        else
-                          const SizedBox(width: 40),
-                      ],
-                    ),
+                      ),
+                      _GaveraItem(
+                        index: index,
+                        showRemove: _gaveras.length > 1,
+                        gaveraTypes: GaveraType.values,
+                        textTheme: textTheme,
+                        formKey: _formKey,
+                        onRemove: () => _removeGavera(index),
+                      ),
+                      const SizedBox(height: AppSpacing.xSmall),
+                    ],
                   ),
                 ),
               ],
@@ -233,23 +163,40 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
             iconColor: AppColors.register,
             icon: Icons.shopping_basket,
             title: 'Canastillas',
+            trailing: _AddButton(
+              key: const Key('stage1-load-form-add-baskets-button'),
+              onTap: () => setState(() => _baskets.add(_baskets.length)),
+            ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FieldLabel(textTheme, 'Cantidad de canastillas'),
-                const SizedBox(height: AppSpacing.xSmall),
-                AppFormTextFild(
-                  key: const Key('stage1-load-form-baskets-quantity'),
-                  name: 'basketsQuantity',
-                  hintText: '0',
-                  keyboardType: TextInputType.number,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(
-                      errorText: 'Este campo es obligatorio',
-                    ),
-                    FormBuilderValidators.integer(),
-                    FormBuilderValidators.min(1),
-                  ]),
+                ..._baskets.map(
+                  (index) => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (index != _baskets.first)
+                        const Divider(height: AppSpacing.medium),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: AppSpacing.xSmall,
+                        ),
+                        child: Text(
+                          'Canastilla ${_baskets.indexOf(index) + 1}',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: AppColors.register,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.4,
+                          ),
+                        ),
+                      ),
+                      _BasketItem(
+                        index: index,
+                        showRemove: _baskets.length > 1,
+                        textTheme: textTheme,
+                        onRemove: () => setState(() => _baskets.remove(index)),
+                      ),
+                      const SizedBox(height: AppSpacing.xSmall),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -411,17 +358,27 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
 
     final values = _formKey.currentState!.value;
     final gaveras = <GaveraData>[];
+    final baskets = <BasketData>[];
     for (int i = 0; i < _gaveras.length; i++) {
       final cantidad = int.tryParse(values['gaverasCantidad_$i'] ?? '') ?? 0;
       final peso = double.tryParse(values['gaverasPeso_$i'] ?? '') ?? 0.0;
-      gaveras.add(GaveraData(quantity: cantidad, referenceWeight: peso));
+      final tipo = values['gaverasTipo_$i'] as GaveraType;
+      gaveras.add(
+        GaveraData(quantity: cantidad, referenceWeight: peso, gaveraType: tipo),
+      );
+    }
+
+    for (int i = 0; i < _baskets.length; i++) {
+      final cantidad = int.tryParse(values['basketsCantidad_$i'] ?? '') ?? 0;
+      final size = values['basketsTipo_$i'] as BasketSize;
+      baskets.add(BasketData(size: size, quantity: cantidad));
     }
 
     final data = Stage1FormData(
       id: widget.initialData?.id ?? _uuid.v4(),
       name: values['name'],
+      baskets: baskets,
       gaveras: gaveras,
-      basketsQuantity: int.parse(values['basketsQuantity']),
       preservativesWeight: double.parse(values['preservativesWeight']),
       preservativesJars: int.parse(values['preservativesJars']),
       limeWeight: double.parse(values['limeWeight']),
@@ -550,6 +507,259 @@ class _AddButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _GaveraItem extends StatelessWidget {
+  final int index;
+  final bool showRemove;
+  final List<GaveraType> gaveraTypes;
+  final TextTheme textTheme;
+  final GlobalKey<FormBuilderState> formKey;
+  final VoidCallback onRemove;
+
+  const _GaveraItem({
+    required this.index,
+    required this.showRemove,
+    required this.gaveraTypes,
+    required this.textTheme,
+    required this.formKey,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Fila 1: Cantidad + Peso + botón eliminar
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _LabeledField(
+                label: 'Cantidad',
+                textTheme: textTheme,
+                child: AppFormTextFild(
+                  name: 'gaverasCantidad_$index',
+                  hintText: '0',
+                  keyboardType: TextInputType.number,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(errorText: 'Requerido'),
+                    FormBuilderValidators.integer(errorText: 'Solo números'),
+                    FormBuilderValidators.min(1),
+                  ]),
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xSmall),
+            Expanded(
+              child: _LabeledField(
+                label: 'Peso (g)',
+                textTheme: textTheme,
+                child: AppFormTextFild(
+                  name: 'gaverasPeso_$index',
+                  hintText: '0.0',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) return 'Requerido';
+                    final peso = double.tryParse(value);
+                    if (peso == null || peso <= 0) return 'Número > 0';
+                    final allValues = formKey.currentState?.instantValue ?? {};
+                    final valoresPesos = allValues.entries
+                        .where((e) => e.key.startsWith('gaverasPeso_'))
+                        .map((e) => double.tryParse(e.value.toString()))
+                        .whereType<double>()
+                        .toList();
+                    if (valoresPesos.where((p) => p == peso).length > 1) {
+                      return 'Peso duplicado';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            if (showRemove)
+              Padding(
+                padding: const EdgeInsets.only(left: 4, top: 22),
+                child: InkWell(
+                  key: Key('stage1-load-form-remove-gaveras-button$index'),
+                  onTap: onRemove,
+                  borderRadius: BorderRadius.circular(20),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Icon(
+                      Icons.remove_circle_outline,
+                      color: AppColors.error,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              )
+            else
+              const SizedBox(width: 40),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.xSmall),
+
+        // Fila 2: Tipo
+        Row(
+          children: [
+            Expanded(
+              child: _LabeledField(
+                label: 'Tipo',
+                textTheme: textTheme,
+                child: CustomFromDropdown<GaveraType>(
+                  key: Key('stage1-load-form-gavera-tipo-$index'),
+                  name: 'gaverasTipo_$index',
+                  items: gaveraTypes
+                      .map(
+                        (g) => DropdownMenuItem<GaveraType>(
+                          key: Key('gavera_de_tipo_${g.name}'),
+                          value: g,
+                          child: Text(g.label, style: textTheme.bodyLarge),
+                        ),
+                      )
+                      .toList(),
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Requerido',
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 40),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+// Widget auxiliar para no repetir el patrón label + SizedBox + field
+class _LabeledField extends StatelessWidget {
+  final String label;
+  final TextTheme textTheme;
+  final Widget child;
+
+  const _LabeledField({
+    required this.label,
+    required this.textTheme,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: textTheme.bodySmall?.copyWith(
+            color: AppColors.textDark.withAlpha(140),
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.4,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.xSmall),
+        child,
+      ],
+    );
+  }
+}
+
+extension GaveraTypeLabel on GaveraType {
+  String get label => switch (this) {
+    GaveraType.kilo => 'Kilo',
+    GaveraType.redonda => 'Redonda',
+    GaveraType.panelo => 'Panelo',
+    GaveraType.pacha => 'Pacha',
+    GaveraType.pastilla => 'Pastilla',
+  };
+}
+
+extension BasketSizeLabel on BasketSize {
+  String get label => switch (this) {
+    BasketSize.grande => 'Grande',
+    BasketSize.pequena => 'Pequeña',
+  };
+}
+
+class _BasketItem extends StatelessWidget {
+  final int index;
+  final bool showRemove;
+  final TextTheme textTheme;
+  final VoidCallback onRemove;
+
+  const _BasketItem({
+    required this.index,
+    required this.showRemove,
+    required this.textTheme,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: _LabeledField(
+            label: 'Cantidad',
+            textTheme: textTheme,
+            child: AppFormTextFild(
+              name: 'basketsCantidad_$index',
+              hintText: '0',
+              keyboardType: TextInputType.number,
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(errorText: 'Requerido'),
+                FormBuilderValidators.integer(errorText: 'Solo números'),
+                FormBuilderValidators.min(1),
+              ]),
+            ),
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xSmall),
+        Expanded(
+          child: _LabeledField(
+            label: 'Tamaño',
+            textTheme: textTheme,
+            child: CustomFromDropdown<BasketSize>(
+              key: Key('stage1-load-form-basket-tipo-$index'),
+              name: 'basketsTipo_$index',
+              items: BasketSize.values
+                  .map(
+                    (s) => DropdownMenuItem<BasketSize>(
+                      key: Key('basket_size_${s.name}'),
+                      value: s,
+                      child: Text(s.label, style: textTheme.bodyLarge),
+                    ),
+                  )
+                  .toList(),
+              validator: FormBuilderValidators.required(errorText: 'Requerido'),
+            ),
+          ),
+        ),
+        if (showRemove)
+          Padding(
+            padding: const EdgeInsets.only(left: 4, top: 22),
+            child: InkWell(
+              key: Key('stage1-load-form-remove-basket-button$index'),
+              onTap: onRemove,
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.all(6),
+                child: Icon(
+                  Icons.remove_circle_outline,
+                  color: AppColors.error,
+                  size: 22,
+                ),
+              ),
+            ),
+          )
+        else
+          const SizedBox(width: 40),
+      ],
     );
   }
 }

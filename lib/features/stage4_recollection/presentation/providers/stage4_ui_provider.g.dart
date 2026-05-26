@@ -58,7 +58,7 @@ final class Stage4UiProvider
   }
 }
 
-String _$stage4UiHash() => r'77fa42a55bbce52b5756563d50ffb98e92aafc29';
+String _$stage4UiHash() => r'7da4ca570f3a2a3a002cbb223c67b4f649eafdd7';
 
 final class Stage4UiFamily extends $Family
     with
