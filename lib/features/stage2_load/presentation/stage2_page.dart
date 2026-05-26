@@ -6,6 +6,7 @@ import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_shimmer.dart';
@@ -244,13 +245,12 @@ class Stage2Page extends ConsumerWidget {
                                   const SizedBox(height: AppSpacing.xSmall),
                                   CustomRichText(
                                     key: Key(
-                                      'stage2_page_${load.baskets.realWeight.toStringAsFixed(1)}-weight',
+                                      'stage2_page_${load.baskets.quality.name}-quality',
                                     ),
-                                    icon: Icons.scale,
-                                    iconColor: AppColors.weight,
-                                    firstText: 'Peso: ',
-                                    secondText:
-                                        '${load.baskets.realWeight.toStringAsFixed(1)} kg',
+                                    icon: Icons.verified,
+                                    iconColor: AppColors.accepted,
+                                    firstText: 'Calidad: ',
+                                    secondText: load.baskets.quality.label,
                                   ),
 
                                   const SizedBox(height: AppSpacing.xSmall),

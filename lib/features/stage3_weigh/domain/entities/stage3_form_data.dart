@@ -1,19 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 
 part 'stage3_form_data.freezed.dart';
 part 'stage3_form_data.g.dart';
-
-@JsonEnum(alwaysCreate: true)
-enum BasketQuality {
-  @JsonValue('regular')
-  regular,
-  @JsonValue('buena')
-  buena,
-  @JsonValue('negra')
-  negra,
-  @JsonValue('extra')
-  extra,
-}
 
 @freezed
 abstract class BasketWeighData with _$BasketWeighData {

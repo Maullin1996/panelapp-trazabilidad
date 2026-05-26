@@ -26,12 +26,19 @@ _BasketLoadData _$BasketLoadDataFromJson(Map<String, dynamic> json) =>
     _BasketLoadData(
       referenceWeight: (json['referenceWeight'] as num).toDouble(),
       count: (json['count'] as num).toInt(),
-      realWeight: (json['realWeight'] as num).toDouble(),
+      quality: $enumDecode(_$BasketQualityEnumMap, json['quality']),
     );
 
 Map<String, dynamic> _$BasketLoadDataToJson(_BasketLoadData instance) =>
     <String, dynamic>{
       'referenceWeight': instance.referenceWeight,
       'count': instance.count,
-      'realWeight': instance.realWeight,
+      'quality': _$BasketQualityEnumMap[instance.quality]!,
     };
+
+const _$BasketQualityEnumMap = {
+  BasketQuality.regular: 'regular',
+  BasketQuality.buena: 'buena',
+  BasketQuality.negra: 'negra',
+  BasketQuality.extra: 'extra',
+};

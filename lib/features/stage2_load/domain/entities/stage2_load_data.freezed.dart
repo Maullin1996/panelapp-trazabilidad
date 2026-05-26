@@ -305,7 +305,7 @@ $BasketLoadDataCopyWith<$Res> get baskets {
 /// @nodoc
 mixin _$BasketLoadData {
 
- double get referenceWeight; int get count; double get realWeight;
+ double get referenceWeight; int get count; BasketQuality get quality;
 /// Create a copy of BasketLoadData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -318,16 +318,16 @@ $BasketLoadDataCopyWith<BasketLoadData> get copyWith => _$BasketLoadDataCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BasketLoadData&&(identical(other.referenceWeight, referenceWeight) || other.referenceWeight == referenceWeight)&&(identical(other.count, count) || other.count == count)&&(identical(other.realWeight, realWeight) || other.realWeight == realWeight));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BasketLoadData&&(identical(other.referenceWeight, referenceWeight) || other.referenceWeight == referenceWeight)&&(identical(other.count, count) || other.count == count)&&(identical(other.quality, quality) || other.quality == quality));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,referenceWeight,count,realWeight);
+int get hashCode => Object.hash(runtimeType,referenceWeight,count,quality);
 
 @override
 String toString() {
-  return 'BasketLoadData(referenceWeight: $referenceWeight, count: $count, realWeight: $realWeight)';
+  return 'BasketLoadData(referenceWeight: $referenceWeight, count: $count, quality: $quality)';
 }
 
 
@@ -338,7 +338,7 @@ abstract mixin class $BasketLoadDataCopyWith<$Res>  {
   factory $BasketLoadDataCopyWith(BasketLoadData value, $Res Function(BasketLoadData) _then) = _$BasketLoadDataCopyWithImpl;
 @useResult
 $Res call({
- double referenceWeight, int count, double realWeight
+ double referenceWeight, int count, BasketQuality quality
 });
 
 
@@ -355,12 +355,12 @@ class _$BasketLoadDataCopyWithImpl<$Res>
 
 /// Create a copy of BasketLoadData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? referenceWeight = null,Object? count = null,Object? realWeight = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? referenceWeight = null,Object? count = null,Object? quality = null,}) {
   return _then(_self.copyWith(
 referenceWeight: null == referenceWeight ? _self.referenceWeight : referenceWeight // ignore: cast_nullable_to_non_nullable
 as double,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
-as int,realWeight: null == realWeight ? _self.realWeight : realWeight // ignore: cast_nullable_to_non_nullable
-as double,
+as int,quality: null == quality ? _self.quality : quality // ignore: cast_nullable_to_non_nullable
+as BasketQuality,
   ));
 }
 
@@ -445,10 +445,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double referenceWeight,  int count,  double realWeight)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double referenceWeight,  int count,  BasketQuality quality)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BasketLoadData() when $default != null:
-return $default(_that.referenceWeight,_that.count,_that.realWeight);case _:
+return $default(_that.referenceWeight,_that.count,_that.quality);case _:
   return orElse();
 
 }
@@ -466,10 +466,10 @@ return $default(_that.referenceWeight,_that.count,_that.realWeight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double referenceWeight,  int count,  double realWeight)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double referenceWeight,  int count,  BasketQuality quality)  $default,) {final _that = this;
 switch (_that) {
 case _BasketLoadData():
-return $default(_that.referenceWeight,_that.count,_that.realWeight);case _:
+return $default(_that.referenceWeight,_that.count,_that.quality);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -486,10 +486,10 @@ return $default(_that.referenceWeight,_that.count,_that.realWeight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double referenceWeight,  int count,  double realWeight)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double referenceWeight,  int count,  BasketQuality quality)?  $default,) {final _that = this;
 switch (_that) {
 case _BasketLoadData() when $default != null:
-return $default(_that.referenceWeight,_that.count,_that.realWeight);case _:
+return $default(_that.referenceWeight,_that.count,_that.quality);case _:
   return null;
 
 }
@@ -501,12 +501,12 @@ return $default(_that.referenceWeight,_that.count,_that.realWeight);case _:
 @JsonSerializable()
 
 class _BasketLoadData implements BasketLoadData {
-  const _BasketLoadData({required this.referenceWeight, required this.count, required this.realWeight});
+  const _BasketLoadData({required this.referenceWeight, required this.count, required this.quality});
   factory _BasketLoadData.fromJson(Map<String, dynamic> json) => _$BasketLoadDataFromJson(json);
 
 @override final  double referenceWeight;
 @override final  int count;
-@override final  double realWeight;
+@override final  BasketQuality quality;
 
 /// Create a copy of BasketLoadData
 /// with the given fields replaced by the non-null parameter values.
@@ -521,16 +521,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BasketLoadData&&(identical(other.referenceWeight, referenceWeight) || other.referenceWeight == referenceWeight)&&(identical(other.count, count) || other.count == count)&&(identical(other.realWeight, realWeight) || other.realWeight == realWeight));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BasketLoadData&&(identical(other.referenceWeight, referenceWeight) || other.referenceWeight == referenceWeight)&&(identical(other.count, count) || other.count == count)&&(identical(other.quality, quality) || other.quality == quality));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,referenceWeight,count,realWeight);
+int get hashCode => Object.hash(runtimeType,referenceWeight,count,quality);
 
 @override
 String toString() {
-  return 'BasketLoadData(referenceWeight: $referenceWeight, count: $count, realWeight: $realWeight)';
+  return 'BasketLoadData(referenceWeight: $referenceWeight, count: $count, quality: $quality)';
 }
 
 
@@ -541,7 +541,7 @@ abstract mixin class _$BasketLoadDataCopyWith<$Res> implements $BasketLoadDataCo
   factory _$BasketLoadDataCopyWith(_BasketLoadData value, $Res Function(_BasketLoadData) _then) = __$BasketLoadDataCopyWithImpl;
 @override @useResult
 $Res call({
- double referenceWeight, int count, double realWeight
+ double referenceWeight, int count, BasketQuality quality
 });
 
 
@@ -558,12 +558,12 @@ class __$BasketLoadDataCopyWithImpl<$Res>
 
 /// Create a copy of BasketLoadData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? referenceWeight = null,Object? count = null,Object? realWeight = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? referenceWeight = null,Object? count = null,Object? quality = null,}) {
   return _then(_BasketLoadData(
 referenceWeight: null == referenceWeight ? _self.referenceWeight : referenceWeight // ignore: cast_nullable_to_non_nullable
 as double,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
-as int,realWeight: null == realWeight ? _self.realWeight : realWeight // ignore: cast_nullable_to_non_nullable
-as double,
+as int,quality: null == quality ? _self.quality : quality // ignore: cast_nullable_to_non_nullable
+as BasketQuality,
   ));
 }
 

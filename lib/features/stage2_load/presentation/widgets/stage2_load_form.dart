@@ -3,6 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
@@ -49,7 +51,7 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
         ? {
             'referenceWeight': init.baskets.referenceWeight,
             'basketsCount': init.baskets.count.toString(),
-            'basketWeight': init.baskets.realWeight.toString(),
+            'quality': init.baskets.quality,
           }
         : {};
 
@@ -197,24 +199,26 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          FieldLabel(textTheme, 'Peso (kg)'),
+                          FieldLabel(textTheme, 'Calidad'),
                           const SizedBox(height: AppSpacing.xSmall),
-                          AppFormTextFild(
-                            key: const Key(
-                              'stage2-load-form-basketWeight-input',
+                          CustomFromDropdown<BasketQuality>(
+                            key: const Key('stage2-load-form-quality-input'),
+                            name: 'quality',
+                            items: BasketQuality.values
+                                .map(
+                                  (q) => DropdownMenuItem<BasketQuality>(
+                                    key: Key('basket_quality_${q.name}'),
+                                    value: q,
+                                    child: Text(
+                                      q.label,
+                                      style: textTheme.bodyLarge,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            validator: FormBuilderValidators.required(
+                              errorText: 'Obligatorio',
                             ),
-                            name: 'basketWeight',
-                            hintText: '0.0',
-                            keyboardType: TextInputType.number,
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(
-                                errorText: 'Obligatorio',
-                              ),
-                              FormBuilderValidators.numeric(
-                                errorText: 'Use punto decimal',
-                              ),
-                              FormBuilderValidators.min(1),
-                            ]),
                           ),
                         ],
                       ),
@@ -246,9 +250,9 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
                                 referenceWeight:
                                     values['referenceWeight'] as double,
                                 count: int.parse(values['basketsCount']),
-                                realWeight: double.parse(
-                                  values['basketWeight'] as String,
-                                ),
+                                quality:
+                                    values['quality']
+                                        as BasketQuality, // ← reemplaza realWeight
                               ),
                             );
                             formNotifier.submit(data, isNew: widget.isNew);

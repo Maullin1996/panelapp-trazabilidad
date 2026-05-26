@@ -1,4 +1,5 @@
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 
 class Stage2LoadModel {
   final String id;
@@ -22,12 +23,11 @@ class Stage2LoadModel {
       baskets: {
         'referenceWeight': data.baskets.referenceWeight,
         'count': data.baskets.count,
-        'realWeight': data.baskets.realWeight,
+        'quality': data.baskets.quality.name, // enum → String
       },
     );
   }
 
-  /// Convierte el Model de vuelta a tu entidad de dominio
   Stage2LoadData toEntity() {
     return Stage2LoadData(
       id: id,
@@ -36,7 +36,7 @@ class Stage2LoadModel {
       baskets: BasketLoadData(
         referenceWeight: (baskets['referenceWeight'] as num).toDouble(),
         count: baskets['count'] as int,
-        realWeight: (baskets['realWeight'] as num).toDouble(),
+        quality: BasketQuality.values.byName(baskets['quality'] as String),
       ),
     );
   }

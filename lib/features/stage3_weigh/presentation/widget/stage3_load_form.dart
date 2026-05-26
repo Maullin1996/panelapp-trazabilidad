@@ -9,6 +9,7 @@ import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/helpers/comma_to_dot_formatter.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/stage3_form_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/selection_source_title.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';

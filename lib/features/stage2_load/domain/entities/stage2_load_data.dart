@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 
 part 'stage2_load_data.freezed.dart';
 part 'stage2_load_data.g.dart';
@@ -21,7 +22,7 @@ abstract class BasketLoadData with _$BasketLoadData {
   const factory BasketLoadData({
     required double referenceWeight,
     required int count,
-    required double realWeight,
+    required BasketQuality quality,
   }) = _BasketLoadData;
 
   factory BasketLoadData.fromJson(Map<String, dynamic> json) =>
