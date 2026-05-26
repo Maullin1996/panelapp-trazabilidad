@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/helpers/quality_color.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/widget/summary_card.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 
@@ -94,18 +96,17 @@ class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // tus 3 cards de resumen aquí sin cambios
                   SummaryCard(
                     title: 'Registrado en molienda',
                     firstTextCard1: 'Fecha cargue: ',
                     secondTextCard1: DateFormat.yMd().format(load2.date),
-                    firstTextCard2: 'Peso esperado: ',
+                    firstTextCard2: 'Total enviadas: ',
                     secondTextCard2:
-                        '${summaryCalculus.totalRefkg.toStringAsFixed(2)} kg',
+                        '${summaryCalculus.totalBaskets} canastillas',
                     firstIcon: Icons.calendar_month,
                     firstIconColors: AppColors.weight,
-                    secondIcon: Icons.bar_chart,
-                    secondIconColors: AppColors.register,
+                    secondIcon: Icons.inventory_2,
+                    secondIconColors: AppColors.secondaryDarkPanela,
                     textTheme: textTheme,
                   ),
                   const SizedBox(height: AppSpacing.xSmall),
@@ -113,30 +114,71 @@ class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
                     textTheme: textTheme,
                     title: 'Registrado en bodega',
                     firstTextCard1: 'Registradas: ',
-                    secondTextCard1: '${summaryCalculus.regCount} Canastillas',
-                    firstTextCard2: 'Peso registrado: ',
+                    secondTextCard1: '${summaryCalculus.regCount} canastillas',
+                    firstTextCard2: 'Faltan: ',
                     secondTextCard2:
-                        '${summaryCalculus.regWeight.toStringAsFixed(2)} kg',
+                        '${summaryCalculus.missingCount} canastillas',
                     firstIcon: Icons.all_inbox_rounded,
                     firstIconColors: AppColors.register,
-                    secondIconColors: AppColors.accepted,
-                    secondIcon: Icons.check_box,
+                    secondIconColors: AppColors.error,
+                    secondIcon: Icons.priority_high,
                   ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  SummaryCard(
-                    textTheme: textTheme,
-                    title: 'Faltantes',
-                    firstTextCard1: 'Faltan: ',
-                    secondTextCard1:
-                        '${summaryCalculus.missingCount} Canastillas',
-                    firstTextCard2: 'Peso faltante: ',
-                    secondTextCard2:
-                        '${summaryCalculus.missingWeight.toStringAsFixed(2)} kg',
-                    firstIcon: Icons.priority_high,
-                    firstIconColors: AppColors.error,
-                    secondIconColors: AppColors.alert,
-                    secondIcon: Icons.warning,
+                  CustomCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: AppSpacing.small,
+                            right: AppSpacing.small,
+                            top: AppSpacing.xSmall,
+                          ),
+                          child: Text(
+                            "Calidad",
+                            style: textTheme.headlineMedium?.copyWith(
+                              color: AppColors.primaryPanelaBrown,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.small,
+                            vertical: AppSpacing.xSmall,
+                          ),
+                          child: Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: AppColors.secondaryDarkPanela.withAlpha(45),
+                          ),
+                        ),
+                        if (summaryCalculus.countByQuality.isNotEmpty) ...[
+                          const SizedBox(height: AppSpacing.xSmall),
+                          ...BasketQuality.values
+                              .where(
+                                (q) => summaryCalculus.countByQuality
+                                    .containsKey(q),
+                              )
+                              .map(
+                                (q) => Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: AppSpacing.smallLarge,
+                                    bottom: AppSpacing.xSmall,
+                                  ),
+                                  child: CustomRichText(
+                                    icon: Icons.label_outline,
+                                    iconColor: qualityColor(quality: q.label),
+                                    firstText: '${q.label}: ',
+                                    secondText:
+                                        '${summaryCalculus.countByQuality[q]}',
+                                  ),
+                                ),
+                              ),
+                        ],
+                      ],
+                    ),
                   ),
+
                   const SizedBox(height: AppSpacing.small),
                   Padding(
                     padding: const EdgeInsets.only(left: 2, bottom: 6),
@@ -166,11 +208,7 @@ class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.small,
                 ),
-                child: _BasketCard(
-                  basket: b,
-                  load2: load2,
-                  sequence: b.sequence,
-                ),
+                child: _BasketCard(basket: b, sequence: b.sequence),
               );
             },
           ),
@@ -186,14 +224,9 @@ class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
 
 class _BasketCard extends StatelessWidget {
   final BasketWeighData basket;
-  final Stage2LoadData load2;
   final int sequence;
 
-  const _BasketCard({
-    required this.basket,
-    required this.load2,
-    required this.sequence,
-  });
+  const _BasketCard({required this.basket, required this.sequence});
 
   @override
   Widget build(BuildContext context) {
@@ -282,18 +315,12 @@ class _BasketCard extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xSmall),
                   CustomRichText(
-                    icon: Icons.warning,
-                    iconColor: AppColors.alert,
-                    firstText: 'Peso faltante: ',
-                    secondText:
-                        '${(load2.baskets.realWeight - basket.realWeight).clamp(0, double.infinity).toStringAsFixed(2)} kg',
-                  ),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomRichText(
                     icon: Icons.verified,
-                    iconColor: AppColors.accepted,
+                    iconColor: qualityColor(quality: basket.quality.label),
                     firstText: 'Calidad: ',
-                    secondText: basket.quality.name.toUpperCase(),
+                    secondText: basket
+                        .quality
+                        .label, // ← .label en vez de .name.toUpperCase()
                   ),
                 ],
               ),

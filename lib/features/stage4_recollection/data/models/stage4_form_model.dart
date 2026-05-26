@@ -1,3 +1,4 @@
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
 
 class Stage4FormModel {
@@ -5,7 +6,7 @@ class Stage4FormModel {
   final String projectId;
   final DateTime date;
   final List<Map<String, dynamic>> returnedGaveras;
-  final int returnedBaskets;
+  final List<Map<String, dynamic>> returnedBaskets;
   final int returnedPreservativesJars;
   final int returnedLimeJars;
 
@@ -33,7 +34,9 @@ class Stage4FormModel {
             },
           )
           .toList(),
-      returnedBaskets: data.returnedBaskets,
+      returnedBaskets: data.returnedBaskets
+          .map((b) => {'size': b.size.name, 'quantity': b.quantity})
+          .toList(),
       returnedPreservativesJars: data.returnedPreservativesJars,
       returnedLimeJars: data.returnedLimeJars,
     );
@@ -53,7 +56,14 @@ class Stage4FormModel {
             ),
           )
           .toList(),
-      returnedBaskets: returnedBaskets,
+      returnedBaskets: (returnedBaskets as List)
+          .map(
+            (b) => ReturnedBaskets(
+              size: BasketSize.values.byName(b['size'] as String),
+              quantity: b['quantity'] as int,
+            ),
+          )
+          .toList(),
       returnedPreservativesJars: returnedPreservativesJars,
       returnedLimeJars: returnedLimeJars,
     );
@@ -72,14 +82,15 @@ class Stage4FormModel {
     };
   }
 
-  /// Deserializa desde JSON puro
   factory Stage4FormModel.fromJson(Map<String, dynamic> json) {
     return Stage4FormModel(
       id: json['id'] as String,
       projectId: json['projectId'] as String,
       date: DateTime.parse(json['date'] as String),
       returnedGaveras: List<Map<String, dynamic>>.from(json['returnedGaveras']),
-      returnedBaskets: json['returnedBaskets'] as int,
+      returnedBaskets: List<Map<String, dynamic>>.from(
+        json['returnedBaskets'],
+      ), // ← lista
       returnedPreservativesJars: json['returnedPreservativesJars'] as int,
       returnedLimeJars: json['returnedLimeJars'] as int,
     );

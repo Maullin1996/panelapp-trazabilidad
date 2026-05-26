@@ -73,7 +73,7 @@ final class Stage5GlobalSummaryProvider
 }
 
 String _$stage5GlobalSummaryHash() =>
-    r'620a5d9c6da91a312b9e2868f2d117b8e751fc87';
+    r'4c412c78740f67aa7a85194bd6223a9de5423fa1';
 
 final class Stage5GlobalSummaryFamily extends $Family
     with $FunctionalFamilyOverride<List<Stage5SummaryItem>, String> {

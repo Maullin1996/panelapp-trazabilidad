@@ -14,7 +14,9 @@ _Stage4FormData _$Stage4FormDataFromJson(Map<String, dynamic> json) =>
       returnedGaveras: (json['returnedGaveras'] as List<dynamic>)
           .map((e) => ReturnedGaveras.fromJson(e as Map<String, dynamic>))
           .toList(),
-      returnedBaskets: (json['returnedBaskets'] as num).toInt(),
+      returnedBaskets: (json['returnedBaskets'] as List<dynamic>)
+          .map((e) => ReturnedBaskets.fromJson(e as Map<String, dynamic>))
+          .toList(),
       returnedPreservativesJars: (json['returnedPreservativesJars'] as num)
           .toInt(),
       returnedLimeJars: (json['returnedLimeJars'] as num).toInt(),
@@ -30,6 +32,23 @@ Map<String, dynamic> _$Stage4FormDataToJson(_Stage4FormData instance) =>
       'returnedPreservativesJars': instance.returnedPreservativesJars,
       'returnedLimeJars': instance.returnedLimeJars,
     };
+
+_ReturnedBaskets _$ReturnedBasketsFromJson(Map<String, dynamic> json) =>
+    _ReturnedBaskets(
+      size: $enumDecode(_$BasketSizeEnumMap, json['size']),
+      quantity: (json['quantity'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$ReturnedBasketsToJson(_ReturnedBaskets instance) =>
+    <String, dynamic>{
+      'size': _$BasketSizeEnumMap[instance.size]!,
+      'quantity': instance.quantity,
+    };
+
+const _$BasketSizeEnumMap = {
+  BasketSize.grande: 'grande',
+  BasketSize.pequena: 'pequena',
+};
 
 _ReturnedGaveras _$ReturnedGaverasFromJson(Map<String, dynamic> json) =>
     _ReturnedGaveras(

@@ -5,6 +5,7 @@ import 'package:registro_panela/features/stage5_summary/domain/stage5_summary_it
 import 'package:registro_panela/features/stage5_summary/presentation/providers/stage5_global_summary_provider.dart';
 import 'package:registro_panela/features/stage5_summary/presentation/providers/stage5_summary_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
 
 class Stage5Summary extends ConsumerWidget {
   final String projectId;
@@ -17,9 +18,7 @@ class Stage5Summary extends ConsumerWidget {
     final textTheme = TextTheme.of(context);
 
     if (summaryByDay.isEmpty) {
-      return Center(
-        child: Text('No ha habido cargues', style: textTheme.headlineMedium),
-      );
+      return Center(child: EmptyWidget());
     }
 
     return SingleChildScrollView(

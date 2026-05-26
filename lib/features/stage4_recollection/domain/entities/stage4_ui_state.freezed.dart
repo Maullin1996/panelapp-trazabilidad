@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Stage4UiState {
 
- List<ReturnedGaveras> get returnedGaveras; int get returnedBaskets; int get returnedPreservativesJars; int get returnedLimeJars;
+ List<ReturnedGaveras> get returnedGaveras; List<ReturnedBaskets> get returnedBaskets; int get returnedPreservativesJars; int get returnedLimeJars;
 /// Create a copy of Stage4UiState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,12 +25,12 @@ $Stage4UiStateCopyWith<Stage4UiState> get copyWith => _$Stage4UiStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stage4UiState&&const DeepCollectionEquality().equals(other.returnedGaveras, returnedGaveras)&&(identical(other.returnedBaskets, returnedBaskets) || other.returnedBaskets == returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stage4UiState&&const DeepCollectionEquality().equals(other.returnedGaveras, returnedGaveras)&&const DeepCollectionEquality().equals(other.returnedBaskets, returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(returnedGaveras),returnedBaskets,returnedPreservativesJars,returnedLimeJars);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(returnedGaveras),const DeepCollectionEquality().hash(returnedBaskets),returnedPreservativesJars,returnedLimeJars);
 
 @override
 String toString() {
@@ -45,7 +45,7 @@ abstract mixin class $Stage4UiStateCopyWith<$Res>  {
   factory $Stage4UiStateCopyWith(Stage4UiState value, $Res Function(Stage4UiState) _then) = _$Stage4UiStateCopyWithImpl;
 @useResult
 $Res call({
- List<ReturnedGaveras> returnedGaveras, int returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
+ List<ReturnedGaveras> returnedGaveras, List<ReturnedBaskets> returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
 });
 
 
@@ -66,7 +66,7 @@ class _$Stage4UiStateCopyWithImpl<$Res>
   return _then(_self.copyWith(
 returnedGaveras: null == returnedGaveras ? _self.returnedGaveras : returnedGaveras // ignore: cast_nullable_to_non_nullable
 as List<ReturnedGaveras>,returnedBaskets: null == returnedBaskets ? _self.returnedBaskets : returnedBaskets // ignore: cast_nullable_to_non_nullable
-as int,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
+as List<ReturnedBaskets>,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
 as int,returnedLimeJars: null == returnedLimeJars ? _self.returnedLimeJars : returnedLimeJars // ignore: cast_nullable_to_non_nullable
 as int,
   ));
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ReturnedGaveras> returnedGaveras,  int returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ReturnedGaveras> returnedGaveras,  List<ReturnedBaskets> returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Stage4UiState() when $default != null:
 return $default(_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreservativesJars,_that.returnedLimeJars);case _:
@@ -174,7 +174,7 @@ return $default(_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreser
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ReturnedGaveras> returnedGaveras,  int returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ReturnedGaveras> returnedGaveras,  List<ReturnedBaskets> returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)  $default,) {final _that = this;
 switch (_that) {
 case _Stage4UiState():
 return $default(_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreservativesJars,_that.returnedLimeJars);case _:
@@ -194,7 +194,7 @@ return $default(_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreser
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ReturnedGaveras> returnedGaveras,  int returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ReturnedGaveras> returnedGaveras,  List<ReturnedBaskets> returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,) {final _that = this;
 switch (_that) {
 case _Stage4UiState() when $default != null:
 return $default(_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreservativesJars,_that.returnedLimeJars);case _:
@@ -209,7 +209,7 @@ return $default(_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreser
 
 
 class _Stage4UiState implements Stage4UiState {
-  const _Stage4UiState({required final  List<ReturnedGaveras> returnedGaveras, required this.returnedBaskets, required this.returnedPreservativesJars, required this.returnedLimeJars}): _returnedGaveras = returnedGaveras;
+  const _Stage4UiState({required final  List<ReturnedGaveras> returnedGaveras, required final  List<ReturnedBaskets> returnedBaskets, required this.returnedPreservativesJars, required this.returnedLimeJars}): _returnedGaveras = returnedGaveras,_returnedBaskets = returnedBaskets;
   
 
  final  List<ReturnedGaveras> _returnedGaveras;
@@ -219,7 +219,13 @@ class _Stage4UiState implements Stage4UiState {
   return EqualUnmodifiableListView(_returnedGaveras);
 }
 
-@override final  int returnedBaskets;
+ final  List<ReturnedBaskets> _returnedBaskets;
+@override List<ReturnedBaskets> get returnedBaskets {
+  if (_returnedBaskets is EqualUnmodifiableListView) return _returnedBaskets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_returnedBaskets);
+}
+
 @override final  int returnedPreservativesJars;
 @override final  int returnedLimeJars;
 
@@ -233,12 +239,12 @@ _$Stage4UiStateCopyWith<_Stage4UiState> get copyWith => __$Stage4UiStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stage4UiState&&const DeepCollectionEquality().equals(other._returnedGaveras, _returnedGaveras)&&(identical(other.returnedBaskets, returnedBaskets) || other.returnedBaskets == returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stage4UiState&&const DeepCollectionEquality().equals(other._returnedGaveras, _returnedGaveras)&&const DeepCollectionEquality().equals(other._returnedBaskets, _returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_returnedGaveras),returnedBaskets,returnedPreservativesJars,returnedLimeJars);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_returnedGaveras),const DeepCollectionEquality().hash(_returnedBaskets),returnedPreservativesJars,returnedLimeJars);
 
 @override
 String toString() {
@@ -253,7 +259,7 @@ abstract mixin class _$Stage4UiStateCopyWith<$Res> implements $Stage4UiStateCopy
   factory _$Stage4UiStateCopyWith(_Stage4UiState value, $Res Function(_Stage4UiState) _then) = __$Stage4UiStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<ReturnedGaveras> returnedGaveras, int returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
+ List<ReturnedGaveras> returnedGaveras, List<ReturnedBaskets> returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
 });
 
 
@@ -273,8 +279,8 @@ class __$Stage4UiStateCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? returnedGaveras = null,Object? returnedBaskets = null,Object? returnedPreservativesJars = null,Object? returnedLimeJars = null,}) {
   return _then(_Stage4UiState(
 returnedGaveras: null == returnedGaveras ? _self._returnedGaveras : returnedGaveras // ignore: cast_nullable_to_non_nullable
-as List<ReturnedGaveras>,returnedBaskets: null == returnedBaskets ? _self.returnedBaskets : returnedBaskets // ignore: cast_nullable_to_non_nullable
-as int,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
+as List<ReturnedGaveras>,returnedBaskets: null == returnedBaskets ? _self._returnedBaskets : returnedBaskets // ignore: cast_nullable_to_non_nullable
+as List<ReturnedBaskets>,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
 as int,returnedLimeJars: null == returnedLimeJars ? _self.returnedLimeJars : returnedLimeJars // ignore: cast_nullable_to_non_nullable
 as int,
   ));

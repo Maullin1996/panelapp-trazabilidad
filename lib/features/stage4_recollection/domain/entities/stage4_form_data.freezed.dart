@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Stage4FormData {
 
- String get id; String get projectId; DateTime get date; List<ReturnedGaveras> get returnedGaveras; int get returnedBaskets; int get returnedPreservativesJars; int get returnedLimeJars;
+ String get id; String get projectId; DateTime get date; List<ReturnedGaveras> get returnedGaveras; List<ReturnedBaskets> get returnedBaskets; int get returnedPreservativesJars; int get returnedLimeJars;
 /// Create a copy of Stage4FormData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $Stage4FormDataCopyWith<Stage4FormData> get copyWith => _$Stage4FormDataCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stage4FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other.returnedGaveras, returnedGaveras)&&(identical(other.returnedBaskets, returnedBaskets) || other.returnedBaskets == returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stage4FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other.returnedGaveras, returnedGaveras)&&const DeepCollectionEquality().equals(other.returnedBaskets, returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,projectId,date,const DeepCollectionEquality().hash(returnedGaveras),returnedBaskets,returnedPreservativesJars,returnedLimeJars);
+int get hashCode => Object.hash(runtimeType,id,projectId,date,const DeepCollectionEquality().hash(returnedGaveras),const DeepCollectionEquality().hash(returnedBaskets),returnedPreservativesJars,returnedLimeJars);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $Stage4FormDataCopyWith<$Res>  {
   factory $Stage4FormDataCopyWith(Stage4FormData value, $Res Function(Stage4FormData) _then) = _$Stage4FormDataCopyWithImpl;
 @useResult
 $Res call({
- String id, String projectId, DateTime date, List<ReturnedGaveras> returnedGaveras, int returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
+ String id, String projectId, DateTime date, List<ReturnedGaveras> returnedGaveras, List<ReturnedBaskets> returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
 });
 
 
@@ -72,7 +72,7 @@ as String,projectId: null == projectId ? _self.projectId : projectId // ignore: 
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,returnedGaveras: null == returnedGaveras ? _self.returnedGaveras : returnedGaveras // ignore: cast_nullable_to_non_nullable
 as List<ReturnedGaveras>,returnedBaskets: null == returnedBaskets ? _self.returnedBaskets : returnedBaskets // ignore: cast_nullable_to_non_nullable
-as int,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
+as List<ReturnedBaskets>,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
 as int,returnedLimeJars: null == returnedLimeJars ? _self.returnedLimeJars : returnedLimeJars // ignore: cast_nullable_to_non_nullable
 as int,
   ));
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String projectId,  DateTime date,  List<ReturnedGaveras> returnedGaveras,  int returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String projectId,  DateTime date,  List<ReturnedGaveras> returnedGaveras,  List<ReturnedBaskets> returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Stage4FormData() when $default != null:
 return $default(_that.id,_that.projectId,_that.date,_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreservativesJars,_that.returnedLimeJars);case _:
@@ -180,7 +180,7 @@ return $default(_that.id,_that.projectId,_that.date,_that.returnedGaveras,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String projectId,  DateTime date,  List<ReturnedGaveras> returnedGaveras,  int returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String projectId,  DateTime date,  List<ReturnedGaveras> returnedGaveras,  List<ReturnedBaskets> returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)  $default,) {final _that = this;
 switch (_that) {
 case _Stage4FormData():
 return $default(_that.id,_that.projectId,_that.date,_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreservativesJars,_that.returnedLimeJars);case _:
@@ -200,7 +200,7 @@ return $default(_that.id,_that.projectId,_that.date,_that.returnedGaveras,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String projectId,  DateTime date,  List<ReturnedGaveras> returnedGaveras,  int returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String projectId,  DateTime date,  List<ReturnedGaveras> returnedGaveras,  List<ReturnedBaskets> returnedBaskets,  int returnedPreservativesJars,  int returnedLimeJars)?  $default,) {final _that = this;
 switch (_that) {
 case _Stage4FormData() when $default != null:
 return $default(_that.id,_that.projectId,_that.date,_that.returnedGaveras,_that.returnedBaskets,_that.returnedPreservativesJars,_that.returnedLimeJars);case _:
@@ -215,7 +215,7 @@ return $default(_that.id,_that.projectId,_that.date,_that.returnedGaveras,_that.
 @JsonSerializable()
 
 class _Stage4FormData implements Stage4FormData {
-  const _Stage4FormData({required this.id, required this.projectId, required this.date, required final  List<ReturnedGaveras> returnedGaveras, required this.returnedBaskets, required this.returnedPreservativesJars, required this.returnedLimeJars}): _returnedGaveras = returnedGaveras;
+  const _Stage4FormData({required this.id, required this.projectId, required this.date, required final  List<ReturnedGaveras> returnedGaveras, required final  List<ReturnedBaskets> returnedBaskets, required this.returnedPreservativesJars, required this.returnedLimeJars}): _returnedGaveras = returnedGaveras,_returnedBaskets = returnedBaskets;
   factory _Stage4FormData.fromJson(Map<String, dynamic> json) => _$Stage4FormDataFromJson(json);
 
 @override final  String id;
@@ -228,7 +228,13 @@ class _Stage4FormData implements Stage4FormData {
   return EqualUnmodifiableListView(_returnedGaveras);
 }
 
-@override final  int returnedBaskets;
+ final  List<ReturnedBaskets> _returnedBaskets;
+@override List<ReturnedBaskets> get returnedBaskets {
+  if (_returnedBaskets is EqualUnmodifiableListView) return _returnedBaskets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_returnedBaskets);
+}
+
 @override final  int returnedPreservativesJars;
 @override final  int returnedLimeJars;
 
@@ -245,12 +251,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stage4FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other._returnedGaveras, _returnedGaveras)&&(identical(other.returnedBaskets, returnedBaskets) || other.returnedBaskets == returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stage4FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.projectId, projectId) || other.projectId == projectId)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other._returnedGaveras, _returnedGaveras)&&const DeepCollectionEquality().equals(other._returnedBaskets, _returnedBaskets)&&(identical(other.returnedPreservativesJars, returnedPreservativesJars) || other.returnedPreservativesJars == returnedPreservativesJars)&&(identical(other.returnedLimeJars, returnedLimeJars) || other.returnedLimeJars == returnedLimeJars));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,projectId,date,const DeepCollectionEquality().hash(_returnedGaveras),returnedBaskets,returnedPreservativesJars,returnedLimeJars);
+int get hashCode => Object.hash(runtimeType,id,projectId,date,const DeepCollectionEquality().hash(_returnedGaveras),const DeepCollectionEquality().hash(_returnedBaskets),returnedPreservativesJars,returnedLimeJars);
 
 @override
 String toString() {
@@ -265,7 +271,7 @@ abstract mixin class _$Stage4FormDataCopyWith<$Res> implements $Stage4FormDataCo
   factory _$Stage4FormDataCopyWith(_Stage4FormData value, $Res Function(_Stage4FormData) _then) = __$Stage4FormDataCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String projectId, DateTime date, List<ReturnedGaveras> returnedGaveras, int returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
+ String id, String projectId, DateTime date, List<ReturnedGaveras> returnedGaveras, List<ReturnedBaskets> returnedBaskets, int returnedPreservativesJars, int returnedLimeJars
 });
 
 
@@ -288,9 +294,275 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,projectId: null == projectId ? _self.projectId : projectId // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,returnedGaveras: null == returnedGaveras ? _self._returnedGaveras : returnedGaveras // ignore: cast_nullable_to_non_nullable
-as List<ReturnedGaveras>,returnedBaskets: null == returnedBaskets ? _self.returnedBaskets : returnedBaskets // ignore: cast_nullable_to_non_nullable
-as int,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
+as List<ReturnedGaveras>,returnedBaskets: null == returnedBaskets ? _self._returnedBaskets : returnedBaskets // ignore: cast_nullable_to_non_nullable
+as List<ReturnedBaskets>,returnedPreservativesJars: null == returnedPreservativesJars ? _self.returnedPreservativesJars : returnedPreservativesJars // ignore: cast_nullable_to_non_nullable
 as int,returnedLimeJars: null == returnedLimeJars ? _self.returnedLimeJars : returnedLimeJars // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$ReturnedBaskets {
+
+ BasketSize get size; int get quantity;
+/// Create a copy of ReturnedBaskets
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReturnedBasketsCopyWith<ReturnedBaskets> get copyWith => _$ReturnedBasketsCopyWithImpl<ReturnedBaskets>(this as ReturnedBaskets, _$identity);
+
+  /// Serializes this ReturnedBaskets to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReturnedBaskets&&(identical(other.size, size) || other.size == size)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,size,quantity);
+
+@override
+String toString() {
+  return 'ReturnedBaskets(size: $size, quantity: $quantity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReturnedBasketsCopyWith<$Res>  {
+  factory $ReturnedBasketsCopyWith(ReturnedBaskets value, $Res Function(ReturnedBaskets) _then) = _$ReturnedBasketsCopyWithImpl;
+@useResult
+$Res call({
+ BasketSize size, int quantity
+});
+
+
+
+
+}
+/// @nodoc
+class _$ReturnedBasketsCopyWithImpl<$Res>
+    implements $ReturnedBasketsCopyWith<$Res> {
+  _$ReturnedBasketsCopyWithImpl(this._self, this._then);
+
+  final ReturnedBaskets _self;
+  final $Res Function(ReturnedBaskets) _then;
+
+/// Create a copy of ReturnedBaskets
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? size = null,Object? quantity = null,}) {
+  return _then(_self.copyWith(
+size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as BasketSize,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ReturnedBaskets].
+extension ReturnedBasketsPatterns on ReturnedBaskets {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReturnedBaskets value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReturnedBaskets() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReturnedBaskets value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReturnedBaskets():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReturnedBaskets value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReturnedBaskets() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( BasketSize size,  int quantity)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReturnedBaskets() when $default != null:
+return $default(_that.size,_that.quantity);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( BasketSize size,  int quantity)  $default,) {final _that = this;
+switch (_that) {
+case _ReturnedBaskets():
+return $default(_that.size,_that.quantity);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( BasketSize size,  int quantity)?  $default,) {final _that = this;
+switch (_that) {
+case _ReturnedBaskets() when $default != null:
+return $default(_that.size,_that.quantity);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ReturnedBaskets implements ReturnedBaskets {
+  const _ReturnedBaskets({required this.size, required this.quantity});
+  factory _ReturnedBaskets.fromJson(Map<String, dynamic> json) => _$ReturnedBasketsFromJson(json);
+
+@override final  BasketSize size;
+@override final  int quantity;
+
+/// Create a copy of ReturnedBaskets
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReturnedBasketsCopyWith<_ReturnedBaskets> get copyWith => __$ReturnedBasketsCopyWithImpl<_ReturnedBaskets>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReturnedBasketsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReturnedBaskets&&(identical(other.size, size) || other.size == size)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,size,quantity);
+
+@override
+String toString() {
+  return 'ReturnedBaskets(size: $size, quantity: $quantity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReturnedBasketsCopyWith<$Res> implements $ReturnedBasketsCopyWith<$Res> {
+  factory _$ReturnedBasketsCopyWith(_ReturnedBaskets value, $Res Function(_ReturnedBaskets) _then) = __$ReturnedBasketsCopyWithImpl;
+@override @useResult
+$Res call({
+ BasketSize size, int quantity
+});
+
+
+
+
+}
+/// @nodoc
+class __$ReturnedBasketsCopyWithImpl<$Res>
+    implements _$ReturnedBasketsCopyWith<$Res> {
+  __$ReturnedBasketsCopyWithImpl(this._self, this._then);
+
+  final _ReturnedBaskets _self;
+  final $Res Function(_ReturnedBaskets) _then;
+
+/// Create a copy of ReturnedBaskets
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? size = null,Object? quantity = null,}) {
+  return _then(_ReturnedBaskets(
+size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
+as BasketSize,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

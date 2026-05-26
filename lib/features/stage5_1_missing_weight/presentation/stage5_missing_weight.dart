@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/presentation/providers/stage4_ui_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/missing_gavera.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
@@ -49,9 +52,17 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
     final missingLimeJars = project.limeJars - returns.returnedLimeJars;
     final missingPreservativesJars =
         project.preservativesJars - returns.returnedPreservativesJars;
-    //TODO: CORREGUIR
-    final missingBaskets =
-        project.baskets[0].quantity - returns.returnedBaskets;
+    final missingBaskets = <BasketSize, int>{};
+    for (final b in project.baskets) {
+      final returned = returns.returnedBaskets
+          .firstWhere(
+            (r) => r.size == b.size,
+            orElse: () => ReturnedBaskets(size: b.size, quantity: 0),
+          )
+          .quantity;
+      final diff = b.quantity - returned;
+      if (diff != 0) missingBaskets[b.size] = diff;
+    }
 
     final missingGaveras = <MissingGavera>[];
     final returnedByWeight = {
@@ -72,7 +83,7 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
         missingGaveras.isNotEmpty ||
         missingLimeJars != 0 ||
         missingPreservativesJars != 0 ||
-        missingBaskets != 0 ||
+        missingBaskets.isNotEmpty ||
         summary3.totalMissingWeight != 0 ||
         summary3.totalMissingCount != 0;
 
@@ -209,12 +220,14 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                           icon: Icons.local_drink_rounded,
                           iconColor: AppColors.error,
                         ),
-                      if (missingBaskets != 0)
-                        _AlertRow(
-                          label: 'Canastillas',
-                          value: '$missingBaskets unid.',
-                          icon: Icons.priority_high,
-                          iconColor: AppColors.error,
+                      if (missingBaskets.isNotEmpty)
+                        ...missingBaskets.entries.map(
+                          (e) => _AlertRow(
+                            label: 'Canastillas ${e.key.label}',
+                            value: '${e.value} unid.',
+                            icon: Icons.priority_high,
+                            iconColor: AppColors.error,
+                          ),
                         ),
                       if (summary3.totalMissingWeight != 0)
                         _AlertRow(

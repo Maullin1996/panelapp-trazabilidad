@@ -7,21 +7,29 @@ part 'stage5_global_summary_provider.g.dart';
 @riverpod
 List<Stage5SummaryItem> stage5GlobalSummary(Ref ref, String projectId) {
   final days = ref.watch(stage5SummaryProvider(projectId));
-  final Map<String, int> agg = {};
+  final Map<double, _Accum> agg = {};
 
   for (final day in days) {
     for (final item in day.items) {
-      final key = '${item.gaveraWeight}|${item.realWeight}';
-      agg[key] = (agg[key] ?? 0) + item.totalCount;
+      final prev = agg[item.gaveraWeight] ?? const _Accum(0, 0.0);
+      agg[item.gaveraWeight] = _Accum(
+        prev.count + item.totalCount,
+        prev.weight + item.realWeight,
+      );
     }
   }
 
   return agg.entries.map((e) {
-    final p = e.key.split('|');
     return Stage5SummaryItem(
-      gaveraWeight: double.parse(p[0]),
-      realWeight: double.parse(p[1]),
-      totalCount: e.value,
+      gaveraWeight: e.key,
+      realWeight: e.value.weight,
+      totalCount: e.value.count,
     );
-  }).toList()..sort((a, b) => a.realWeight.compareTo(b.realWeight));
+  }).toList()..sort((a, b) => a.gaveraWeight.compareTo(b.gaveraWeight));
+}
+
+class _Accum {
+  final int count;
+  final double weight;
+  const _Accum(this.count, this.weight);
 }

@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
@@ -100,17 +101,30 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
                 // ── Sección Insumos ──────────────────────────────────────
                 _SectionLabel(label: 'Insumos'),
                 const SizedBox(height: 6),
-                _InsumoCard(
-                  icon: Icons.shopping_basket,
-                  iconColor: AppColors.register,
-                  iconBg: AppColors.register.withAlpha(25),
-                  title: 'Canastillas',
-                  supplied: project.baskets[0].quantity, //TODO : CORREGIR
-                  returned: returns.returnedBaskets,
-                  accentColor: AppColors.register,
-                  fieldName: 'returnBaskets',
-                  activeForm: _activeForm,
-                ),
+                ...List.generate(project.baskets.length, (i) {
+                  final basket = project.baskets[i];
+                  final returned = returns.returnedBaskets
+                      .firstWhere(
+                        (b) => b.size == basket.size,
+                        orElse: () =>
+                            ReturnedBaskets(size: basket.size, quantity: 0),
+                      )
+                      .quantity;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _InsumoCard(
+                      icon: Icons.shopping_basket,
+                      iconColor: AppColors.register,
+                      iconBg: AppColors.register.withAlpha(25),
+                      title: 'Canastillas ${basket.size.label}',
+                      supplied: basket.quantity,
+                      returned: returned,
+                      accentColor: AppColors.register,
+                      fieldName: 'returnBaskets_$i',
+                      activeForm: _activeForm,
+                    ),
+                  );
+                }),
                 const SizedBox(height: 10),
                 _InsumoCard(
                   icon: Icons.science_rounded,
@@ -251,8 +265,18 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
     for (int i = 0; i < (project?.gaveras.length ?? 0); i++) {
       gaveras.add(
         ReturnedGaveras(
-          quantity: int.tryParse(vals['returnGavera_$i'] ?? '') ?? 0,
+          quantity: _readInt(vals['returnGavera_$i']),
           referenceWeight: project!.gaveras[i].referenceWeight,
+        ),
+      );
+    }
+
+    final baskets = <ReturnedBaskets>[];
+    for (int i = 0; i < (project?.baskets.length ?? 0); i++) {
+      baskets.add(
+        ReturnedBaskets(
+          size: project!.baskets[i].size,
+          quantity: _readInt(vals['returnBaskets_$i']),
         ),
       );
     }
@@ -262,7 +286,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
       projectId: widget.projectId,
       date: DateTime.now(),
       returnedGaveras: gaveras,
-      returnedBaskets: _readInt(vals['returnBaskets']),
+      returnedBaskets: baskets,
       returnedPreservativesJars: _readInt(vals['returnPreservativesJars']),
       returnedLimeJars: _readInt(vals['returnLimeJars']),
     );
@@ -286,10 +310,23 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
           project.gaveras[e.key].quantity -
               returns.returnedGaveras[e.key].quantity,
     );
+    final basketsExceed = baskets.any((b) {
+      final supplied = project.baskets
+          .firstWhere((p) => p.size == b.size)
+          .quantity;
+      final alreadyReturned = returns.returnedBaskets
+          .firstWhere(
+            (r) => r.size == b.size,
+            orElse: () => ReturnedBaskets(size: b.size, quantity: 0),
+          )
+          .quantity;
+      return b.quantity > supplied - alreadyReturned;
+    });
 
     if (data.returnedPreservativesJars > remainingPreservatives ||
         data.returnedLimeJars > remainingLime ||
-        gaverasExceed) {
+        gaverasExceed ||
+        basketsExceed) {
       CustomSnackBar.show(
         context,
         message: 'Cantidad supera el máximo permitido',
@@ -303,7 +340,7 @@ class _Stage4PageState extends ConsumerState<Stage4Page>
 
   bool _isEmptySubmission(Stage4FormData d) {
     return d.returnedGaveras.every((g) => g.quantity == 0) &&
-        d.returnedBaskets == 0 &&
+        d.returnedBaskets.every((b) => b.quantity == 0) &&
         d.returnedPreservativesJars == 0 &&
         d.returnedLimeJars == 0;
   }
@@ -361,8 +398,8 @@ class _SectionLabel extends StatelessWidget {
 
 // ─── Gaveras Card ─────────────────────────────────────────────────────────────
 class _GaverasCard extends StatelessWidget {
-  final List gaveras;
-  final List returned;
+  final List<GaveraData> gaveras;
+  final List<ReturnedGaveras> returned;
   final bool activeForm;
 
   const _GaverasCard({
@@ -373,14 +410,8 @@ class _GaverasCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalSupplied = gaveras.fold<int>(
-      0,
-      (s, g) => s + (g.quantity as int),
-    );
-    final totalReturned = returned.fold<int>(
-      0,
-      (s, r) => s + (r.quantity as int),
-    );
+    final totalSupplied = gaveras.fold<int>(0, (s, g) => s + (g.quantity));
+    final totalReturned = returned.fold<int>(0, (s, r) => s + (r.quantity));
     final progress = totalSupplied > 0 ? totalReturned / totalSupplied : 0.0;
 
     return _SurfaceCard(
@@ -405,11 +436,11 @@ class _GaverasCard extends StatelessWidget {
           // Filas de gaveras
           ...List.generate(gaveras.length, (i) {
             final g = gaveras[i];
-            final ret = returned[i].quantity as int;
-            final remaining = (g.quantity as int) - ret;
+            final ret = returned[i].quantity;
+            final remaining = (g.quantity) - ret;
             return _GaveraRow(
-              referenceWeight: g.referenceWeight as double,
-              supplied: g.quantity as int,
+              referenceWeight: g.referenceWeight,
+              supplied: g.quantity,
               returned: ret,
               remaining: remaining,
               fieldName: 'returnGavera_$i',

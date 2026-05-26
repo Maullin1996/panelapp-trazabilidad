@@ -1,25 +1,22 @@
 import 'package:collection/collection.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'inputs_math_provider.g.dart';
 
 class LoadSummary {
-  final int totalBaskets; // ✅ agregado, lo tenía SummaryCalculus
-  final double totalRefkg;
+  final int totalBaskets;
   final int regCount;
-  final double regWeight;
   final int missingCount;
-  final double missingWeight;
+  final Map<BasketQuality, int> countByQuality;
 
   LoadSummary({
     required this.totalBaskets,
-    required this.totalRefkg,
     required this.regCount,
-    required this.regWeight,
     required this.missingCount,
-    required this.missingWeight,
+    required this.countByQuality,
   });
 }
 
@@ -30,35 +27,28 @@ LoadSummary loadSummary(Ref ref, String load2Id) {
   if (load2 == null) {
     return LoadSummary(
       totalBaskets: 0,
-      totalRefkg: 0,
       regCount: 0,
-      regWeight: 0,
       missingCount: 0,
-      missingWeight: 0,
+      countByQuality: {},
     );
   }
 
   final entries3 = ref.watch(syncStage3ProjectsProvider);
-
-  final totalBaskets = load2.baskets.count;
-  final refPerBasket = load2.baskets.realWeight;
-  final totalRefkg = refPerBasket * totalBaskets;
-
   final entry = entries3.firstWhereOrNull((e) => e.stage2LoadId == load2Id);
 
+  final totalBaskets = load2.baskets.count;
   final regCount = entry?.baskets.length ?? 0;
-  final regWeight =
-      entry?.baskets.fold<double>(0, (s, b) => s + b.realWeight) ?? 0;
-
   final missingCount = (totalBaskets - regCount).clamp(0, totalBaskets);
-  final missingWeight = (totalRefkg - regWeight).clamp(0, double.infinity);
+
+  final countByQuality = <BasketQuality, int>{};
+  for (final b in entry?.baskets ?? []) {
+    countByQuality[b.quality] = (countByQuality[b.quality] ?? 0) + 1;
+  }
 
   return LoadSummary(
     totalBaskets: totalBaskets,
-    totalRefkg: totalRefkg,
     regCount: regCount,
-    regWeight: regWeight,
     missingCount: missingCount,
-    missingWeight: missingWeight.toDouble(),
+    countByQuality: countByQuality,
   );
 }

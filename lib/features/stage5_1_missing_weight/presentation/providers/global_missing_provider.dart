@@ -47,9 +47,9 @@ Stage3GlobalSummary stage3GlobalSummary(Ref ref, String projectId) {
 
   for (final load in loads2) {
     expectedCount += load.baskets.count;
-    expectedWeight += load.baskets.count * load.baskets.realWeight;
+    // referenceWeight es el peso de la gavera, que es el peso esperado por canastilla
+    expectedWeight += load.baskets.count * load.baskets.referenceWeight;
 
-    // O(1) en lugar de firstWhereOrNull que es O(n)
     final entry = entries3ByLoadId[load.id];
     if (entry != null) {
       registeredCount += entry.baskets.length;

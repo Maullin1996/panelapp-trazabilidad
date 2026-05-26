@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/core/services/compress_file.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/helpers/comma_to_dot_formatter.dart';
@@ -85,7 +86,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
     if (widget.initialData != null) {
       for (final b in widget.initialData!.baskets) {
         initMap['realWeight_${b.sequence}'] = b.realWeight.toString();
-        initMap['quality_${b.sequence}'] = b.quality.name;
+        initMap['quality_${b.sequence}'] = b.quality;
       }
     }
     return FormBuilder(
@@ -134,7 +135,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                                   for (final i in _indices) {
                                     final raw = values['realWeight_$i'];
                                     final qualStr =
-                                        values['quality_$i'] as String?;
+                                        values['quality_$i'] as BasketQuality?;
 
                                     double? realWeight;
                                     if (raw is num) {
@@ -146,8 +147,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                                     }
 
                                     final hasWeight = realWeight != null;
-                                    final hasQuality =
-                                        (qualStr?.isNotEmpty == true);
+                                    final hasQuality = qualStr != null;
 
                                     final prev = existingMap[i];
 
@@ -158,10 +158,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                                           sequence: i,
                                           referenceWeight: _refWeightPerBasket,
                                           realWeight: realWeight,
-                                          quality: BasketQuality.values
-                                              .firstWhere(
-                                                (q) => q.name == qualStr,
-                                              ),
+                                          quality: qualStr,
                                           photoPath: _photoPaths[i] ?? '',
                                         ),
                                       );
@@ -284,17 +281,18 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         const SizedBox(height: AppSpacing.smallLarge),
                         Text('Calidad', style: textTheme.headlineMedium),
                         const SizedBox(height: AppSpacing.xSmall),
-                        CustomFromDropdown<String>(
+                        // Cambia el tipo del dropdown
+                        CustomFromDropdown<BasketQuality>(
                           key: Key('stage3-load-form-quality$index-input'),
                           name: 'quality_$index',
                           items: BasketQuality.values.map((e) {
-                            return DropdownMenuItem(
+                            return DropdownMenuItem<BasketQuality>(
                               key: Key('stage3-load-form-${e.name}-input'),
-                              value: e.name,
+                              value: e,
                               child: Text(
-                                e.name.toUpperCase(),
+                                e.label,
                                 style: textTheme.bodyLarge,
-                              ),
+                              ), // ← .label
                             );
                           }).toList(),
                         ),

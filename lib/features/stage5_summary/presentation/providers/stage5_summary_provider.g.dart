@@ -72,7 +72,7 @@ final class Stage5SummaryProvider
   }
 }
 
-String _$stage5SummaryHash() => r'3d8e6eef79d2aebf3ba3f2403a698ae8be14a87a';
+String _$stage5SummaryHash() => r'c7364d040ae4004dff1d640891d26db77083cb80';
 
 final class Stage5SummaryFamily extends $Family
     with $FunctionalFamilyOverride<List<Stage5SummaryDay>, String> {

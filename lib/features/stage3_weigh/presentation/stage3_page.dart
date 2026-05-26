@@ -7,12 +7,15 @@ import 'package:intl/intl.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:registro_panela/features/stage2_load/presentation/providers/sync_stage2_loads_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/helpers/quality_color.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/stage3_loads_loading_provider.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/widget/stage3_shimmer.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/selection_source_title.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
@@ -142,19 +145,19 @@ class Stage3Page extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: AppSpacing.xSmall),
                                 CustomRichText(
-                                  icon: Icons.scale,
-                                  iconColor: AppColors.weight,
-                                  firstText: 'Peso canastilla: ',
-                                  secondText:
-                                      '${load2.baskets.realWeight.toStringAsFixed(2)} kg',
+                                  icon: Icons.verified,
+                                  iconColor: AppColors.accepted,
+                                  firstText: 'Calidad: ',
+                                  secondText: load2.baskets.quality.label,
                                 ),
                                 const SizedBox(height: AppSpacing.xSmall),
                                 CustomRichText(
-                                  icon: Icons.bar_chart,
-                                  iconColor: AppColors.register,
-                                  firstText: 'Peso total esperado: ',
+                                  icon: Icons.storage,
+                                  iconColor: AppColors.weight,
+
+                                  firstText: 'Gavera: ',
                                   secondText:
-                                      '${summary.totalRefkg.toStringAsFixed(2)} kg',
+                                      "${load2.baskets.referenceWeight.toString()} g",
                                 ),
                               ],
                             ),
@@ -203,7 +206,7 @@ class Stage3Page extends ConsumerWidget {
                             padding: const EdgeInsets.only(
                               left: AppSpacing.small,
                               right: AppSpacing.small,
-                              bottom: AppSpacing.smallLarge,
+                              bottom: AppSpacing.small,
                             ),
                             child: Column(
                               children: [
@@ -215,13 +218,28 @@ class Stage3Page extends ConsumerWidget {
                                 ),
 
                                 const SizedBox(height: AppSpacing.xSmall),
-                                CustomRichText(
-                                  icon: Icons.check_box,
-                                  iconColor: AppColors.accepted,
-                                  firstText: 'Peso total registrado: ',
-                                  secondText:
-                                      '${summary.regWeight.toStringAsFixed(2)} kg',
-                                ),
+                                ...BasketQuality.values
+                                    .where(
+                                      (q) =>
+                                          summary.countByQuality.containsKey(q),
+                                    )
+                                    .map(
+                                      (q) => Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: AppSpacing.small,
+                                          bottom: AppSpacing.xSmall,
+                                        ),
+                                        child: CustomRichText(
+                                          icon: Icons.label_outline,
+                                          iconColor: qualityColor(
+                                            quality: q.label,
+                                          ),
+                                          firstText: '${q.label}: ',
+                                          secondText:
+                                              '${summary.countByQuality[q]}',
+                                        ),
+                                      ),
+                                    ),
                               ],
                             ),
                           ),
@@ -241,7 +259,7 @@ class Stage3Page extends ConsumerWidget {
                                 SizedBox(width: AppSpacing.xSmall),
                                 Expanded(
                                   child: Text(
-                                    'Canastillas y Peso faltante',
+                                    'Canastillas faltantes',
                                     style: textTheme.headlineMedium?.copyWith(
                                       color: AppColors.error,
                                       fontWeight: FontWeight.w600,
@@ -275,17 +293,9 @@ class Stage3Page extends ConsumerWidget {
                                 CustomRichText(
                                   icon: Icons.priority_high,
                                   iconColor: AppColors.error,
-                                  firstText: 'Faltan canastillas: ',
-                                  secondText: summary.missingCount.toString(),
-                                ),
-
-                                const SizedBox(height: AppSpacing.small),
-                                CustomRichText(
-                                  icon: Icons.warning,
-                                  iconColor: AppColors.alert,
-                                  firstText: 'Peso faltante: ',
+                                  firstText: 'Faltan: ',
                                   secondText:
-                                      '${summary.missingWeight.toStringAsFixed(2)}kg',
+                                      '${summary.missingCount} canastillas',
                                 ),
                               ],
                             ),

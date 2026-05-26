@@ -1,3 +1,4 @@
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
 import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_ui_state.dart';
@@ -38,15 +39,20 @@ class Stage4Ui extends _$Stage4Ui {
       }
     }
 
-    final totalBaskets = entries.fold<int>(0, (previousValue, element) {
-      // todo: corregir
-      if (previousValue + element.returnedBaskets >
-          project.baskets[0].quantity) {
-        return project.baskets[0].quantity;
-      } else {
-        return previousValue + element.returnedBaskets;
+    // Reemplaza el fold de totalBaskets por agrupación por size:
+    final returnedBySize = <BasketSize, int>{};
+    for (final entry in entries) {
+      for (final b in entry.returnedBaskets) {
+        returnedBySize[b.size] = (returnedBySize[b.size] ?? 0) + b.quantity;
       }
-    });
+    }
+
+    final returnedBaskets = project.baskets.map((b) {
+      final returned = returnedBySize[b.size] ?? 0;
+      final capped = returned > b.quantity ? b.quantity : returned;
+      return ReturnedBaskets(size: b.size, quantity: capped);
+    }).toList();
+
     final totalPreservatives = entries.fold<int>(0, (previousValue, element) {
       final sum = previousValue + element.returnedPreservativesJars;
       return sum > project.preservativesJars ? project.preservativesJars : sum;
@@ -58,7 +64,7 @@ class Stage4Ui extends _$Stage4Ui {
 
     return Stage4UiState(
       returnedGaveras: aggregatedGaveras,
-      returnedBaskets: totalBaskets,
+      returnedBaskets: returnedBaskets,
       returnedPreservativesJars: totalPreservatives,
       returnedLimeJars: totalLime,
     );

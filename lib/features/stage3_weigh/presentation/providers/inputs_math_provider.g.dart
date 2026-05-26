@@ -66,7 +66,7 @@ final class LoadSummaryProvider
   }
 }
 
-String _$loadSummaryHash() => r'93427a4af4ba2001f41a0446b2ebf949fd50c377';
+String _$loadSummaryHash() => r'f72a24979df0be1c2832cf0878d3e19a2ff99ea1';
 
 final class LoadSummaryFamily extends $Family
     with $FunctionalFamilyOverride<LoadSummary, String> {
