@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/core/services/compress_file.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/widgets/two_form_row.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
@@ -666,23 +667,6 @@ class _LabeledField extends StatelessWidget {
       ],
     );
   }
-}
-
-extension GaveraTypeLabel on GaveraType {
-  String get label => switch (this) {
-    GaveraType.kilo => 'Kilo',
-    GaveraType.redonda => 'Redonda',
-    GaveraType.panelo => 'Panelo',
-    GaveraType.pacha => 'Pacha',
-    GaveraType.pastilla => 'Pastilla',
-  };
-}
-
-extension BasketSizeLabel on BasketSize {
-  String get label => switch (this) {
-    BasketSize.grande => 'Grande',
-    BasketSize.pequena => 'Pequeña',
-  };
 }
 
 class _BasketItem extends StatelessWidget {

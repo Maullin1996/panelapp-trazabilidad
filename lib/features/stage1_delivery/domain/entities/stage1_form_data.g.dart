@@ -24,7 +24,7 @@ Map<String, dynamic> _$GaveraDataToJson(_GaveraData instance) =>
 const _$GaveraTypeEnumMap = {
   GaveraType.kilo: 'kilo',
   GaveraType.redonda: 'redonda',
-  GaveraType.panelo: 'panelo',
+  GaveraType.panelon: 'panelon',
   GaveraType.pacha: 'pacha',
   GaveraType.pastilla: 'pastilla',
 };

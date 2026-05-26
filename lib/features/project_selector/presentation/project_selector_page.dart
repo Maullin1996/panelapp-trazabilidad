@@ -14,6 +14,7 @@ import 'package:registro_panela/features/stage1_delivery/presentation/providers/
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/widgets.dart';
 import 'package:registro_panela/features/pdf/helpers/generate_and_share_pdf.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 
 class ProjectSelectorPage extends ConsumerStatefulWidget {
   const ProjectSelectorPage({super.key});
@@ -226,7 +227,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
       ),
       itemCount: typedProjects.length,
       itemBuilder: (context, i) {
-        final p = projects[i] as dynamic;
+        final p = typedProjects[i];
         final user = ref.read(authProvider).user;
         return Dismissible(
           key: Key('project-selector-dismissible-${p.id}'),
@@ -390,16 +391,100 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                                     ),
                                   ),
                                 ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  // ← nuevo chip
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryPanelaBrown
+                                        .withAlpha(20),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.small,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    p.gaveras[index].gaveraType.label,
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.primaryPanelaBrown,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xSmall),
-                        CustomRichText(
-                          firstText: 'Canastillas: ',
-                          secondText: '${p.basketsQuantity}',
-                          icon: Icons.shopping_basket,
-                          iconColor: AppColors.register,
+                        Row(
+                          children: [
+                            const IconDecoration(
+                              icon: Icons.shopping_basket,
+                              iconColor: AppColors.register,
+                              backgroundColor: AppColors.register,
+                            ),
+                            const SizedBox(width: AppSpacing.xSmall),
+                            Text(
+                              'Canastillas',
+                              style: textTheme.headlineMedium,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
+                        ...List.generate(
+                          p.baskets.length,
+                          (index) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 4,
+                              left: AppSpacing.small,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.register.withAlpha(30),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.small,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'unidades: ${p.baskets[index].quantity}',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.register,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondaryDarkPanela
+                                        .withAlpha(20),
+                                    borderRadius: BorderRadius.circular(
+                                      AppRadius.small,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    p.baskets[index].size.label,
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.secondaryDarkPanela,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                         const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(

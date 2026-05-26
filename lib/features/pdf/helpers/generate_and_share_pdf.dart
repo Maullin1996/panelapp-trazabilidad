@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 import 'package:registro_panela/shared/utils/typography.dart';
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -128,9 +129,8 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
                       children: [
                         pw.Text('Canastillas', style: tSection),
                         vspace(10),
-                        //todo: Corregir
                         pw.Text(
-                          '${project.baskets[0].quantity}',
+                          '${project.baskets.fold(0, (sum, b) => sum + b.quantity)}',
                           style: tHeader,
                         ),
                         vspace(4),
@@ -184,6 +184,7 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
                       columnWidths: {
                         0: const pw.FlexColumnWidth(1.5),
                         1: const pw.FlexColumnWidth(2),
+                        2: const pw.FlexColumnWidth(2),
                       },
                       children: [
                         pw.TableRow(
@@ -201,6 +202,10 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
                                 'Peso referencia (g)',
                                 style: tSmall,
                               ),
+                            ),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(10),
+                              child: pw.Text('Tipo', style: tSmall),
                             ),
                           ],
                         ),
@@ -224,6 +229,17 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
                                   style: tBody,
                                 ),
                               ),
+                              pw.Padding(
+                                // ← nuevo dato
+                                padding: const pw.EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 8,
+                                ),
+                                child: pw.Text(
+                                  g.gaveraType.label,
+                                  style: tBody,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -234,6 +250,65 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
               ),
             ),
             vspace(24),
+
+            pw.Text(
+              'CANASTILLAS',
+              style: pw.TextStyle(
+                font: fontBold,
+                fontSize: 12,
+                color: subtitleColor,
+                letterSpacing: 1.2,
+              ),
+            ),
+            vspace(12),
+            cardContainer(
+              pw.Table(
+                border: pw.TableBorder.symmetric(
+                  outside: pw.BorderSide(color: borderColor, width: 0.8),
+                ),
+                columnWidths: {
+                  0: const pw.FlexColumnWidth(2),
+                  1: const pw.FlexColumnWidth(1.5),
+                },
+                children: [
+                  pw.TableRow(
+                    decoration: const pw.BoxDecoration(
+                      color: PdfColors.grey200,
+                    ),
+                    children: [
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(10),
+                        child: pw.Text('Tamaño', style: tSmall),
+                      ),
+                      pw.Padding(
+                        padding: const pw.EdgeInsets.all(10),
+                        child: pw.Text('Cantidad', style: tSmall),
+                      ),
+                    ],
+                  ),
+                  ...project.baskets.map(
+                    (b) => pw.TableRow(
+                      children: [
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 8,
+                          ),
+                          child: pw.Text(b.size.label, style: tBody),
+                        ),
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 8,
+                          ),
+                          child: pw.Text('${b.quantity}', style: tBody),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             pw.Text(
               'MATERIALES ADICIONALES',

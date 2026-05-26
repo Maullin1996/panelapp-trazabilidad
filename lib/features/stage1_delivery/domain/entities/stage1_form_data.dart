@@ -46,6 +46,6 @@ abstract class Stage1FormData with _$Stage1FormData {
       _$Stage1FormDataFromJson(json);
 }
 
-enum GaveraType { kilo, redonda, panelo, pacha, pastilla }
+enum GaveraType { kilo, redonda, panelon, pacha, pastilla }
 
 enum BasketSize { grande, pequena }
