@@ -6,6 +6,8 @@ import 'package:registro_panela/features/index_features.dart';
 import 'package:registro_panela/features/project_selector/presentation/project_selector_page.dart';
 import 'package:registro_panela/features/pdf/presentation/pdf_screen.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage5/domain/entities/stage5_invoice_data.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/pages/stage5_invoice_summary_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = GoRouterNotifier(ref);
@@ -148,6 +150,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                     projectId: projectId,
                     recordId: recordId,
                   );
+                },
+              ),
+              GoRoute(
+                name: 'stage5invoice',
+                path: 'invoice',
+                builder: (context, state) {
+                  final invoice = state.extra as Stage5InvoiceData;
+                  return Stage5InvoiceSummaryPage(invoice: invoice);
                 },
               ),
             ],

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:registro_panela/features/admin/domain/entities/app_user.dart';
-import 'package:registro_panela/features/auth/domin/repositories/auth_repository.dart';
+import 'package:registro_panela/features/auth/domain/repositories/auth_repository.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';

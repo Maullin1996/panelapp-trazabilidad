@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/routes.dart';
-import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
-import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
-import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
+import 'package:registro_panela/features/auth/domain/entities/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/enums/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 
 /// Control de acceso por estado de auth y rol

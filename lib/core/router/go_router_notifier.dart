@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/entities/auth_status.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 
 class GoRouterNotifier extends ChangeNotifier {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/stage5_missing_weight.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/pages/stage5_missing_weight.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/stage52_page.dart';
 import 'package:registro_panela/features/stage5_summary/presentation/stage5_summary.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';

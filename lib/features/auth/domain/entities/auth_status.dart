@@ -1,5 +1,5 @@
-import 'package:registro_panela/features/auth/domin/entities/authenticated_user.dart';
-import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/entities/authenticated_user.dart';
+import 'package:registro_panela/features/auth/domain/enums/auth_status.dart';
 
 /// Modela el estado de autenticación actual de la app.
 ///

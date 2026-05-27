@@ -13,6 +13,7 @@ import 'package:registro_panela/features/stage5_1_missing_weight/presentation/wi
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/global_missing_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage51_usecases_provider.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/widgets/stage5_invoice_form.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
 import 'package:registro_panela/shared/widgets/icon_decoration.dart';
@@ -229,14 +230,6 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
                             iconColor: AppColors.error,
                           ),
                         ),
-                      if (summary3.totalMissingWeight != 0)
-                        _AlertRow(
-                          label: 'Peso faltante',
-                          value:
-                              '${summary3.totalMissingWeight.toStringAsFixed(2)} kg',
-                          icon: Icons.monitor_weight_outlined,
-                          iconColor: AppColors.alert,
-                        ),
                     ],
                   ),
                 ),
@@ -349,16 +342,11 @@ class _Stage5MissingWeightState extends ConsumerState<Stage5MissingWeight> {
             const SizedBox(height: AppSpacing.xSmall),
 
             // ── Formulario precio / abono ──
-            FormTotalToPay(
+            FormTotalToPay(projectId: widget.projectId),
+            const SizedBox(height: AppSpacing.xSmall),
+            Stage5InvoiceForm(
+              // ← nueva sección de facturación
               projectId: widget.projectId,
-              totalRegisteredWeight: summary3.totalRegisteredWeight,
-              onPriceCalculated: () {
-                scrollController.animateTo(
-                  scrollController.position.maxScrollExtent,
-                  duration: const Duration(milliseconds: 400),
-                  curve: Curves.easeOut,
-                );
-              },
             ),
           ],
         ),

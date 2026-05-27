@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
 part 'authenticated_user.freezed.dart';
 part 'authenticated_user.g.dart';
 

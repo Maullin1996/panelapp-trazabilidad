@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/routes.dart';
-import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_summary_provider.dart';

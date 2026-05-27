@@ -9,7 +9,7 @@ export 'package:registro_panela/features/stage3_weigh/presentation/stage3_page.d
 export 'package:registro_panela/features/stage3_weigh/presentation/stage3_page_summary.dart';
 export 'package:registro_panela/features/stage4_recollection/presentation/stage4_page.dart';
 export 'package:registro_panela/features/stage5/presentation/stage5_page.dart';
-export 'package:registro_panela/features/stage5_1_missing_weight/presentation/stage5_missing_weight.dart';
+export 'package:registro_panela/features/stage5_1_missing_weight/presentation/pages/stage5_missing_weight.dart';
 export 'package:registro_panela/features/stage5_2_records/presentation/Stage52_page_summary.dart';
 export 'package:registro_panela/features/stage5_2_records/presentation/stage52_form_page.dart';
 export 'package:registro_panela/features/stage5_2_records/presentation/stage52_page.dart';

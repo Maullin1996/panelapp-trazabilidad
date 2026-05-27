@@ -1,4 +1,4 @@
-import 'package:registro_panela/features/auth/domin/entities/authenticated_user.dart';
+import 'package:registro_panela/features/auth/domain/entities/authenticated_user.dart';
 
 /// Contrato para manejar autenticación de usuarios.
 abstract class AuthRepository {

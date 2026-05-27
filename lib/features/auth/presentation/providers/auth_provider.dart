@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:registro_panela/features/auth/domin/entities/auth_status.dart';
-import 'package:registro_panela/features/auth/domin/entities/authenticated_user.dart';
-import 'package:registro_panela/features/auth/domin/enums/auth_status.dart';
-import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
-import 'package:registro_panela/features/auth/domin/repositories/auth_repository.dart';
+import 'package:registro_panela/features/auth/domain/entities/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/entities/authenticated_user.dart';
+import 'package:registro_panela/features/auth/domain/enums/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
+import 'package:registro_panela/features/auth/domain/repositories/auth_repository.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

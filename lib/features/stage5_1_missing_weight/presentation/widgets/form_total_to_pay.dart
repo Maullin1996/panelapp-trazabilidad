@@ -3,11 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_format.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/stage51_price_per_kilo_provider.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/sync_stage51_payments_provider.dart';
 import 'package:registro_panela/shared/widgets/custom_card.dart';
-import 'package:registro_panela/shared/widgets/icon_decoration.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
@@ -16,16 +12,9 @@ import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
 
 class FormTotalToPay extends ConsumerStatefulWidget {
-  final double totalRegisteredWeight;
   final String projectId;
-  final VoidCallback? onPriceCalculated;
 
-  const FormTotalToPay({
-    super.key,
-    this.totalRegisteredWeight = 0,
-    required this.projectId,
-    this.onPriceCalculated,
-  });
+  const FormTotalToPay({super.key, required this.projectId});
 
   @override
   ConsumerState<FormTotalToPay> createState() => _FormTotalToPayState();
@@ -34,7 +23,6 @@ class FormTotalToPay extends ConsumerStatefulWidget {
 class _FormTotalToPayState extends ConsumerState<FormTotalToPay>
     with SingleTickerProviderStateMixin {
   final _formKeyAmount = GlobalKey<FormBuilderState>();
-  final _formKeyPrice = GlobalKey<FormBuilderState>();
   bool showForm = false;
   final uuid = Uuid();
 
@@ -72,20 +60,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay>
   @override
   Widget build(BuildContext context) {
     final textTheme = TextTheme.of(context);
-    final pricePerKilo = ref.watch(
-      stage5PricePerKiloProvider(widget.projectId),
-    );
     final formNotifier = ref.watch(stage5PriceFormProvider.notifier);
-    final allInstallments = ref.watch(syncStage51PaymentsProvider);
-    final installments = allInstallments
-        .where((e) => e.projectId == widget.projectId)
-        .toList();
-    final totalInstallments = installments.fold<double>(
-      0.0,
-      (sum, e) => sum + e.amount,
-    );
-    final totalWeight = widget.totalRegisteredWeight;
-    final totalToPay = (pricePerKilo ?? 0) * totalWeight - totalInstallments;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,215 +216,7 @@ class _FormTotalToPayState extends ConsumerState<FormTotalToPay>
         ),
 
         const SizedBox(height: AppSpacing.xSmall),
-
-        // ── Sección "Calcular factura" ──
-        Padding(
-          padding: const EdgeInsets.only(left: 2, bottom: 6),
-          child: Text(
-            'CALCULAR FACTURA',
-            style: textTheme.labelSmall?.copyWith(
-              letterSpacing: 1.1,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        CustomCard(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.small),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Valor por kilo', style: textTheme.bodyMedium),
-                const SizedBox(height: AppSpacing.xSmall),
-                FormBuilder(
-                  key: _formKeyPrice,
-                  child: AppFormTextFild(
-                    key: const Key('stage5-form-total-to-pay-price-input'),
-                    name: 'pricePerKilo',
-                    keyboardType: TextInputType.number,
-                    hintText: '\$ 0',
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return 'Requerido';
-                      final digitsOnly = value.replaceAll(
-                        RegExp(r'[^0-9]'),
-                        '',
-                      );
-                      final parsed = double.tryParse(digitsOnly);
-                      if (parsed == null) return 'Debe ser un número válido';
-                      if (parsed < 1) return 'Debe ser mayor que 0';
-                      return null;
-                    },
-                    inputFormatters: [MoneyInputFormatter()],
-                    valueTransformer: (text) {
-                      if (text == null) return null;
-                      final digitsOnly = text.replaceAll(RegExp(r'[^0-9]'), '');
-                      return double.tryParse(digitsOnly);
-                    },
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.small),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton(
-                    key: const Key('stage5-form-total-to-pay-calculate-button'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryPanelaBrown,
-                      foregroundColor: AppColors.textLight,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.large),
-                      ),
-                    ),
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      if (!(_formKeyPrice.currentState?.saveAndValidate() ??
-                          false)) {
-                        return;
-                      }
-                      final values = _formKeyPrice.currentState!.value;
-                      final price = values['pricePerKilo'] as double;
-                      ref
-                          .read(
-                            stage5PricePerKiloProvider(
-                              widget.projectId,
-                            ).notifier,
-                          )
-                          .setPrice(price);
-                      widget.onPriceCalculated?.call();
-                    },
-                    child: Text(
-                      'Calcular',
-                      style: textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textLight,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // ── Resumen de factura ──
-        if (pricePerKilo != null) ...[
-          const SizedBox(height: AppSpacing.xSmall),
-          Padding(
-            padding: const EdgeInsets.only(left: 2, bottom: 6),
-            child: Text(
-              'RESUMEN DE FACTURA',
-              style: textTheme.labelSmall?.copyWith(
-                letterSpacing: 1.1,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          CustomCard(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.small),
-              child: Column(
-                children: [
-                  _SummaryRow(
-                    icon: Icons.monitor_weight_outlined,
-                    iconColor: AppColors.weight,
-                    label: 'Peso registrado',
-                    value: '${totalWeight.toStringAsFixed(2)} kg',
-                  ),
-                  _SummaryRow(
-                    icon: Icons.attach_money,
-                    iconColor: AppColors.accepted,
-                    label: 'Valor por kilo',
-                    value: '\$ ${moneyFormat(pricePerKilo)}',
-                  ),
-                  _SummaryRow(
-                    icon: Icons.calculate_outlined,
-                    iconColor: AppColors.accepted,
-                    label: 'Total bruto',
-                    value: '\$ ${moneyFormat(pricePerKilo * totalWeight)}',
-                  ),
-                  _SummaryRow(
-                    icon: Icons.remove_circle_outline,
-                    iconColor: AppColors.accentLightPanela,
-                    label: 'Total abonado',
-                    value: '\$ ${moneyFormat(totalInstallments)}',
-                  ),
-                  const Divider(height: 20, thickness: 0.5),
-                  Row(
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 28,
-                        decoration: BoxDecoration(
-                          color: AppColors.error.withAlpha(35),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Icon(
-                          Icons.receipt_long,
-                          size: 15,
-                          color: AppColors.error,
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.xSmall),
-                      Expanded(
-                        child: Text(
-                          'Total a pagar',
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        '\$ ${moneyFormat(totalToPay)}',
-                        style: textTheme.headlineMedium?.copyWith(
-                          color: AppColors.error,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ],
-    );
-  }
-}
-
-class _SummaryRow extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String label;
-  final String value;
-
-  const _SummaryRow({
-    required this.icon,
-    required this.iconColor,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = TextTheme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 7),
-      child: Row(
-        children: [
-          IconDecoration(
-            icon: icon,
-            iconColor: iconColor,
-            backgroundColor: iconColor.withAlpha(35),
-          ),
-          const SizedBox(width: AppSpacing.xSmall),
-          Expanded(child: Text(label, style: textTheme.bodyMedium)),
-          Text(
-            value,
-            style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
     );
   }
 }

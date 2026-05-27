@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:registro_panela/core/services/custom_snack_bar.dart';
-import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';

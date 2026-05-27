@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:registro_panela/features/auth/domin/entities/authenticated_user.dart';
-import 'package:registro_panela/features/auth/domin/enums/user_role.dart';
-import 'package:registro_panela/features/auth/domin/repositories/auth_repository.dart';
+import 'package:registro_panela/features/auth/domain/entities/authenticated_user.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
+import 'package:registro_panela/features/auth/domain/repositories/auth_repository.dart';
 
 /// Implementación de [AuthRepository] usando FirebaseAuth y Firestore.
 class AuthRepositoryImpl implements AuthRepository {
