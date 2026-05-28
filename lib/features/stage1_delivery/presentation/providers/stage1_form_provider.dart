@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:registro_panela/core/storage/application/storage_providers.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
@@ -12,18 +14,19 @@ class Stage1Form extends _$Stage1Form {
   @override
   Stage1FormState build() => const Stage1FormState();
 
-  Future<void> submit(Stage1FormData data, {required bool isNew}) async {
+  Future<void> submit(
+    Stage1FormData data, {
+    required bool isNew,
+    Uint8List? photoBytes,
+  }) async {
     state = state.copyWith(status: Stage1FormStatus.submitting);
 
     try {
-      final dataToSave =
-          (data.photoPath != null &&
-              data.photoPath!.isNotEmpty &&
-              !data.photoPath!.startsWith('http'))
+      final dataToSave = photoBytes != null
           ? data.copyWith(
               photoPath: await ref.read(uploadImageProvider)(
                 path: 'stage1_photos/${data.id}.jpg',
-                localFilePath: data.photoPath!,
+                bytes: photoBytes,
               ),
             )
           : data;

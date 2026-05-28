@@ -24,7 +24,7 @@ class Auth extends _$Auth {
 
   /// Login con email/clave. Actualiza [state] según resultado.
   Future<void> login({required String email, required String password}) async {
-    state = state.copyWith(authStatus: AuthStatus.checking, errorMessage: '');
+    state = state.copyWith(errorMessage: '');
 
     try {
       final user = await _authRepository.signIn(
@@ -52,22 +52,24 @@ class Auth extends _$Auth {
 
   /// Verifica sesión al inicio (splash) o reingreso a la app.
   Future<void> checkAuthStatus() async {
-    // Si ya estamos autenticados, no rehacer la carga.
     if (state.authStatus == AuthStatus.authenticated && state.user != null) {
       return;
     }
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      // Espera a que Firebase restaure la sesión — crítico en web
+      final user = await FirebaseAuth.instance.authStateChanges().first;
+
       if (user == null) {
         state = const AuthParams(authStatus: AuthStatus.notAuthenticated);
         return;
       }
-      final uid = user.uid;
+
       final doc = await FirebaseFirestore.instance
           .collection('users')
-          .doc(uid)
+          .doc(user.uid)
           .get();
+
       if (!doc.exists) {
         state = const AuthParams(
           authStatus: AuthStatus.notAuthenticated,
@@ -84,7 +86,7 @@ class Auth extends _$Auth {
 
       state = state.copyWith(
         user: AuthenticatedUser(
-          id: uid,
+          id: user.uid,
           name: data['name'],
           email: data['email'],
           role: role,

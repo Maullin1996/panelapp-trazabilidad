@@ -1,15 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:registro_panela/core/services/compress_file.dart';
+import 'package:go_router/go_router.dart';
+import 'package:registro_panela/core/router/routes.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_form_status.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 import 'package:registro_panela/shared/widgets/app_form_text_fild.dart';
-import 'package:registro_panela/shared/widgets/camera_preview_screen.dart';
 import 'package:registro_panela/shared/widgets/custom_from_dropdown.dart';
 import 'package:registro_panela/shared/widgets/field_label.dart';
 import 'package:registro_panela/shared/widgets/section_card.dart';
@@ -32,13 +34,12 @@ class Stage52LoadForm extends ConsumerStatefulWidget {
 
 class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
   final _formKey = GlobalKey<FormBuilderState>();
-  late String? _photoPath;
+  Uint8List? _photoBytes;
   final _uuid = Uuid();
 
   @override
   void initState() {
     super.initState();
-    _photoPath = widget.initialRecord?.photoPath;
   }
 
   @override
@@ -199,7 +200,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                       size: 20,
                     ),
                     label: Text(
-                      _photoPath == null ? 'Tomar foto' : 'Cambiar foto',
+                      _photoBytes == null ? 'Tomar foto' : 'Cambiar foto',
                       style: textTheme.headlineSmall?.copyWith(
                         color: AppColors.textLight,
                         fontWeight: FontWeight.w600,
@@ -207,15 +208,27 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                     ),
                   ),
                 ),
-                if (_photoPath != null) ...[
+                if (_photoBytes != null ||
+                    widget.initialRecord?.photoPath.isNotEmpty == true) ...[
                   const SizedBox(height: AppSpacing.small),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.medium),
-                    child: StageImageWidget(
-                      imagePath: _photoPath!,
-                      width: double.infinity,
-                      height: 220,
-                      fit: BoxFit.cover,
+                  GestureDetector(
+                    onTap: () {
+                      final url = widget.initialRecord?.photoPath;
+                      if (url != null && url.isNotEmpty) {
+                        context.push(Routes.imageViewer, extra: url);
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                      child: StageImageWidget(
+                        imageBytes: _photoBytes,
+                        imageUrl: _photoBytes == null
+                            ? widget.initialRecord?.photoPath
+                            : null,
+                        width: double.infinity,
+                        height: 220,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ],
@@ -298,9 +311,9 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
       panelaWeight: double.parse(v['panelaWeight']),
       unitCount: int.parse(v['unitCount']),
       quality: BasketQuality.values.firstWhere((q) => q.name == v['quality']),
-      photoPath: _photoPath ?? '',
+      photoPath: widget.initialRecord?.photoPath ?? '',
     );
-    formNotifier.submit(data: record, isNew: isNew);
+    formNotifier.submit(data: record, isNew: isNew, photoBytes: _photoBytes);
   }
 
   void _onPickImage(TextTheme textTheme) {
@@ -337,28 +350,16 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
   }
 
   Future<void> _pickFromCamera() async {
-    final imagePath = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const CameraPreviewScreen()),
-    );
-
-    if (imagePath != null) {
-      final compressed = await compressFile(imagePath);
-      if (compressed != null) {
-        setState(() => _photoPath = compressed);
-      }
-    }
+    final bytes = await ref
+        .read(imagePickerServiceProvider)
+        .captureFromCamera(context);
+    if (bytes != null) setState(() => _photoBytes = bytes);
   }
 
   Future<void> _pickFromGallery() async {
-    final path = await ref
+    final bytes = await ref
         .read(imagePickerServiceProvider)
-        .pickImage(fromCamera: false);
-    if (path != null) {
-      final compressedPath = await compressFile(path);
-      if (compressedPath != null) {
-        setState(() => _photoPath = compressedPath);
-      }
-    }
+        .captureFromGallery();
+    if (bytes != null) setState(() => _photoBytes = bytes);
   }
 }

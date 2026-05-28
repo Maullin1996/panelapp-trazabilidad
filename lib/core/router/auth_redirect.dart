@@ -19,20 +19,18 @@ String? authRedirectForTesting({
   required String path,
   String? routeName,
 }) {
-  // if (auth.authStatus == AuthStatus.checking) {
-  //   return path != '/splash' ? '/splash' : Routes.splash;
-  // }
+  if (auth.authStatus == AuthStatus.checking) {
+    return path == Routes.splash ? null : Routes.splash;
+  }
 
   if (auth.authStatus == AuthStatus.notAuthenticated) {
     return path != Routes.login ? Routes.login : null;
   }
 
   if (auth.authStatus == AuthStatus.authenticated) {
-    if (path == '/splash' || path == Routes.login) {
+    if (path == Routes.splash || path == Routes.login) {
       return Routes.projects;
     }
-
-    // Verificar permisos para otras rutas
     return _checkRolePermissions(auth, routeName);
   }
 

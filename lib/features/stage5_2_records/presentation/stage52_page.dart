@@ -317,7 +317,7 @@ class _RecordCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(AppRadius.medium),
                         child: StageImageWidget(
-                          imagePath: r.photoPath,
+                          imageUrl: r.photoPath,
                           width: 120,
                           height: 72,
                           fit: BoxFit.cover,

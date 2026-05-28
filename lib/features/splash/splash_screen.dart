@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/features/auth/domain/entities/auth_status.dart';
-import 'package:registro_panela/features/auth/domain/enums/auth_status.dart';
 import 'package:registro_panela/features/auth/presentation/providers/auth_provider.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 
@@ -16,12 +14,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Dispara pero no bloquees la UI
-    _initialize();
-  }
-
-  Future<void> _initialize() async {
-    await Future.delayed(Duration(milliseconds: 1000));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(authProvider.notifier).checkAuthStatus();
     });
@@ -30,12 +22,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = TextTheme.of(context);
-
-    ref.listen<AuthParams>(authProvider, (previous, next) {
-      if (next.authStatus != AuthStatus.checking) {
-        ref.read(authProvider.notifier).checkAuthStatus();
-      }
-    });
 
     return Scaffold(
       body: Center(

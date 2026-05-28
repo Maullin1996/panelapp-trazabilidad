@@ -13,7 +13,7 @@ class ImageViewer extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          Center(child: StageImageWidget(imagePath: image)),
+          Center(child: StageImageWidget(imageUrl: image)),
           Padding(
             padding: const EdgeInsets.all(AppSpacing.medium),
             child: Align(

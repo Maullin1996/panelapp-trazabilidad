@@ -285,7 +285,7 @@ class _BasketCard extends StatelessWidget {
                   context.push(Routes.imageViewer, extra: basket.photoPath),
               child: Center(
                 child: StageImageWidget(
-                  imagePath: basket.photoPath,
+                  imageUrl: basket.photoPath,
                   width: 200,
                   height: 200,
                   fit: BoxFit.cover,

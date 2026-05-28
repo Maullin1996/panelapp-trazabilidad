@@ -1,44 +1,55 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:registro_panela/shared/utils/tokens.dart';
 
-/// Widget que muestra una imagen local o remota con caching.
 class StageImageWidget extends StatelessWidget {
-  /// Ruta del archivo local o URL remota
-  final String imagePath;
-
-  /// Ancho deseado (opcional)
+  final String? imageUrl;
+  final Uint8List? imageBytes;
   final double? width;
-
-  /// Alto deseado (opcional)
   final double? height;
-
-  /// BoxFit para ajustar la imagen
   final BoxFit fit;
-
-  /// Widget mostrado mientras carga la imagen remota
-
-  /// Widget mostrado en caso de error
   final Widget errorWidget;
 
+  // ignore: strict_top_level_inference
   const StageImageWidget({
     super.key,
-    required this.imagePath,
+    this.imageUrl,
+    this.imageBytes,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
     this.errorWidget = const Center(child: Icon(Icons.broken_image)),
-  });
+  }) : assert(
+         imageUrl != null || imageBytes != null,
+         'Debes proveer imageUrl o imageBytes',
+       );
 
   @override
   Widget build(BuildContext context) {
-    // Si es una URL (Firebase u otra), usamos CachedNetworkImage
-    if (imagePath.startsWith('http')) {
+    if (imageBytes != null) {
+      return Image.memory(imageBytes!, width: width, height: height, fit: fit);
+    }
+
+    if (imageUrl!.startsWith('http')) {
+      if (kIsWeb) {
+        return Image.network(
+          imageUrl!,
+          width: width,
+          height: height,
+          fit: fit,
+          loadingBuilder: (_, child, progress) {
+            if (progress == null) return child;
+            return _ImageShimmer(width: width ?? 100, height: height ?? 100);
+          },
+          errorBuilder: (_, _, _) => errorWidget,
+        );
+      }
+
       return ClipRRect(
         borderRadius: BorderRadiusGeometry.circular(AppRadius.large),
         child: CachedNetworkImage(
-          imageUrl: imagePath,
+          imageUrl: imageUrl!,
           placeholder: (_, _) =>
               _ImageShimmer(width: width ?? 100, height: height ?? 100),
           errorWidget: (_, _, _) => errorWidget,
@@ -49,13 +60,6 @@ class StageImageWidget extends StatelessWidget {
       );
     }
 
-    // En otro caso, asumimos ruta local
-    final file = File(imagePath);
-    if (file.existsSync()) {
-      return Image.file(file, width: width, height: height, fit: fit);
-    }
-
-    // Si no existe archivo local, mostramos errorWidget
     return _ImageError(width: width ?? 100, height: height ?? 100);
   }
 }

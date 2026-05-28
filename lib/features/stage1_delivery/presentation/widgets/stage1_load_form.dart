@@ -1,10 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:registro_panela/core/router/routes.dart';
-import 'package:registro_panela/core/services/compress_file.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
@@ -31,7 +32,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   late final List<int> _gaveras;
   late final List<int> _baskets;
   late final Uuid _uuid;
-  String? _photoPath;
+  Uint8List? _photoBytes;
 
   @override
   void initState() {
@@ -39,7 +40,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     _formKey = GlobalKey<FormBuilderState>();
     _gaveras = widget.initialData?.gaveras.asMap().keys.toList() ?? [0];
     _baskets = widget.initialData?.baskets.asMap().keys.toList() ?? [0];
-    _photoPath = widget.initialData?.photoPath;
     _uuid = const Uuid();
   }
 
@@ -290,7 +290,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                       size: 20,
                     ),
                     label: Text(
-                      _photoPath == null ? 'Tomar foto' : 'Cambiar foto',
+                      _photoBytes == null ? 'Tomar foto' : 'Cambiar foto',
                       style: textTheme.headlineSmall?.copyWith(
                         color: AppColors.textLight,
                         fontWeight: FontWeight.w600,
@@ -298,16 +298,24 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                     ),
                   ),
                 ),
-                if (_photoPath != null) ...[
+                if (_photoBytes != null ||
+                    widget.initialData?.photoPath != null) ...[
                   const SizedBox(height: AppSpacing.small),
                   GestureDetector(
                     key: const Key('stage1-load-form-image'),
-                    onTap: () =>
-                        context.push(Routes.imageViewer, extra: _photoPath),
+                    onTap: () {
+                      final url = widget.initialData?.photoPath;
+                      if (url != null) {
+                        context.push(Routes.imageViewer, extra: url);
+                      }
+                    },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(AppRadius.medium),
                       child: StageImageWidget(
-                        imagePath: _photoPath!,
+                        imageBytes: _photoBytes,
+                        imageUrl: _photoBytes == null
+                            ? widget.initialData?.photoPath
+                            : null,
                         width: double.infinity,
                         height: 220,
                         fit: BoxFit.cover,
@@ -386,9 +394,10 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
       limeJars: int.parse(values['limeJars']),
       phone: values['phone'],
       date: widget.initialData?.date ?? DateTime.now(),
-      photoPath: _photoPath,
+      photoPath:
+          widget.initialData?.photoPath, // URL existente o null si es nuevo
     );
-    formNotifier.submit(data, isNew: widget.isNew);
+    formNotifier.submit(data, isNew: widget.isNew, photoBytes: _photoBytes);
   }
 
   void _onPickImage(TextTheme textTheme) {
@@ -428,24 +437,17 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
   }
 
   Future<void> _pickFromCamera() async {
-    final imagePath = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const CameraPreviewScreen()),
-    );
-    if (imagePath != null) {
-      final compressed = await compressFile(imagePath);
-      if (compressed != null) setState(() => _photoPath = compressed);
-    }
+    final bytes = await ref
+        .read(imagePickerServiceProvider)
+        .captureFromCamera(context);
+    if (bytes != null) setState(() => _photoBytes = bytes);
   }
 
   Future<void> _pickFromGallery() async {
-    final path = await ref
+    final bytes = await ref
         .read(imagePickerServiceProvider)
-        .pickImage(fromCamera: false);
-    if (path != null) {
-      final compressed = await compressFile(path);
-      if (compressed != null) setState(() => _photoPath = compressed);
-    }
+        .captureFromGallery();
+    if (bytes != null) setState(() => _photoBytes = bytes);
   }
 }
 

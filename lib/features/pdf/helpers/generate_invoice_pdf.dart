@@ -1,9 +1,11 @@
 // generate_invoice_pdf.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'web_download_stub.dart' if (dart.library.html) 'web_download.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:registro_panela/features/stage5/domain/entities/stage5_invoice_data.dart';
 import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
@@ -389,8 +391,12 @@ Future<void> generateAndShareInvoicePdf(
   List<PaymentData> installments,
 ) async {
   final bytes = await generateInvoicePdf(invoice, projectName, installments);
-  await Printing.sharePdf(
-    bytes: bytes,
-    filename: 'factura_${invoice.projectId}.pdf',
-  );
+  if (kIsWeb) {
+    await downloadPdfInBrowser(bytes, 'factura_${invoice.projectId}.pdf');
+  } else {
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: 'factura_${invoice.projectId}.pdf',
+    );
+  }
 }

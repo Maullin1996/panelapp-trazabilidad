@@ -25,8 +25,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   @override
   Widget build(BuildContext context) {
     ref.listen<AuthParams>(authProvider, (previous, next) {
-      if (previous?.authStatus != next.authStatus &&
-          next.authStatus == AuthStatus.notAuthenticated) {
+      if (previous?.authStatus == AuthStatus.checking &&
+          next.authStatus == AuthStatus.notAuthenticated &&
+          next.errorMessage != null &&
+          next.errorMessage!.isNotEmpty) {
         CustomSnackBar.show(
           context,
           message: 'Usuario inválido o revisar conexión',
@@ -38,10 +40,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final textTheme = TextTheme.of(context);
     final formState = ref.watch(loginFormProvider);
     final formNotifier = ref.read(loginFormProvider.notifier);
-    final authNotifier = ref.read(authProvider.notifier);
-    final isChecking =
-        ref.watch(authProvider).authStatus == AuthStatus.checking;
-    final isSubmitting = formState.isSubmitting || isChecking;
+    final isSubmitting = formState.isSubmitting;
 
     return FormBuilder(
       key: _fbkey,
@@ -109,10 +108,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               onPressed: (formState.isValid && !isSubmitting)
                   ? () async {
                       if (_fbkey.currentState?.saveAndValidate() ?? false) {
-                        await authNotifier.login(
-                          email: formState.email,
-                          password: formState.password,
-                        );
+                        await formNotifier.submit();
                       }
                     }
                   : null,

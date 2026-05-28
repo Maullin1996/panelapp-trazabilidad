@@ -1,0 +1,1 @@
+[{"origin":["http://localhost:*","https://*.web.app","https://*.firebaseapp.com"],"method":["GET"],"maxAgeSeconds":3600,"responseHeader":["Content-Type"]}]

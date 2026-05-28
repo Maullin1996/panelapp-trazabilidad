@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:registro_panela/core/storage/application/storage_providers.dart';
 import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:registro_panela/features/stage3_weigh/presentation/providers/stage3_usecases_provider.dart';
@@ -42,12 +44,16 @@ class Stage3Form extends _$Stage3Form {
   @override
   Stage3FormState build() => const Stage3FormState();
 
-  Future<void> submit(Stage3FormData data, {required bool isNew}) async {
+  Future<void> submit(
+    Stage3FormData data, {
+    required bool isNew,
+    Map<int, Uint8List> photoBytes = const {},
+  }) async {
     state = const Stage3FormState(status: Stage3FormStatus.submitting);
     try {
       final dataWithUrls = await _uploadPhotos(
         data,
-        // ✅ Conectamos onProgress al estado
+        photoBytes,
         onProgress: (done, total) {
           state = state.copyWith(uploadedPhotos: done, totalPhotos: total);
         },
@@ -69,13 +75,13 @@ class Stage3Form extends _$Stage3Form {
   }
 
   Future<Stage3FormData> _uploadPhotos(
-    Stage3FormData data, {
+    Stage3FormData data,
+    Map<int, Uint8List> photoBytes, {
     int batchSize = 4,
     int maxRetries = 2,
     void Function(int done, int total)? onProgress,
   }) async {
     final uploadImage = ref.read(uploadImageProvider);
-
     final baskets = List<BasketWeighData>.from(data.baskets)
       ..sort((a, b) => a.sequence.compareTo(b.sequence));
 
@@ -83,8 +89,8 @@ class Stage3Form extends _$Stage3Form {
     var done = 0;
 
     Future<BasketWeighData> uploadOne(BasketWeighData b) async {
-      final local = b.photoPath;
-      if (local.isEmpty || local.startsWith('http')) {
+      final bytes = photoBytes[b.sequence];
+      if (bytes == null) {
         onProgress?.call(++done, total);
         return b;
       }
@@ -95,14 +101,13 @@ class Stage3Form extends _$Stage3Form {
           final storagePath = 'stage3/${data.projectId}/${data.id}/${b.id}.jpg';
           final downloadUrl = await uploadImage(
             path: storagePath,
-            localFilePath: local,
+            bytes: bytes,
           );
           onProgress?.call(++done, total);
           return b.copyWith(photoPath: downloadUrl);
         } catch (e) {
           if (attempt >= maxRetries) rethrow;
-          final delayMs = 500 * (1 << attempt);
-          await Future.delayed(Duration(milliseconds: delayMs));
+          await Future.delayed(Duration(milliseconds: 500 * (1 << attempt)));
           attempt++;
         }
       }

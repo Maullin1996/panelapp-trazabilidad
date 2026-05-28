@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseStorageDatasource {
@@ -10,10 +9,13 @@ class FirebaseStorageDatasource {
 
   Future<String> uploadImage({
     required String path,
-    required String localFilePath,
+    required Uint8List bytes,
   }) async {
     final ref = _storage.ref().child(path);
-    final uploadTask = await ref.putFile(File(localFilePath));
+    final uploadTask = await ref.putData(
+      bytes,
+      SettableMetadata(contentType: 'image/jpeg'),
+    );
     return await uploadTask.ref.getDownloadURL();
   }
 }

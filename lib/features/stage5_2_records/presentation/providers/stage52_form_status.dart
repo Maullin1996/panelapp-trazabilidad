@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:registro_panela/core/storage/application/storage_providers.dart';
 import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:registro_panela/features/stage5_2_records/presentation/providers/stage52_usecases_provider.dart';
@@ -24,25 +26,23 @@ class Stage52Form extends _$Stage52Form {
   Future<void> submit({
     required Stage52RecordData data,
     required bool isNew,
+    Uint8List? photoBytes,
   }) async {
     state = const Stage52FormState(status: Stage52FormStatus.submitting);
     try {
-      if (data.photoPath.isNotEmpty && !data.photoPath.startsWith('http')) {
+      if (photoBytes != null) {
         final uploadImage = ref.read(uploadImageProvider);
         final downloadUrl = await uploadImage(
           path: 'stage52_photos/${data.id}.jpg',
-          localFilePath: data.photoPath,
+          bytes: photoBytes,
         );
         data = data.copyWith(photoPath: downloadUrl);
       }
       if (isNew) {
-        final createUseCase = ref.read(createStage52DataProvider);
-        await createUseCase(data);
+        await ref.read(createStage52DataProvider)(data);
       } else {
-        final updateUseCase = ref.read(updateStage52DataProvider);
-        await updateUseCase(data);
+        await ref.read(updateStage52DataProvider)(data);
       }
-
       state = const Stage52FormState(status: Stage52FormStatus.success);
     } catch (e) {
       state = Stage52FormState(

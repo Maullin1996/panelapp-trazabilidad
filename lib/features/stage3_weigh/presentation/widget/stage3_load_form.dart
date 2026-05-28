@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/core/services/compress_file.dart';
 import 'package:registro_panela/core/services/image_picker_service_provider.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:registro_panela/features/stage2_load/domain/entities/basket_quality_label.dart';
@@ -42,7 +41,8 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
   late double _refWeightPerBasket;
   late int _totalBaskets;
   late final Uuid _uuid;
-  late Map<int, String> _photoPaths;
+  late Map<int, String> _photoPaths; // URLs existentes de Firebase
+  final Map<int, Uint8List> _photoBytes = {}; // fotos nuevas capturadas
 
   @override
   void didUpdateWidget(covariant Stage3LoadForm old) {
@@ -179,6 +179,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                                   formNotifier.submit(
                                     formData,
                                     isNew: widget.isNew,
+                                    photoBytes: _photoBytes,
                                   );
                                 },
                           child: formState.status == Stage3FormStatus.submitting
@@ -296,7 +297,24 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             );
                           }).toList(),
                         ),
-                        const SizedBox(height: AppSpacing.medium),
+                        const SizedBox(height: AppSpacing.smallLarge),
+                        if (_photoBytes[index] != null ||
+                            _photoPaths[index]?.isNotEmpty == true) ...[
+                          const SizedBox(height: 8),
+                          Center(
+                            child: StageImageWidget(
+                              key: Key('stage3_load_form-image-taken'),
+                              imageBytes: _photoBytes[index],
+                              imageUrl: _photoBytes[index] == null
+                                  ? _photoPaths[index]
+                                  : null,
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: AppSpacing.smallLarge),
                         Center(
                           child: SizedBox(
                             width: double.infinity,
@@ -318,19 +336,6 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: AppSpacing.smallLarge),
-                        if (_photoPaths[index]?.isNotEmpty == true) ...[
-                          const SizedBox(height: 8),
-                          Center(
-                            child: StageImageWidget(
-                              key: Key('stage3_load_form-image-taken'),
-                              imagePath: _photoPaths[index]!,
-                              width: 200,
-                              height: 200,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -377,28 +382,16 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
   }
 
   Future<void> _pickFromCamera(int index) async {
-    final imagePath = await Navigator.push<String>(
-      context,
-      MaterialPageRoute(builder: (context) => const CameraPreviewScreen()),
-    );
-
-    if (imagePath != null) {
-      final compressed = await compressFile(imagePath);
-      if (compressed != null) {
-        setState(() => _photoPaths[index] = compressed);
-      }
-    }
+    final bytes = await ref
+        .read(imagePickerServiceProvider)
+        .captureFromCamera(context);
+    if (bytes != null) setState(() => _photoBytes[index] = bytes);
   }
 
   Future<void> _pickFromGallery(int index) async {
-    final path = await ref
+    final bytes = await ref
         .read(imagePickerServiceProvider)
-        .pickImage(fromCamera: false);
-    if (path != null) {
-      final compressedPath = await compressFile(path);
-      if (compressedPath != null) {
-        setState(() => _photoPaths[index] = compressedPath);
-      }
-    }
+        .captureFromGallery();
+    if (bytes != null) setState(() => _photoBytes[index] = bytes);
   }
 }

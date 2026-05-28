@@ -5,11 +5,12 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:registro_panela/core/router/app_router.dart';
+import 'package:registro_panela/firebase_options.dart';
 import 'package:registro_panela/shared/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,

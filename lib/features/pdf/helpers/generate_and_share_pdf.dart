@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
@@ -6,7 +7,7 @@ import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_
 import 'package:registro_panela/shared/utils/typography.dart';
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'dart:typed_data';
+import 'web_download_stub.dart' if (dart.library.html) 'web_download.dart';
 
 // Mapea tus tamaños a puntos del PDF (un poco más grandes para impresión)
 class PdfTypography {
@@ -436,5 +437,12 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
 
 Future<void> generateAndSharePdf(Stage1FormData project) async {
   final bytes = await generatePdf(project);
-  await Printing.sharePdf(bytes: bytes, filename: 'proyecto_${project.id}.pdf');
+  if (kIsWeb) {
+    await downloadPdfInBrowser(bytes, 'proyecto_${project.id}.pdf');
+  } else {
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: 'proyecto_${project.id}.pdf',
+    );
+  }
 }

@@ -47,10 +47,7 @@ class Stage52SummaryPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (record.photoPath.isNotEmpty)
-              StageImageWidget(
-                imagePath: record.photoPath,
-                fit: BoxFit.contain,
-              ),
+              StageImageWidget(imageUrl: record.photoPath, fit: BoxFit.contain),
             const SizedBox(height: AppSpacing.smallLarge),
             CustomCard(
               child: Column(
