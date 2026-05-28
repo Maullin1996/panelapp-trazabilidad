@@ -2,8 +2,8 @@
 export 'admin/pages/administrative_page.dart';
 
 // auth
-export 'auth/pages/login_page.dart';
-export 'auth/widgets/login_form.dart';
+export 'package:core/shared/login_page.dart';
+export 'package:core/shared/widgets/login_form.dart';
 
 // image_view
 export 'image_view/presentation/image_viewer.dart';
@@ -13,10 +13,10 @@ export 'pdf/pages/pdf_screen.dart';
 
 // project_selector
 export 'project_selector/presentation/project_selector_page.dart';
-export 'project_selector/widgets/project_selector_shimmer.dart';
+export 'package:core/shared/widgets/project_selector_shimmer.dart';
 
 // splash
-export 'splash/splash_screen.dart';
+export 'package:core/shared/splash_screen.dart';
 
 // stage1
 export 'stage1/pages/stage1_page.dart';

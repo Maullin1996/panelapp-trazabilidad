@@ -162,7 +162,7 @@ packages:
     source: hosted
     version: "1.1.2"
   cloud_firestore:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore
       sha256: "6d965d2522a1cf6ed334098065a44e4e925686e83934927f4e3f8bce57f1a500"
@@ -353,7 +353,7 @@ packages:
     source: hosted
     version: "6.2.1"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       sha256: "93a5bde9775fd5adcc937f39dfa04ae0bc89c4d79bea6abc49de3f7b049d9ff6"
@@ -499,7 +499,7 @@ packages:
     source: hosted
     version: "2.0.34"
   flutter_riverpod:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_riverpod
       sha256: "4e166be88e1dbbaa34a280bdb744aeae73b7ef25fdf8db7a3bb776760a3648e2"
@@ -549,7 +549,7 @@ packages:
     source: hosted
     version: "2.1.3"
   go_router:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: go_router
       sha256: "92d8cee7c57dff0a6c409c05597b460002434eccf7424a712283225b3962d03f"
@@ -661,7 +661,7 @@ packages:
     source: hosted
     version: "0.2.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"

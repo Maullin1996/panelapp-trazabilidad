@@ -13,7 +13,7 @@ import 'package:core/features/auth/providers/auth_provider.dart';
 import 'package:core/core/router/routes.dart';
 import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:core/core/services/custom_snack_bar.dart';
-import 'package:mobile/feature/project_selector/widgets/project_selector_shimmer.dart';
+
 import 'package:core/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 
 class ProjectSelectorPage extends ConsumerStatefulWidget {
