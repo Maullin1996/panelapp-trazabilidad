@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:registro_panela/features/auth/domain/repositories/auth_repository.dart';
-import 'package:registro_panela/features/auth/presentation/providers/auth_repository_provider.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
-import 'package:registro_panela/features/stage5_2_records/presentation/stage52_page.dart';
+import '../../packages/core/lib/features/auth/domain/repositories/auth_repository.dart';
+import '../../packages/core/lib/features/auth/presentation/providers/auth_repository_provider.dart';
+import '../../packages/core/lib/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import '../../packages/core/lib/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
+import '../../packages/core/lib/features/stage5_2_records/presentation/stage52_page.dart';
 import 'package:registro_panela/shared/widgets/empty_widget.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}

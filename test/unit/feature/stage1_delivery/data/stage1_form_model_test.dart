@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:registro_panela/features/stage1_delivery/data/models/stage1_form_model.dart';
-import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import '../../../../../packages/core/lib/features/stage1_delivery/data/models/stage1_form_model.dart';
+import '../../../../../packages/core/lib/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 
 void main() {
   final tDate = DateTime(2024, 1, 15);

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:registro_panela/features/stage3_weigh/data/models/stage3_model.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/data/models/stage3_model.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 
 void main() {
   final tDate = DateTime(2024, 1, 15);

@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
-import 'package:registro_panela/features/stage4_recollection/domain/repositories/stage4_repository.dart';
-import 'package:registro_panela/features/stage4_recollection/domain/usecases/create_stage4_data.dart';
-import 'package:registro_panela/features/stage4_recollection/domain/usecases/update_stage4_data.dart';
-import 'package:registro_panela/features/stage4_recollection/domain/usecases/watch_stage4_data.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/domain/entities/stage4_form_data.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/domain/repositories/stage4_repository.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/domain/usecases/create_stage4_data.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/domain/usecases/update_stage4_data.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/domain/usecases/watch_stage4_data.dart';
 
 class MockStage4Repository extends Mock implements Stage4Repository {}
 

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/data/models/stage51_payment_data_model.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
+import '../../../../../packages/core/lib/features/stage5_1_missing_weight/data/models/stage51_payment_data_model.dart';
+import '../../../../../packages/core/lib/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 
 void main() {
   final tDate = DateTime(2024, 1, 15);

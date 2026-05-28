@@ -11,6 +11,16 @@ dependencies:
     sdk: flutter
   core:
     path: ../../packages/core
+  cloud_firestore: ^6.2.0
+  firebase_core: ^4.6.0
+  flutter_riverpod: ^3.1.0
+  go_router: ^17.2.0
+  intl: ^0.20.2
+  flutter_form_builder: ^10.1.0
+  form_builder_validators: ^11.2.0
+  printing: ^5.11.0
+  uuid: ^4.5.1
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.14.4
@@ -23,6 +33,14 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/logo.png
+  fonts:
+    - family: RobotoVariableItalic
+      fonts:
+        - asset: assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf
+          weight: 400
+          style: normal
 
 flutter_native_splash:
   color: "#F5EFE1"

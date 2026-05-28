@@ -1,4 +1,4 @@
-name: registro_panela_monorepo
+name: registro_panela
 
 packages:
   - apps/**

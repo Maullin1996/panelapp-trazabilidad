@@ -1,0 +1,8 @@
+import '../entities/stage2_load_data.dart';
+
+abstract class Stage2Repository {
+  Future<void> create(Stage2LoadData data);
+  Future<void> update(Stage2LoadData data);
+  Future<void> delete(String id);
+  Stream<List<Stage2LoadData>> watch();
+}

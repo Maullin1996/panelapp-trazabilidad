@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:registro_panela/shared/utils/colors.dart';
-import 'package:registro_panela/shared/utils/radius.dart';
-import 'package:registro_panela/shared/widgets/custom_card.dart';
+import '../../packages/core/lib/shared/utils/colors.dart';
+import '../../packages/core/lib/shared/utils/radius.dart';
+import '../../packages/core/lib/shared/widgets/custom_card.dart';
 
 void main() {
   testWidgets('CustomCard renders with default styling', (tester) async {

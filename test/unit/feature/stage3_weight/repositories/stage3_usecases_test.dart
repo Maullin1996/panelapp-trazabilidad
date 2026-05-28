@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/repositories/stage3_repository.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/usecase/create_stage3_data.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/usecase/delete_stage3_data.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/usecase/update_stage3_data.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/usecase/watch_stage3_weighs.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/repositories/stage3_repository.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/usecase/create_stage3_data.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/usecase/delete_stage3_data.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/usecase/update_stage3_data.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/usecase/watch_stage3_weighs.dart';
 
 class MockStage3Repository extends Mock implements Stage3Repository {}
 

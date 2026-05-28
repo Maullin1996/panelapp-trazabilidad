@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/repositories/stage52_repository.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/usecases/create_stage52_data.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/usecases/delete_stage52_data.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/usecases/update_stage52_data.dart';
-import 'package:registro_panela/features/stage5_2_records/domain/usecases/watch_stage52_data.dart';
+import '../../../../../packages/core/lib/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import '../../../../../packages/core/lib/features/stage5_2_records/domain/repositories/stage52_repository.dart';
+import '../../../../../packages/core/lib/features/stage5_2_records/domain/usecases/create_stage52_data.dart';
+import '../../../../../packages/core/lib/features/stage5_2_records/domain/usecases/delete_stage52_data.dart';
+import '../../../../../packages/core/lib/features/stage5_2_records/domain/usecases/update_stage52_data.dart';
+import '../../../../../packages/core/lib/features/stage5_2_records/domain/usecases/watch_stage52_data.dart';
 
 class MockStage52Repository extends Mock implements Stage52Repository {}
 

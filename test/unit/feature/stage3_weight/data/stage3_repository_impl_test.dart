@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:registro_panela/features/stage3_weigh/data/datasources/stage3_firestore_datasource.dart';
-import 'package:registro_panela/features/stage3_weigh/data/models/stage3_model.dart';
-import 'package:registro_panela/features/stage3_weigh/data/repositories_impl/stage3_repository_impl.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/data/datasources/stage3_firestore_datasource.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/data/models/stage3_model.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/data/repositories_impl/stage3_repository_impl.dart';
+import '../../../../../packages/core/lib/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 
 class MockStage3FirestoreDatasource extends Mock
     implements Stage3FirestoreDatasource {}

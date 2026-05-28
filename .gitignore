@@ -49,3 +49,7 @@ google-services.json
 GoogleService-Info.plist
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+
+apps/mobile/build/
+apps/web/build/
+packages/core/.dart_tool/

@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:registro_panela/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
-import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/global_missing_provider.dart';
-import 'package:registro_panela/features/stage2_load/presentation/providers/sync_stage2_loads_provider.dart';
+import '../../../packages/core/lib/features/stage2_load/domain/entities/stage2_load_data.dart';
+import '../../../packages/core/lib/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import '../../../packages/core/lib/features/stage3_weigh/presentation/providers/sync_stage3_loads_provider.dart';
+import '../../../packages/core/lib/features/stage5_1_missing_weight/presentation/providers/global_missing_provider.dart';
+import '../../../packages/core/lib/features/stage2_load/presentation/providers/sync_stage2_loads_provider.dart';
 
 Stage2LoadData _load2({
   required String id,

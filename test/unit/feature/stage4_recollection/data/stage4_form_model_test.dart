@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:registro_panela/features/stage4_recollection/data/models/stage4_form_model.dart';
-import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/data/models/stage4_form_model.dart';
+import '../../../../../packages/core/lib/features/stage4_recollection/domain/entities/stage4_form_data.dart';
 
 void main() {
   final tDate = DateTime(2024, 1, 15);

@@ -1,0 +1,27 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../data/datasources/stage3_firestore_datasource.dart';
+import '../data/repositories_impl/stage3_repository_impl.dart';
+import '../domain/repositories/stage3_repository.dart';
+import '../domain/usecase/index.dart';
+
+final stage3RepositoryProvider = Provider<Stage3Repository>((ref) {
+  final datasource = Stage3FirestoreDatasource();
+  return Stage3RepositoryImpl(datasource);
+});
+
+//usecases
+final createStage3DataProvider = Provider<CreateStage3Data>((ref) {
+  return CreateStage3Data(ref.read(stage3RepositoryProvider));
+});
+
+final updateStage3DataProvider = Provider<UpdateStage3Data>((ref) {
+  return UpdateStage3Data(ref.read(stage3RepositoryProvider));
+});
+
+final watchStatage3LoadsProvider = Provider<WatchStage3Weighs>((ref) {
+  return WatchStage3Weighs(ref.read(stage3RepositoryProvider));
+});
+
+final deleteStage3DataProvider = Provider<DeleteStage3Data>((ref) {
+  return DeleteStage3Data(ref.read(stage3RepositoryProvider));
+});

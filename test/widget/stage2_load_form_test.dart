@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:registro_panela/features/stage2_load/presentation/widgets/stage2_load_form.dart';
+import '../../packages/core/lib/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import '../../packages/core/lib/features/stage2_load/presentation/widgets/stage2_load_form.dart';
 
 Stage1FormData _project() {
   return Stage1FormData(
@@ -24,16 +24,26 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(
-          home: Scaffold(
-            body: Stage2LoadForm(project: _project()),
-          ),
+          home: Scaffold(body: Stage2LoadForm(project: _project())),
         ),
       ),
     );
 
-    expect(find.byKey(const Key('stage2-load-form-refweight-input')), findsOneWidget);
-    expect(find.byKey(const Key('stage2-load-form-basketsCount-input')), findsOneWidget);
-    expect(find.byKey(const Key('stage2-load-form-basketWeight-input')), findsOneWidget);
-    expect(find.byKey(const Key('stage2-load-form-summit-button')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage2-load-form-refweight-input')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage2-load-form-basketsCount-input')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage2-load-form-basketWeight-input')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage2-load-form-summit-button')),
+      findsOneWidget,
+    );
   });
 }
