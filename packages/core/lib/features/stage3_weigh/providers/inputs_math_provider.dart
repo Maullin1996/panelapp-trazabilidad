@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import '../../stage2_load/providers/providers.dart';
 import 'sync_stage3_loads_provider.dart';
-import '../../stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'inputs_math_provider.g.dart';

@@ -8,7 +8,6 @@ import 'package:core/features/auth/providers/auth_provider.dart';
 import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/features/stage5_2_records/providers/providers.dart';
 
-import 'package:mobile/feature/stage53/widgets/stage52_shimmer.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
 

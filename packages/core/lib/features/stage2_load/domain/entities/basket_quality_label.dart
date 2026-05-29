@@ -1,4 +1,4 @@
-import '../../../stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 
 extension BasketQualityLabel on BasketQuality {
   String get label => switch (this) {

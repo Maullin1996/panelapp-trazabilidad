@@ -1,5 +1,5 @@
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../stage5_2_records/domain/entities/stage52_record_data.dart';
 
 part 'stage2_load_data.freezed.dart';
 part 'stage2_load_data.g.dart';

@@ -1,3 +1,4 @@
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/features/stage2_load/domain/entities/stage2_load_data.dart';
 import 'package:core/features/stage2_load/providers/stage2_load_form_provider.dart';

@@ -8,12 +8,9 @@ import 'package:core/features/stage4_recollection/domain/entities/stage4_form_da
 import 'package:core/features/stage4_recollection/providers/stage4_ui_provider.dart';
 import 'package:core/features/stage5_1_missing_weight/domain/entities/missing_gavera.dart';
 import 'package:core/features/stage5_1_missing_weight/helper/money_format.dart';
-import '../widgets/form_total_to_pay.dart';
 import 'package:core/features/stage5_1_missing_weight/providers/providers.dart';
-import '../widgets/stage5_invoice_form.dart';
 import 'package:core/shared/utils/tokens.dart';
-import 'package:core/shared/widgets/custom_card.dart';
-import 'package:core/shared/widgets/icon_decoration.dart';
+import 'package:core/shared/widgets/widgets.dart';
 
 class Stage5MissingWeight extends ConsumerStatefulWidget {
   final String projectId;

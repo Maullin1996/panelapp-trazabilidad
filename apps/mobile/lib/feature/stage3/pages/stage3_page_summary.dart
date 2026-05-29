@@ -11,8 +11,7 @@ import 'package:core/features/stage2_load/providers/providers.dart';
 import 'package:core/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:core/features/stage3_weigh/helpers/quality_color.dart';
 import 'package:core/features/stage3_weigh/providers/index.dart';
-import '../widgets/summary_card.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
 

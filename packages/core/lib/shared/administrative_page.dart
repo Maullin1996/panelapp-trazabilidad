@@ -77,7 +77,12 @@ class _AdminResetPasswordPageState
         body: usersState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Error cargando usuarios: $e')),
-          data: (users) => _buildForm(context, users, textTheme, changing),
+          data: (users) => Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: _buildForm(context, users, textTheme, changing),
+            ),
+          ),
         ),
       ),
     );

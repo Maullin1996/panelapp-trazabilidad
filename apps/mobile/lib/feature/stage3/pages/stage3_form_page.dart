@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:core/core/services/custom_snack_bar.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:core/features/stage2_load/providers/providers.dart';
-import '../widgets/stage3_load_form.dart';
 import 'package:core/features/stage3_weigh/providers/stage3_form_provider.dart';
 import 'package:core/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
 import 'package:core/shared/utils/tokens.dart';
+import 'package:core/shared/widgets/stage3_load_form.dart';
 
 class Stage3FormPage extends ConsumerWidget {
   final String projectId;

@@ -65,8 +65,8 @@ class Stage1FormModel {
       gaveras: gaveras
           .map(
             (g) => GaveraData(
-              quantity: g['quantity'] as int,
-              referenceWeight: g['referenceWeight'] as double,
+              quantity: (g['quantity'] as num).toInt(),
+              referenceWeight: (g['referenceWeight'] as num).toDouble(),
               gaveraType: GaveraType.values.byName(g['gaveraType'] as String),
             ),
           )
@@ -75,14 +75,14 @@ class Stage1FormModel {
           .map(
             (b) => BasketData(
               size: BasketSize.values.byName(b['size'] as String),
-              quantity: b['quantity'] as int,
+              quantity: (b['quantity'] as num).toInt(),
             ),
           )
           .toList(),
-      preservativesWeight: preservativesWeight,
-      preservativesJars: preservativesJars,
-      limeWeight: limeWeight,
-      limeJars: limeJars,
+      preservativesWeight: (preservativesWeight as num).toDouble(),
+      preservativesJars: (preservativesJars as num).toInt(),
+      limeWeight: (limeWeight as num).toDouble(),
+      limeJars: (limeJars as num).toInt(),
       phone: phone,
       date: date,
       photoPath: photoPath,

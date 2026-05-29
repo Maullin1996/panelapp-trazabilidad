@@ -22,7 +22,7 @@ class CustomFromDropdown<T> extends StatelessWidget {
       name: name,
       items: items,
       validator: validator,
-      menuWidth: width * 0.95,
+      menuWidth: width > 600 ? 320 : width * 0.95,
       borderRadius: BorderRadius.circular(AppRadius.medium),
       dropdownColor: Colors.white,
       padding: const EdgeInsets.symmetric(

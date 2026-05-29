@@ -1,3 +1,5 @@
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
+
 import '../../domain/entities/stage52_record_data.dart';
 
 class Stage52RecordModel {

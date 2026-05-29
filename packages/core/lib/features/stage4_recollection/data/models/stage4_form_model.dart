@@ -52,7 +52,8 @@ class Stage4FormModel {
           .map(
             (g) => ReturnedGaveras(
               quantity: g['quantity'] as int,
-              referenceWeight: g['referenceWeight'] as double,
+              // pon esto
+              referenceWeight: (g['referenceWeight'] as num).toDouble(),
             ),
           )
           .toList(),

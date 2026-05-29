@@ -13,6 +13,7 @@ import 'package:core/core/router/routes.dart';
 import 'package:core/shared/widgets/widgets.dart';
 import 'package:core/shared/utils/tokens.dart';
 import '../shared/web_layout.dart';
+import '../shared/web_stage_selector_dialog.dart';
 
 class WebProjectSelectorPage extends ConsumerStatefulWidget {
   const WebProjectSelectorPage({super.key});
@@ -266,7 +267,10 @@ class _WebProjectSelectorPageState
     final user = ref.read(authProvider).user;
     if (user == null) return;
     if (user.role == UserRole.admin) {
-      context.push('${Routes.projects}${Routes.stages}/${p.id}');
+      showDialog(
+        context: context,
+        builder: (_) => WebStageSelectorDialog(projectId: p.id),
+      );
     } else {
       context.push('${_routeForRole(user.role)}/${p.id}');
     }

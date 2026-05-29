@@ -30,11 +30,9 @@ class StageSelectorPage extends StatelessWidget {
                   right: AppSpacing.smallLarge,
                   bottom: AppSpacing.small,
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFFFCF8F0),
-                    borderRadius: BorderRadius.circular(AppRadius.large),
-                  ),
+                child: Material(
+                  color: Color(0xFFFCF8F0),
+                  borderRadius: BorderRadius.circular(AppRadius.large),
                   child: ListTile(
                     subtitle: Text(
                       _stageSubtitle(stage),

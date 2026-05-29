@@ -5,9 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:core/core/services/custom_snack_bar.dart';
 import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:mobile/feature/stage53/widgets/stage52_form.dart';
 import 'package:core/features/stage5_2_records/providers/providers.dart';
 import 'package:core/shared/utils/spacing.dart';
+import 'package:core/shared/widgets/stage52_load_form.dart';
 
 class Stage52FormPage extends ConsumerWidget {
   final String projectId;

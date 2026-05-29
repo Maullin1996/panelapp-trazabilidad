@@ -8,9 +8,7 @@ import 'package:core/features/auth/domain/enums/user_role.dart';
 import 'package:core/features/auth/providers/auth_provider.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
-import '../widgets/stage2_load_form.dart';
 import 'package:core/features/stage2_load/providers/providers.dart';
-import '../widgets/stage2_shimmer.dart';
 import 'package:core/shared/utils/tokens.dart';
 
 import 'package:core/shared/widgets/widgets.dart';

@@ -10,10 +10,10 @@ import 'package:core/features/stage2_load/domain/entities/basket_quality_label.d
 import 'package:core/features/stage5/domain/entities/stage5_invoice_data.dart';
 import 'package:core/features/stage5/providers/stage5_invoice_summary_provider.dart';
 import 'package:core/features/stage5_1_missing_weight/helper/money_input_formatter.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/app_form_text_fild.dart';
 import 'package:core/shared/widgets/custom_card.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 
 class Stage5InvoiceForm extends ConsumerStatefulWidget {
   final String projectId;

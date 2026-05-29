@@ -13,6 +13,7 @@ import 'package:core/features/stage5_2_records/domain/entities/stage52_record_da
 import 'package:core/features/stage5_2_records/providers/stage52_form_status.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 
 class Stage52LoadForm extends ConsumerStatefulWidget {
   final String projectId;

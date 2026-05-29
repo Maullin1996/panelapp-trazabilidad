@@ -1,19 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 part 'stage52_record_data.freezed.dart';
 part 'stage52_record_data.g.dart';
-
-@JsonEnum(alwaysCreate: true)
-enum BasketQuality {
-  @JsonValue('regular')
-  regular,
-  @JsonValue('buena')
-  buena,
-  @JsonValue('negra')
-  negra,
-  @JsonValue('extra')
-  extra,
-}
 
 @freezed
 abstract class Stage52RecordData with _$Stage52RecordData {

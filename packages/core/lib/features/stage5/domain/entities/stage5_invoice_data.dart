@@ -1,6 +1,6 @@
 // stage5_invoice_data.dart
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../stage5_2_records/domain/entities/stage52_record_data.dart';
 
 part 'stage5_invoice_data.freezed.dart';
 part 'stage5_invoice_data.g.dart';

@@ -1,3 +1,4 @@
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -10,7 +11,6 @@ import 'package:core/features/stage2_load/domain/entities/index.dart';
 import 'package:core/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:core/features/stage3_weigh/helpers/comma_to_dot_formatter.dart';
 import 'package:core/features/stage3_weigh/providers/stage3_form_provider.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
 

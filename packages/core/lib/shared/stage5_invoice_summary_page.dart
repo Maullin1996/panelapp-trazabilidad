@@ -11,9 +11,9 @@ import 'package:core/features/stage5/domain/entities/stage5_invoice_data.dart';
 import 'package:core/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 import 'package:core/features/stage5_1_missing_weight/helper/money_format.dart';
 import 'package:core/features/stage5_1_missing_weight/providers/sync_stage51_payments_provider.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/custom_card.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 
 class Stage5InvoiceSummaryPage extends ConsumerWidget {
   final Stage5InvoiceData invoice;

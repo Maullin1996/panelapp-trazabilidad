@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:core/shared/utils/tokens.dart';
-import 'package:mobile/feature/stage51/pages/stage5_summary.dart';
-import 'package:mobile/feature/stage52/pages/stage5_missing_weight.dart';
 import 'package:mobile/feature/stage53/pages/stage52_page.dart';
+import 'package:core/shared/stage5_summary.dart';
+import 'package:core/shared/stage5_missing_weight.dart';
 
 class Stage5Page extends ConsumerStatefulWidget {
   final String projectId;
