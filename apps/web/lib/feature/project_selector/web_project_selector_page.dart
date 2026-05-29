@@ -14,6 +14,7 @@ import 'package:core/shared/widgets/widgets.dart';
 import 'package:core/shared/utils/tokens.dart';
 import '../shared/web_layout.dart';
 import '../shared/web_stage_selector_dialog.dart';
+import 'package:core/features/pdf/helpers/generate_and_share_pdf.dart';
 
 class WebProjectSelectorPage extends ConsumerStatefulWidget {
   const WebProjectSelectorPage({super.key});
@@ -97,28 +98,79 @@ class _WebProjectSelectorPageState
                   ),
                 ),
                 const Spacer(),
-                if (user != null &&
-                    (user.role == UserRole.admin ||
-                        user.role == UserRole.stage1))
-                  ElevatedButton.icon(
-                    onPressed: () => context.push('${Routes.stage1}/new'),
-                    icon: const Icon(
-                      Icons.add,
-                      color: AppColors.cardBackground,
-                    ),
-                    label: Text(
-                      'Nuevo proyecto',
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: AppColors.cardBackground,
-                        fontWeight: FontWeight.w600,
+                PopupMenuButton<String>(
+                  position: PopupMenuPosition.under,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.xSmall,
+                  ),
+                  borderRadius: BorderRadius.circular(AppRadius.large),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppRadius.medium),
+                  ),
+                  color: AppColors.cardBackground,
+                  icon: const Icon(Icons.more_vert),
+                  onSelected: (value) async {
+                    switch (value) {
+                      case 'users':
+                        context.pushNamed('adminResetPassword');
+                      case 'logout':
+                        ref.read(authProvider.notifier).logout();
+                      case 'preview':
+                        final selectedProject = projects.firstWhere(
+                          (p) => p.id == isSelected.first,
+                        );
+                        context.pushNamed(
+                          'pdf-preview',
+                          extra: selectedProject,
+                        );
+                        setState(() => isSelected.clear());
+                      case 'print':
+                        final selectedProject = projects.firstWhere(
+                          (p) => p.id == isSelected.first,
+                        );
+                        await generateAndSharePdf(selectedProject);
+                        setState(() => isSelected.clear());
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => [
+                    if (user != null && user.role == UserRole.admin)
+                      const PopupMenuItem<String>(
+                        value: 'users',
+                        child: _PopMenuDecoracion(
+                          text: 'Usuarios',
+                          backGroundcolor: AppColors.weight,
+                        ),
+                      ),
+                    if (isSelected.isNotEmpty) ...[
+                      const PopupMenuItem<String>(
+                        value: 'preview',
+                        child: _PopMenuDecoracion(
+                          text: 'Vista previa PDF',
+                          backGroundcolor: AppColors.weight,
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: 'print',
+                        child: _PopMenuDecoracion(
+                          text: 'Imprimir',
+                          backGroundcolor: AppColors.weight,
+                        ),
+                      ),
+                    ],
+                    const PopupMenuItem<String>(
+                      value: 'logout',
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Divider(color: AppColors.weight, thickness: 0.5),
+                          _PopMenuDecoracion(
+                            text: 'Cerrar sesión',
+                            backGroundcolor: AppColors.error,
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                const SizedBox(width: AppSpacing.small),
-                IconButton(
-                  onPressed: () => ref.read(authProvider.notifier).logout(),
-                  icon: const Icon(Icons.logout),
-                  tooltip: 'Cerrar sesión',
+                  ],
                 ),
               ],
             ),
@@ -246,6 +298,43 @@ class _WebProjectSelectorPageState
                           ),
                         ),
                         const SizedBox(height: AppSpacing.xSmall),
+                        Row(
+                          children: [
+                            const IconDecoration(
+                              icon: Icons.shopping_basket,
+                              iconColor: AppColors.register,
+                              backgroundColor: AppColors.register,
+                            ),
+                            const SizedBox(width: AppSpacing.xSmall),
+                            Text(
+                              'Canastillas',
+                              style: textTheme.headlineMedium,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
+                        ...p.baskets.map(
+                          (b) => Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 4,
+                              left: AppSpacing.small,
+                            ),
+                            child: Wrap(
+                              spacing: 6,
+                              children: [
+                                _Chip(
+                                  'unidades: ${b.quantity}',
+                                  AppColors.register,
+                                ),
+                                _Chip(
+                                  b.size.label,
+                                  AppColors.secondaryDarkPanela,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xSmall),
                         CustomRichText(
                           firstText: 'Contacto: ',
                           secondText: p.phone,
@@ -324,6 +413,35 @@ class _Chip extends StatelessWidget {
           fontSize: AppTypography.body,
           fontWeight: FontWeight.w500,
           color: color,
+        ),
+      ),
+    );
+  }
+}
+
+class _PopMenuDecoracion extends StatelessWidget {
+  final String text;
+  final Color backGroundcolor;
+
+  const _PopMenuDecoracion({required this.text, required this.backGroundcolor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xSmall,
+        vertical: AppSpacing.xSmall,
+      ),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: backGroundcolor.withAlpha(38),
+        borderRadius: BorderRadius.circular(AppRadius.small),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontFamily: AppTypography.familyRoboto,
+          fontSize: AppTypography.body,
         ),
       ),
     );

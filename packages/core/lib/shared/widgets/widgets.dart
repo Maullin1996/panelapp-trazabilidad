@@ -1,6 +1,6 @@
 export 'package:core/shared/widgets/icon_decoration.dart';
 export 'package:core/shared/widgets/custom_from_dropdown.dart';
-export 'package:core/shared/widgets/camera_preview_screen.dart';
+export 'package:core/shared/widgets/camera_preview_screen_mobile.dart';
 export 'package:core/shared/widgets/stage_image_widget.dart';
 export 'package:core/shared/widgets/empty_widget.dart';
 export 'package:core/shared/widgets/error_widget_custom.dart';

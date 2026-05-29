@@ -1,4 +1,3 @@
-import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +11,7 @@ import 'package:core/features/stage2_load/providers/providers.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
 import '../shared/web_layout.dart';
+import 'package:core/features/stage2_load/domain/entities/index.dart';
 
 class WebStage2Page extends ConsumerWidget {
   final String projectId;
@@ -107,88 +107,123 @@ class WebStage2Page extends ConsumerWidget {
                 ? ErrorWidgetCustom(error: error)
                 : loads.isEmpty
                 ? const EmptyWidget()
-                : SingleChildScrollView(
-                    padding: const EdgeInsets.all(AppSpacing.medium),
-                    child: Card(
-                      color: AppColors.cardBackground,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.large),
-                      ),
-                      child: DataTable(
-                        headingRowColor: WidgetStateProperty.all(
-                          AppColors.primaryPanelaBrown.withAlpha(15),
-                        ),
-                        columns: const [
-                          DataColumn(label: Text('Fecha')),
-                          DataColumn(label: Text('Canastillas')),
-                          DataColumn(label: Text('Calidad')),
-                          DataColumn(label: Text('Gavera (g)')),
-                          DataColumn(label: Text('Acciones')),
-                        ],
-                        rows: loads.map((load) {
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                Text(
-                                  DateFormat.yMd().format(load.date),
-                                  style: textTheme.bodyMedium,
-                                ),
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth < 900) {
+                        return ListView.separated(
+                          padding: const EdgeInsets.all(AppSpacing.medium),
+                          itemCount: loads.length,
+                          separatorBuilder: (_, _) =>
+                              const SizedBox(height: AppSpacing.small),
+                          itemBuilder: (_, index) {
+                            final load = loads[index];
+                            return _LoadCard(
+                              load: load,
+                              project: project,
+                              onEdit: () => _showFormDialog(
+                                context,
+                                ref,
+                                project,
+                                initialData: load,
+                                isNew: false,
                               ),
-                              DataCell(
-                                Text(
-                                  load.baskets.count.toString(),
-                                  style: textTheme.bodyMedium,
-                                ),
+                              onDelete: user?.role == UserRole.admin
+                                  ? () => _confirmDelete(
+                                      context,
+                                      ref,
+                                      load.id,
+                                      textTheme,
+                                    )
+                                  : null,
+                            );
+                          },
+                        );
+                      }
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.all(AppSpacing.medium),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: CustomCard(
+                            child: DataTable(
+                              headingRowColor: WidgetStateProperty.all(
+                                AppColors.primaryPanelaBrown.withAlpha(15),
                               ),
-                              DataCell(
-                                Text(
-                                  load.baskets.quality.label,
-                                  style: textTheme.bodyMedium,
-                                ),
-                              ),
-                              DataCell(
-                                Text(
-                                  '${load.baskets.referenceWeight} g',
-                                  style: textTheme.bodyMedium,
-                                ),
-                              ),
-                              DataCell(
-                                Row(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(
-                                        Icons.edit_outlined,
-                                        color: AppColors.primaryPanelaBrown,
-                                      ),
-                                      onPressed: () => _showFormDialog(
-                                        context,
-                                        ref,
-                                        project,
-                                        initialData: load,
-                                        isNew: false,
+                              columns: const [
+                                DataColumn(label: Text('Fecha')),
+                                DataColumn(label: Text('Canastillas')),
+                                DataColumn(label: Text('Calidad')),
+                                DataColumn(label: Text('Gavera (g)')),
+                                DataColumn(label: Text('Acciones')),
+                              ],
+                              rows: loads.map((load) {
+                                return DataRow(
+                                  cells: [
+                                    DataCell(
+                                      Text(
+                                        DateFormat.yMd().format(load.date),
+                                        style: textTheme.bodyMedium,
                                       ),
                                     ),
-                                    if (user?.role == UserRole.admin)
-                                      IconButton(
-                                        icon: const Icon(
-                                          Icons.delete_outline,
-                                          color: AppColors.error,
-                                        ),
-                                        onPressed: () => _confirmDelete(
-                                          context,
-                                          ref,
-                                          load.id,
-                                          textTheme,
-                                        ),
+                                    DataCell(
+                                      Text(
+                                        load.baskets.count.toString(),
+                                        style: textTheme.bodyMedium,
                                       ),
+                                    ),
+                                    DataCell(
+                                      Text(
+                                        load.baskets.quality.label,
+                                        style: textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Text(
+                                        '${load.baskets.referenceWeight} g',
+                                        style: textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit_outlined,
+                                              color:
+                                                  AppColors.primaryPanelaBrown,
+                                            ),
+                                            onPressed: () => _showFormDialog(
+                                              context,
+                                              ref,
+                                              project,
+                                              initialData: load,
+                                              isNew: false,
+                                            ),
+                                          ),
+                                          if (user?.role == UserRole.admin)
+                                            IconButton(
+                                              icon: const Icon(
+                                                Icons.delete_outline,
+                                                color: AppColors.error,
+                                              ),
+                                              onPressed: () => _confirmDelete(
+                                                context,
+                                                ref,
+                                                load.id,
+                                                textTheme,
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
           ),
         ],
@@ -255,5 +290,117 @@ class WebStage2Page extends ConsumerWidget {
     if (confirm == true) {
       await ref.read(deleteStage2DataProvider).call(id);
     }
+  }
+}
+
+class _LoadCard extends StatelessWidget {
+  final Stage2LoadData load;
+  final dynamic project;
+  final VoidCallback onEdit;
+  final VoidCallback? onDelete;
+
+  const _LoadCard({
+    required this.load,
+    required this.project,
+    required this.onEdit,
+    this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+    return CustomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Header ──
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.xSmall,
+            ),
+            child: Row(
+              children: [
+                IconDecoration(
+                  icon: Icons.unarchive,
+                  iconColor: AppColors.alert,
+                ),
+                const SizedBox(width: AppSpacing.xSmall),
+                Expanded(
+                  child: Text(
+                    DateFormat.yMd().format(load.date),
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: AppColors.secondaryDarkPanela,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit_outlined,
+                    color: AppColors.primaryPanelaBrown,
+                  ),
+                  onPressed: onEdit,
+                ),
+                if (onDelete != null)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: AppColors.error,
+                    ),
+                    onPressed: onDelete,
+                  ),
+              ],
+            ),
+          ),
+
+          // ── Divider ──
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.xSmall,
+            ),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.secondaryDarkPanela.withAlpha(45),
+            ),
+          ),
+
+          // ── Datos ──
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              bottom: AppSpacing.small,
+            ),
+            child: Column(
+              children: [
+                CustomRichText(
+                  icon: Icons.shopping_basket,
+                  iconColor: AppColors.register,
+                  firstText: 'Canastillas: ',
+                  secondText: load.baskets.count.toString(),
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomRichText(
+                  icon: Icons.verified,
+                  iconColor: AppColors.accepted,
+                  firstText: 'Calidad: ',
+                  secondText: load.baskets.quality.label,
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomRichText(
+                  icon: Icons.storage_outlined,
+                  iconColor: AppColors.weight,
+                  firstText: 'Gavera: ',
+                  secondText: '${load.baskets.referenceWeight} g',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

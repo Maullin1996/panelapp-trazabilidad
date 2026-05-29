@@ -89,11 +89,11 @@ class WebStage3SummaryPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // ── Resumen superior en Row ────────────────
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: SummaryCard(
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 900;
+                          final cards = [
+                            SummaryCard(
                               title: 'Registrado en molienda',
                               firstTextCard1: 'Fecha cargue: ',
                               secondTextCard1: DateFormat.yMd().format(
@@ -108,10 +108,7 @@ class WebStage3SummaryPage extends ConsumerWidget {
                               secondIconColors: AppColors.secondaryDarkPanela,
                               textTheme: textTheme,
                             ),
-                          ),
-                          const SizedBox(width: AppSpacing.small),
-                          Expanded(
-                            child: SummaryCard(
+                            SummaryCard(
                               textTheme: textTheme,
                               title: 'Registrado en bodega',
                               firstTextCard1: 'Registradas: ',
@@ -125,10 +122,7 @@ class WebStage3SummaryPage extends ConsumerWidget {
                               secondIconColors: AppColors.error,
                               secondIcon: Icons.priority_high,
                             ),
-                          ),
-                          const SizedBox(width: AppSpacing.small),
-                          Expanded(
-                            child: CustomCard(
+                            CustomCard(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -193,8 +187,34 @@ class WebStage3SummaryPage extends ConsumerWidget {
                                 ],
                               ),
                             ),
-                          ),
-                        ],
+                          ];
+
+                          if (isNarrow) {
+                            return Column(
+                              children: cards
+                                  .map(
+                                    (c) => Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: AppSpacing.small,
+                                      ),
+                                      child: c,
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          }
+
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(child: cards[0]),
+                              const SizedBox(width: AppSpacing.small),
+                              Expanded(child: cards[1]),
+                              const SizedBox(width: AppSpacing.small),
+                              Expanded(child: cards[2]),
+                            ],
+                          );
+                        },
                       ),
 
                       const SizedBox(height: AppSpacing.medium),
@@ -209,71 +229,230 @@ class WebStage3SummaryPage extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.small),
-                      Card(
-                        color: AppColors.cardBackground,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.large),
-                        ),
-                        child: DataTable(
-                          headingRowColor: WidgetStateProperty.all(
-                            AppColors.primaryPanelaBrown.withAlpha(15),
-                          ),
-                          columns: const [
-                            DataColumn(label: Text('#')),
-                            DataColumn(label: Text('Peso real (kg)')),
-                            DataColumn(label: Text('Calidad')),
-                            DataColumn(label: Text('Foto')),
-                          ],
-                          rows: entry3.baskets.map((b) {
-                            return DataRow(
-                              cells: [
-                                DataCell(
-                                  Text(
-                                    '#${b.sequence + 1}',
-                                    style: textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.secondaryDarkPanela,
-                                    ),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          if (constraints.maxWidth < 900) {
+                            return Column(
+                              children: entry3.baskets.map((b) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(
+                                    bottom: AppSpacing.small,
                                   ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    '${b.realWeight.toStringAsFixed(2)} kg',
-                                    style: textTheme.bodyMedium,
-                                  ),
-                                ),
-                                DataCell(
-                                  Text(
-                                    b.quality.label,
-                                    style: textTheme.bodyMedium?.copyWith(
-                                      color: qualityColor(
-                                        quality: b.quality.label,
-                                      ),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                                DataCell(
-                                  b.photoPath.isNotEmpty
-                                      ? InkWell(
-                                          onTap: () => context.push(
-                                            Routes.imageViewer,
-                                            extra: b.photoPath,
+                                  child: CustomCard(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // ── Header ──
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: AppSpacing.small,
+                                            right: AppSpacing.small,
+                                            top: AppSpacing.xSmall,
                                           ),
-                                          child: const Icon(
-                                            Icons.image_outlined,
-                                            color: AppColors.register,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 10,
+                                                      vertical: 4,
+                                                    ),
+                                                decoration: BoxDecoration(
+                                                  color: AppColors
+                                                      .secondaryDarkPanela
+                                                      .withAlpha(20),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        AppRadius.small,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: AppColors
+                                                        .secondaryDarkPanela
+                                                        .withAlpha(60),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  '#${b.sequence + 1}',
+                                                  style: textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        color: AppColors
+                                                            .secondaryDarkPanela,
+                                                      ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: AppSpacing.xSmall,
+                                              ),
+                                              Text(
+                                                'Canastilla',
+                                                style: textTheme.headlineMedium
+                                                    ?.copyWith(
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                              ),
+                                            ],
                                           ),
-                                        )
-                                      : const Icon(
-                                          Icons.image_not_supported_outlined,
-                                          color: AppColors.weight,
                                         ),
-                                ),
-                              ],
+                                        // ── Foto ──
+                                        if (b.photoPath.isNotEmpty) ...[
+                                          const SizedBox(
+                                            height: AppSpacing.xSmall,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () => context.push(
+                                              Routes.imageViewer,
+                                              extra: b.photoPath,
+                                            ),
+                                            child: Center(
+                                              child: StageImageWidget(
+                                                imageUrl: b.photoPath,
+                                                width: 200,
+                                                height: 200,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        // ── Datos ──
+                                        Padding(
+                                          padding: const EdgeInsets.all(
+                                            AppSpacing.small,
+                                          ),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: AppColors.weight.withAlpha(
+                                                38,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                  AppRadius.medium,
+                                                ),
+                                              ),
+                                            ),
+                                            padding: const EdgeInsets.all(
+                                              AppSpacing.small,
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                CustomRichText(
+                                                  icon: Icons.scale,
+                                                  iconColor: AppColors.weight,
+                                                  firstText:
+                                                      'Peso registrado: ',
+                                                  secondText:
+                                                      '${b.realWeight.toStringAsFixed(2)} kg',
+                                                ),
+                                                const SizedBox(
+                                                  height: AppSpacing.xSmall,
+                                                ),
+                                                CustomRichText(
+                                                  icon: Icons.verified,
+                                                  iconColor: qualityColor(
+                                                    quality: b.quality.label,
+                                                  ),
+                                                  firstText: 'Calidad: ',
+                                                  secondText: b.quality.label,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
                             );
-                          }).toList(),
-                        ),
+                          }
+
+                          return SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: CustomCard(
+                              child: DataTable(
+                                headingRowColor: WidgetStateProperty.all(
+                                  AppColors.primaryPanelaBrown.withAlpha(15),
+                                ),
+                                columns: const [
+                                  DataColumn(label: Text('#')),
+                                  DataColumn(label: Text('Peso real (kg)')),
+                                  DataColumn(label: Text('Calidad')),
+                                  DataColumn(label: Text('Foto')),
+                                ],
+                                rows: entry3.baskets.map((b) {
+                                  return DataRow(
+                                    cells: [
+                                      DataCell(
+                                        Text(
+                                          '#${b.sequence + 1}',
+                                          style: textTheme.bodyMedium?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color:
+                                                AppColors.secondaryDarkPanela,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          '${b.realWeight.toStringAsFixed(2)} kg',
+                                          style: textTheme.bodyMedium,
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          b.quality.label,
+                                          style: textTheme.bodyMedium?.copyWith(
+                                            color: qualityColor(
+                                              quality: b.quality.label,
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        b.photoPath.isNotEmpty
+                                            ? InkWell(
+                                                onTap: () => context.push(
+                                                  Routes.imageViewer,
+                                                  extra: b.photoPath,
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                        vertical: 4,
+                                                      ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          AppRadius.small,
+                                                        ),
+                                                    child: StageImageWidget(
+                                                      imageUrl: b.photoPath,
+                                                      width: 48,
+                                                      height: 48,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : const Icon(
+                                                Icons
+                                                    .image_not_supported_outlined,
+                                                color: AppColors.weight,
+                                              ),
+                                      ),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

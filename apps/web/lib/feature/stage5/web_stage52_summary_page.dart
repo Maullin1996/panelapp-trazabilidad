@@ -82,8 +82,8 @@ class WebStage52SummaryPage extends ConsumerWidget {
                           child: StageImageWidget(
                             imageUrl: record.photoPath,
                             width: double.infinity,
-                            height: 300,
-                            fit: BoxFit.cover,
+                            height: 600,
+                            fit: BoxFit.fitHeight,
                           ),
                         ),
                       const SizedBox(height: AppSpacing.medium),

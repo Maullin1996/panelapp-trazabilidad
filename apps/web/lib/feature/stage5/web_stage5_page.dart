@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:core/shared/utils/tokens.dart';
-import 'package:core/shared/stage5_summary.dart';
-import 'package:core/shared/stage5_missing_weight.dart';
+import 'package:registro_panela_web/feature/stage5/web_stage5_summaty.dart';
+import 'package:registro_panela_web/feature/stage5/web_stage5_missing_weight.dart';
 import '../shared/web_layout.dart';
 import 'web_stage52_page.dart';
 
@@ -97,8 +97,9 @@ class _WebStage5PageState extends ConsumerState<WebStage5Page>
             child: TabBarView(
               controller: _tabController,
               children: [
-                Stage5Summary(projectId: widget.projectId),
-                Stage5MissingWeight(projectId: widget.projectId),
+                // pon esto
+                WebStage5Summary(projectId: widget.projectId),
+                WebStage5MissingWeight(projectId: widget.projectId),
                 WebStage52Page(projectId: widget.projectId),
               ],
             ),

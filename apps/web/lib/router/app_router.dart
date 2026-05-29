@@ -1,16 +1,23 @@
 import 'package:core/features/stage5/domain/entities/stage5_invoice_data.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:core/core/router/index_core.dart';
-import 'package:core/shared/splash_screen.dart';
-import 'package:core/shared/login_page.dart';
-import 'package:core/shared/stage5_invoice_summary_page.dart';
-import '../feature/index_features.dart';
+import 'package:core/shared/utils/tokens.dart';
+
+import 'package:core/shared/stage52_form_page.dart';
 import 'package:core/shared/stage_selector_page.dart';
 import 'package:core/shared/administrative_page.dart';
 import 'package:core/shared/image_viewer.dart';
 import 'package:core/shared/pdf_screen.dart';
+import 'package:core/shared/splash_screen.dart';
+import 'package:core/shared/login_page.dart';
+import 'package:core/shared/stage5_invoice_summary_page.dart';
+import 'package:core/core/router/index_core.dart';
 import 'package:core/features/stage1_delivery/domain/entities/index.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../feature/index_features.dart';
+import 'transitions.dart';
+import '../feature/project_selector/mobile_project_selector_page.dart'
+    as mobile;
 
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = GoRouterNotifier(ref);
@@ -23,55 +30,113 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'login',
         path: Routes.login,
-        builder: (_, state) => const LoginPage(),
+        pageBuilder: (_, state) => noTransitionPage(const LoginPage(), state),
       ),
       GoRoute(
         name: 'projects',
         path: Routes.projects,
-        builder: (_, state) => const WebProjectSelectorPage(),
+        pageBuilder: (_, state) => fadePage(
+          AdaptiveLayout(
+            mobile: const mobile.ProjectSelectorPage(),
+            web: const WebProjectSelectorPage(),
+          ),
+          state,
+        ),
+        routes: [
+          GoRoute(
+            name: 'stageSelector',
+            path: '${Routes.stages}/:projectId',
+            pageBuilder: (context, state) {
+              final projectId = state.pathParameters['projectId']!;
+              return slideUpPage(
+                StageSelectorPage(projectId: projectId),
+                state,
+              );
+            },
+          ),
+        ],
       ),
       GoRoute(
         name: 'stage1',
         path: '${Routes.stage1}/:projectId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final projectId = state.pathParameters['projectId']!;
-          return WebStage1Page(projectId: projectId);
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: Stage1Page(projectId: projectId),
+              web: WebStage1Page(projectId: projectId),
+            ),
+            state,
+          );
         },
       ),
       GoRoute(
         name: 'stage2Detail',
         path: '${Routes.stage2}/:projectId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final projectId = state.pathParameters['projectId']!;
-          return WebStage2Page(projectId: projectId);
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: Stage2Page(projectId: projectId),
+              web: WebStage2Page(projectId: projectId),
+            ),
+            state,
+          );
         },
       ),
       GoRoute(
         name: 'stage3Detail',
         path: '${Routes.stage3}/:projectId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final projectId = state.pathParameters['projectId']!;
-          return WebStage3Page(projectId: projectId);
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: Stage3Page(projectId: projectId),
+              web: WebStage3Page(projectId: projectId),
+            ),
+            state,
+          );
         },
         routes: [
           GoRoute(
             name: 'stage3Form',
             path: ':load2Id/form',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
               final load2Id = state.pathParameters['load2Id']!;
-              return WebStage3FormPage(projectId: projectId, load2Id: load2Id);
+              return slideUpPage(
+                AdaptiveLayout(
+                  mobile: Stage3FormPage(
+                    projectId: projectId,
+                    load2Id: load2Id,
+                  ),
+                  web: WebStage3FormPage(
+                    projectId: projectId,
+                    load2Id: load2Id,
+                  ),
+                ),
+                state,
+              );
             },
           ),
           GoRoute(
             name: 'stage3Summary',
             path: ':load2Id/summary',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
               final load2Id = state.pathParameters['load2Id']!;
-              return WebStage3SummaryPage(
-                load2Id: load2Id,
-                projectId: projectId,
+              return slideUpPage(
+                AdaptiveLayout(
+                  mobile: Stage3PageSummary(
+                    projectId: projectId,
+                    load2Id: load2Id,
+                  ),
+                  web: WebStage3SummaryPage(
+                    projectId: projectId,
+                    load2Id: load2Id,
+                  ),
+                ),
+                state,
               );
             },
           ),
@@ -80,78 +145,124 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         name: 'stage4Detail',
         path: '${Routes.stage4}/:projectId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final projectId = state.pathParameters['projectId']!;
-          return WebStage4Page(projectId: projectId);
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: Stage4Page(projectId: projectId),
+              web: WebStage4Page(projectId: projectId),
+            ),
+            state,
+          );
         },
       ),
       GoRoute(
         name: 'stage5page',
         path: '${Routes.stage5}/:projectId',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final projectId = state.pathParameters['projectId']!;
-          return WebStage5Page(projectId: projectId);
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: Stage5Page(projectId: projectId),
+              web: WebStage5Page(projectId: projectId),
+            ),
+            state,
+          );
         },
         routes: [
           GoRoute(
             name: 'stage5summary',
             path: 'summary',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
-              return WebStage5Page(projectId: projectId);
+              return slideUpPage(WebStage5Page(projectId: projectId), state);
             },
           ),
           GoRoute(
             name: 'stage5report',
             path: 'report',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
-              return WebStage5Page(projectId: projectId);
+              return slideUpPage(WebStage5Page(projectId: projectId), state);
             },
           ),
           GoRoute(
             name: 'stage5records',
             path: 'records',
-            builder: (context, state) {
+            pageBuilder: (context, state) {
               final projectId = state.pathParameters['projectId']!;
-              return WebStage5Page(projectId: projectId);
+              return slideUpPage(WebStage5Page(projectId: projectId), state);
             },
             routes: [
               GoRoute(
                 name: 'stage52form',
                 path: 'form',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final projectId = state.pathParameters['projectId']!;
-                  return WebStage52FormPage(projectId: projectId);
+                  return slideUpPage(
+                    AdaptiveLayout(
+                      mobile: Stage52FormPage(projectId: projectId),
+                      web: WebStage52FormPage(projectId: projectId),
+                    ),
+                    state,
+                  );
                 },
               ),
               GoRoute(
                 name: 'stage52edit',
                 path: ':id/edit',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final projectId = state.pathParameters['projectId']!;
                   final id = state.pathParameters['id'];
-                  return WebStage52FormPage(projectId: projectId, id: id);
+                  return slideUpPage(
+                    AdaptiveLayout(
+                      mobile: Stage52FormPage(projectId: projectId, id: id),
+                      web: WebStage52FormPage(projectId: projectId, id: id),
+                    ),
+                    state,
+                  );
                 },
               ),
               GoRoute(
                 name: 'stage52summary',
                 path: ':recordId/summary',
-                builder: (context, state) {
+                pageBuilder: (context, state) {
                   final projectId = state.pathParameters['projectId']!;
                   final recordId = state.pathParameters['recordId']!;
-                  return WebStage52SummaryPage(
-                    projectId: projectId,
-                    recordId: recordId,
+                  return slideUpPage(
+                    WebStage52SummaryPage(
+                      projectId: projectId,
+                      recordId: recordId,
+                    ),
+                    state,
                   );
                 },
               ),
               GoRoute(
                 name: 'stage5invoice',
                 path: 'invoice',
-                builder: (context, state) {
-                  final invoice = state.extra as Stage5InvoiceData;
-                  return Stage5InvoiceSummaryPage(invoice: invoice);
+                pageBuilder: (context, state) {
+                  final extra = state.extra;
+                  final invoice = extra is Stage5InvoiceData
+                      ? extra
+                      : Stage5InvoiceData.fromJson(
+                          Map<String, dynamic>.from(extra as Map),
+                        );
+                  return slideUpPage(
+                    AdaptiveLayout(
+                      mobile: Stage5InvoiceSummaryPage(invoice: invoice),
+                      web: Scaffold(
+                        backgroundColor: AppColors.backgroundCrema,
+                        body: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 700),
+                            child: Stage5InvoiceSummaryPage(invoice: invoice),
+                          ),
+                        ),
+                      ),
+                    ),
+                    state,
+                  );
                 },
               ),
             ],
@@ -159,34 +270,31 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
       GoRoute(
-        name: 'stageSelector',
-        path: '${Routes.projects}${Routes.stages}/:projectId',
-        builder: (context, state) {
-          final projectId = state.pathParameters['projectId']!;
-          return StageSelectorPage(projectId: projectId);
-        },
-      ),
-      GoRoute(
         name: 'adminResetPassword',
         path: '/admin/reset-password',
-        builder: (_, _) => const AdminResetPasswordPage(),
+        pageBuilder: (_, state) =>
+            slideUpPage(const AdminResetPasswordPage(), state),
       ),
       GoRoute(
         path: Routes.imageViewer,
-        builder: (_, state) {
+        pageBuilder: (_, state) {
           final String image = state.extra as String;
-          return ImageViewer(image: image);
+          return slideUpPage(ImageViewer(image: image), state);
         },
       ),
       GoRoute(
         name: 'pdf-preview',
         path: '/pdf-preview',
-        builder: (_, state) {
+        pageBuilder: (_, state) {
           final project = state.extra as Stage1FormData;
-          return PdfScreen(project: project);
+          return slideUpPage(PdfScreen(project: project), state);
         },
       ),
-      GoRoute(path: Routes.splash, builder: (_, state) => const SplashScreen()),
+      GoRoute(
+        path: Routes.splash,
+        pageBuilder: (_, state) =>
+            noTransitionPage(const SplashScreen(), state),
+      ),
     ],
   );
 });
