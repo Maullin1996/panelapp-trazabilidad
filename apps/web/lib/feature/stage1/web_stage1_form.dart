@@ -340,58 +340,28 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
             title: 'Registro fotográfico',
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _pickFromCamera(),
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppRadius.small,
-                            ),
-                          ),
-                          backgroundColor: AppColors.primaryPanelaBrown,
-                        ),
-                        icon: const Icon(
-                          Icons.camera_alt_outlined,
-                          color: AppColors.textLight,
-                        ),
-                        label: Text(
-                          'Cámara',
-                          style: textTheme.headlineSmall?.copyWith(
-                            color: AppColors.textLight,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _pickImage,
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppRadius.small),
+                      ),
+                      backgroundColor: AppColors.primaryPanelaBrown,
+                    ),
+                    icon: const Icon(
+                      Icons.photo_camera_outlined,
+                      color: AppColors.textLight,
+                    ),
+                    label: Text(
+                      'Adjuntar foto',
+                      style: textTheme.headlineSmall?.copyWith(
+                        color: AppColors.textLight,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: AppSpacing.small),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _pickFromGallery(),
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              AppRadius.small,
-                            ),
-                          ),
-                          backgroundColor: AppColors.weight,
-                        ),
-                        icon: const Icon(
-                          Icons.photo_library_outlined,
-                          color: AppColors.textLight,
-                        ),
-                        label: Text(
-                          'Galería',
-                          style: textTheme.headlineSmall?.copyWith(
-                            color: AppColors.textLight,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
                 if (_photoBytes != null ||
                     widget.initialData?.photoPath != null) ...[
@@ -494,17 +464,8 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
     formNotifier.submit(data, isNew: widget.isNew, photoBytes: _photoBytes);
   }
 
-  Future<void> _pickFromGallery() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromGallery();
-    if (bytes != null) setState(() => _photoBytes = bytes);
-  }
-
-  Future<void> _pickFromCamera() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromCamera(context);
+  Future<void> _pickImage() async {
+    final bytes = await ref.read(imagePickerServiceProvider).pickImage();
     if (bytes != null) setState(() => _photoBytes = bytes);
   }
 }

@@ -183,7 +183,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   height: 48,
                   child: OutlinedButton.icon(
                     key: const Key('stage52-form-photo-button'),
-                    onPressed: () => _onPickImage(textTheme),
+                    onPressed: _onPickImage,
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.small),
@@ -312,50 +312,8 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
     formNotifier.submit(data: record, isNew: isNew, photoBytes: _photoBytes);
   }
 
-  void _onPickImage(TextTheme textTheme) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.backgroundCrema,
-        title: Text(
-          'Seleccionar origen de imagen',
-          style: textTheme.headlineMedium,
-        ),
-        actions: [
-          SelectionSourceTile(
-            key: Key('stage52-form-camera-button'),
-            icon: Icons.camera_alt,
-            label: 'Cámara',
-            onTap: () {
-              Navigator.of(context).pop();
-              _pickFromCamera();
-            },
-          ),
-          const SizedBox(height: AppSpacing.xSmall),
-          SelectionSourceTile(
-            icon: Icons.photo_library_outlined,
-            label: 'Galería',
-            onTap: () {
-              Navigator.of(context).pop();
-              _pickFromGallery();
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _pickFromCamera() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromCamera(context);
-    if (bytes != null) setState(() => _photoBytes = bytes);
-  }
-
-  Future<void> _pickFromGallery() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromGallery();
+  Future<void> _onPickImage() async {
+    final bytes = await ref.read(imagePickerServiceProvider).pickImage();
     if (bytes != null) setState(() => _photoBytes = bytes);
   }
 }

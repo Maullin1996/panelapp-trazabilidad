@@ -57,3 +57,9 @@ packages/core/.dart_tool/
 # Firebase options
 apps/mobile/lib/firebase_options.dart
 apps/web/lib/firebase_options.dart
+
+# Local SSL certs (mkcert)
+*.pem
+
+# Firebase hosting cache
+.firebase/

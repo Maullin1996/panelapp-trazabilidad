@@ -321,7 +321,7 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                             height: 50,
                             child: ElevatedButton.icon(
                               key: Key('stage3-load-form-image$index-button'),
-                              onPressed: () => _pickImage(index, textTheme),
+                              onPressed: () => _pickImage(index),
                               icon: Icon(
                                 Icons.camera_alt,
                                 color: AppColors.textLight,
@@ -348,50 +348,8 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
     );
   }
 
-  void _pickImage(int index, TextTheme textTheme) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.backgroundCrema,
-        title: Text(
-          'Seleccionar origen de imagen',
-          style: textTheme.headlineMedium,
-        ),
-        actions: [
-          SelectionSourceTile(
-            key: Key('stage3-load-form-take-photo-button'),
-            icon: Icons.camera_alt_outlined,
-            label: 'Cámara',
-            onTap: () {
-              Navigator.of(context).pop();
-              _pickFromCamera(index);
-            },
-          ),
-          const SizedBox(height: AppSpacing.xSmall),
-          SelectionSourceTile(
-            icon: Icons.photo_library_outlined,
-            label: 'Galería',
-            onTap: () {
-              Navigator.of(context).pop();
-              _pickFromGallery(index);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _pickFromCamera(int index) async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromCamera(context);
-    if (bytes != null) setState(() => _photoBytes[index] = bytes);
-  }
-
-  Future<void> _pickFromGallery(int index) async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromGallery();
+  Future<void> _pickImage(int index) async {
+    final bytes = await ref.read(imagePickerServiceProvider).pickImage();
     if (bytes != null) setState(() => _photoBytes[index] = bytes);
   }
 }

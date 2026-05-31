@@ -241,7 +241,7 @@ class _WebStage3LoadFormState extends ConsumerState<WebStage3LoadForm> {
                   ),
                 ),
                 key: Key('stage3-load-form-image$index-button'),
-                onPressed: () => _pickImage(index, textTheme),
+                onPressed: () => _pickImage(index),
                 icon: const Icon(
                   Icons.photo_camera_outlined,
                   size: 18,
@@ -354,50 +354,8 @@ class _WebStage3LoadFormState extends ConsumerState<WebStage3LoadForm> {
     );
   }
 
-  void _pickImage(int index, TextTheme textTheme) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.backgroundCrema,
-        title: Text(
-          'Seleccionar origen de imagen',
-          style: textTheme.headlineMedium,
-        ),
-        actions: [
-          SelectionSourceTile(
-            key: const Key('stage3-load-form-take-photo-button'),
-            icon: Icons.camera_alt_outlined,
-            label: 'Cámara',
-            onTap: () {
-              Navigator.of(context).pop();
-              _pickFromCamera(index);
-            },
-          ),
-          const SizedBox(height: AppSpacing.xSmall),
-          SelectionSourceTile(
-            icon: Icons.photo_library_outlined,
-            label: 'Galería',
-            onTap: () {
-              Navigator.of(context).pop();
-              _pickFromGallery(index);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _pickFromCamera(int index) async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromCamera(context);
-    if (bytes != null) setState(() => _photoBytes[index] = bytes);
-  }
-
-  Future<void> _pickFromGallery(int index) async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromGallery();
+  Future<void> _pickImage(int index) async {
+    final bytes = await ref.read(imagePickerServiceProvider).pickImage();
     if (bytes != null) setState(() => _photoBytes[index] = bytes);
   }
 }

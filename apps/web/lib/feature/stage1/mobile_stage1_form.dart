@@ -361,7 +361,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   height: 48,
                   child: OutlinedButton.icon(
                     key: const Key('stage1-load-form-photo-button'),
-                    onPressed: () => _onPickImage(textTheme),
+                    onPressed: _onPickImage,
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.small),
@@ -489,53 +489,8 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     formNotifier.submit(data, isNew: widget.isNew, photoBytes: _photoBytes);
   }
 
-  void _onPickImage(TextTheme textTheme) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.backgroundCrema,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
-        ),
-        title: Text('Seleccionar imagen', style: textTheme.headlineMedium),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SelectionSourceTile(
-              key: const Key('stage1-load-form-camera-button'),
-              icon: Icons.camera_alt,
-              label: 'Cámara',
-              onTap: () {
-                Navigator.of(context).pop();
-                _pickFromCamera();
-              },
-            ),
-            const SizedBox(height: AppSpacing.xSmall),
-            SelectionSourceTile(
-              icon: Icons.photo_library_outlined,
-              label: 'Galería',
-              onTap: () {
-                Navigator.of(context).pop();
-                _pickFromGallery();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _pickFromCamera() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromCamera(context);
-    if (bytes != null) setState(() => _photoBytes = bytes);
-  }
-
-  Future<void> _pickFromGallery() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromGallery();
+  Future<void> _onPickImage() async {
+    final bytes = await ref.read(imagePickerServiceProvider).pickImage();
     if (bytes != null) setState(() => _photoBytes = bytes);
   }
 }
