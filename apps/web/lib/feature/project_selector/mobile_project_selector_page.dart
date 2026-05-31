@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:core/features/stage1_delivery/providers/index.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
-import 'package:core/features/pdf/helpers/generate_and_share_pdf.dart';
 import 'package:core/features/auth/domain/enums/index.dart';
 import 'package:core/features/auth/domain/entities/index.dart';
 import 'package:core/features/auth/providers/auth_provider.dart';
@@ -100,12 +99,6 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   );
                   context.pushNamed('pdf-preview', extra: selectedProject);
                   setState(() => isSelected.clear());
-                case 'print':
-                  final selectedProject = projects.firstWhere(
-                    (p) => p.id == isSelected.first,
-                  );
-                  await generateAndSharePdf(selectedProject);
-                  setState(() => isSelected.clear());
               }
             },
             itemBuilder: (BuildContext context) => [
@@ -129,14 +122,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                 const PopupMenuItem<String>(
                   value: 'preview',
                   child: _PopMenuDecoracion(
-                    text: 'Vista previa PDF',
-                    backGroundcolor: AppColors.weight,
-                  ),
-                ),
-                PopupMenuItem<String>(
-                  value: 'print',
-                  child: _PopMenuDecoracion(
-                    text: 'Imprimir',
+                    text: 'Compartir PDF',
                     backGroundcolor: AppColors.weight,
                   ),
                 ),
