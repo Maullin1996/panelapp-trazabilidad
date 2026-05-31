@@ -326,7 +326,7 @@ class Stage3Page extends ConsumerWidget {
               label: 'Ver resumen',
               onTap: () {
                 Navigator.of(dcontext).pop();
-                context.push('${Routes.stage3}/$projectId/${load2.id}/summary');
+                context.push('${Routes.stage3}/${project.id}/${load2.id}/summary');
               },
             ),
           SizedBox(height: AppSpacing.xSmall),
@@ -336,7 +336,7 @@ class Stage3Page extends ConsumerWidget {
             label: 'Continuar formulario',
             onTap: () {
               Navigator.of(dcontext).pop();
-              context.push('${Routes.stage3}/$projectId/${load2.id}/form');
+              context.push('${Routes.stage3}/${project.id}/${load2.id}/form');
             },
           ),
         ],

@@ -1,6 +1,9 @@
 // admin
 export 'package:core/shared/administrative_page.dart';
 
+// inventory
+export 'inventory/inventory_page.dart';
+
 // auth
 export 'package:core/shared/login_page.dart';
 export 'package:core/shared/widgets/login_form.dart';

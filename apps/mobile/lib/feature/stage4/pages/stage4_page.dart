@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:core/core/services/custom_snack_bar.dart';
-import 'package:core/features/stage1_delivery/domain/entities/index.dart';
+import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:core/features/stage1_delivery/providers/index.dart';
 import 'package:core/features/stage4_recollection/domain/entities/index.dart';
 import 'package:core/features/stage4_recollection/providers/providers.dart';

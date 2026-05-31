@@ -163,6 +163,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       GoRoute(
+        name: 'inventory',
+        path: Routes.inventory,
+        builder: (context, state) => const InventoryPage(),
+      ),
+      GoRoute(
         path: Routes.splash,
         pageBuilder: (_, state) =>
             noTransitionPage(const SplashScreen(), state),

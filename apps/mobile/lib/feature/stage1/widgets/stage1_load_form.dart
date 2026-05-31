@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 import 'package:core/core/router/routes.dart';
 import 'package:core/core/services/image_picker_service_provider.dart';
-import 'package:core/features/stage1_delivery/domain/entities/index.dart';
+import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'two_form_row.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_form_provider.dart';
@@ -141,7 +141,6 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                       _GaveraItem(
                         index: index,
                         showRemove: _gaveras.length > 1,
-                        gaveraTypes: GaveraType.values,
                         textTheme: textTheme,
                         formKey: _formKey,
                         onRemove: () => _removeGavera(index),
@@ -274,7 +273,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
                   height: 48,
                   child: OutlinedButton.icon(
                     key: const Key('stage1-load-form-photo-button'),
-                    onPressed: () => _onPickImage(textTheme),
+                    onPressed: _onPickImage,
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.small),
@@ -368,7 +367,7 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     for (int i = 0; i < _gaveras.length; i++) {
       final cantidad = int.tryParse(values['gaverasCantidad_$i'] ?? '') ?? 0;
       final peso = double.tryParse(values['gaverasPeso_$i'] ?? '') ?? 0.0;
-      final tipo = values['gaverasTipo_$i'] as GaveraType;
+      final tipo = (values['gaverasTipo_$i'] as String?) ?? '';
       gaveras.add(
         GaveraData(quantity: cantidad, referenceWeight: peso, gaveraType: tipo),
       );
@@ -397,53 +396,8 @@ class _Stage1FormState extends ConsumerState<Stage1LoadForm> {
     formNotifier.submit(data, isNew: widget.isNew, photoBytes: _photoBytes);
   }
 
-  void _onPickImage(TextTheme textTheme) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.backgroundCrema,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
-        ),
-        title: Text('Seleccionar imagen', style: textTheme.headlineMedium),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SelectionSourceTile(
-              key: const Key('stage1-load-form-camera-button'),
-              icon: Icons.camera_alt,
-              label: 'Cámara',
-              onTap: () {
-                Navigator.of(context).pop();
-                _pickFromCamera();
-              },
-            ),
-            const SizedBox(height: AppSpacing.xSmall),
-            SelectionSourceTile(
-              icon: Icons.photo_library_outlined,
-              label: 'Galería',
-              onTap: () {
-                Navigator.of(context).pop();
-                _pickFromGallery();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _pickFromCamera() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromCamera(context);
-    if (bytes != null) setState(() => _photoBytes = bytes);
-  }
-
-  Future<void> _pickFromGallery() async {
-    final bytes = await ref
-        .read(imagePickerServiceProvider)
-        .captureFromGallery();
+  Future<void> _onPickImage() async {
+    final bytes = await ref.read(imagePickerServiceProvider).pickImage();
     if (bytes != null) setState(() => _photoBytes = bytes);
   }
 }
@@ -514,7 +468,6 @@ class _AddButton extends StatelessWidget {
 class _GaveraItem extends StatelessWidget {
   final int index;
   final bool showRemove;
-  final List<GaveraType> gaveraTypes;
   final TextTheme textTheme;
   final GlobalKey<FormBuilderState> formKey;
   final VoidCallback onRemove;
@@ -522,7 +475,6 @@ class _GaveraItem extends StatelessWidget {
   const _GaveraItem({
     required this.index,
     required this.showRemove,
-    required this.gaveraTypes,
     required this.textTheme,
     required this.formKey,
     required this.onRemove,
@@ -610,18 +562,10 @@ class _GaveraItem extends StatelessWidget {
               child: _LabeledField(
                 label: 'Tipo',
                 textTheme: textTheme,
-                child: CustomFromDropdown<GaveraType>(
+                child: AppFormTextFild(
                   key: Key('stage1-load-form-gavera-tipo-$index'),
                   name: 'gaverasTipo_$index',
-                  items: gaveraTypes
-                      .map(
-                        (g) => DropdownMenuItem<GaveraType>(
-                          key: Key('gavera_de_tipo_${g.name}'),
-                          value: g,
-                          child: Text(g.label, style: textTheme.bodyLarge),
-                        ),
-                      )
-                      .toList(),
+                  hintText: 'Ej. Plástica',
                   validator: FormBuilderValidators.required(
                     errorText: 'Requerido',
                   ),
