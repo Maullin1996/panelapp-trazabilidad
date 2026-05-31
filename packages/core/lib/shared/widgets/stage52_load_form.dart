@@ -106,7 +106,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
                   key: const Key('stage52-form-panela-weight-input'),
                   name: 'panelaWeight',
                   hintText: 'Ej. 12.5',
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(
                       errorText: 'Este campo es obligatorio',

@@ -1,9 +1,12 @@
 import 'dart:typed_data';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:collection/collection.dart';
 
 import '../../../core/storage/application/storage_providers.dart';
 import '../domain/entities/stage1_form_data.dart';
 import 'index.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:core/features/inventory/domain/entities/inventory_item.dart';
+import 'package:core/features/inventory/providers/inventory_providers.dart';
 
 part 'stage1_form_provider.g.dart';
 
@@ -33,6 +36,35 @@ class Stage1Form extends _$Stage1Form {
 
       if (isNew) {
         await ref.read(createStage1DataProvider)(dataToSave);
+
+        try {
+          final inventoryRepo = ref.read(inventoryRepositoryProvider);
+          final inventoryItems = await inventoryRepo.getAll();
+
+          for (final gavera in dataToSave.gaveras) {
+            final item = inventoryItems.firstWhereOrNull(
+              (i) =>
+                  i.type == InventoryItemType.gavera &&
+                  (i.referenceWeight! - gavera.referenceWeight).abs() < 0.001,
+            );
+            if (item != null && gavera.quantity > 0) {
+              await inventoryRepo.decrementAvailable(item.id, gavera.quantity);
+            }
+          }
+
+          for (final basket in dataToSave.baskets) {
+            final item = inventoryItems.firstWhereOrNull(
+              (i) =>
+                  i.type == InventoryItemType.canastilla &&
+                  i.size == basket.size,
+            );
+            if (item != null && basket.quantity > 0) {
+              await inventoryRepo.decrementAvailable(item.id, basket.quantity);
+            }
+          }
+        } catch (e) {
+          ///
+        }
       } else {
         await ref.read(updateStage1DataProvider)(dataToSave);
       }

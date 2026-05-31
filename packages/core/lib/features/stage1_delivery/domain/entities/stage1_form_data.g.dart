@@ -9,25 +9,15 @@ part of 'stage1_form_data.dart';
 _GaveraData _$GaveraDataFromJson(Map<String, dynamic> json) => _GaveraData(
   quantity: (json['quantity'] as num?)?.toInt() ?? 0,
   referenceWeight: (json['referenceWeight'] as num).toDouble(),
-  gaveraType:
-      $enumDecodeNullable(_$GaveraTypeEnumMap, json['gaveraType']) ??
-      GaveraType.kilo,
+  gaveraType: json['gaveraType'] as String? ?? '',
 );
 
 Map<String, dynamic> _$GaveraDataToJson(_GaveraData instance) =>
     <String, dynamic>{
       'quantity': instance.quantity,
       'referenceWeight': instance.referenceWeight,
-      'gaveraType': _$GaveraTypeEnumMap[instance.gaveraType]!,
+      'gaveraType': instance.gaveraType,
     };
-
-const _$GaveraTypeEnumMap = {
-  GaveraType.kilo: 'kilo',
-  GaveraType.redonda: 'redonda',
-  GaveraType.panelon: 'panelon',
-  GaveraType.pacha: 'pacha',
-  GaveraType.pastilla: 'pastilla',
-};
 
 _BasketData _$BasketDataFromJson(Map<String, dynamic> json) => _BasketData(
   size: $enumDecode(_$BasketSizeEnumMap, json['size']),

@@ -8,7 +8,6 @@ import 'package:core/features/auth/providers/auth_provider.dart';
 import 'package:core/features/auth/domain/enums/index.dart';
 import 'package:core/features/auth/domain/entities/index.dart';
 import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
 import 'package:core/core/router/routes.dart';
 import 'package:core/shared/widgets/widgets.dart';
 import 'package:core/shared/utils/tokens.dart';
@@ -71,7 +70,8 @@ class _WebProjectSelectorPageState
     return WebLayout(
       selectedIndex: 0,
       onDestinationSelected: (index) {
-        if (index == 1) context.pushNamed('adminResetPassword');
+        if (index == 1) context.push(Routes.inventory);
+        if (index == 2) context.pushNamed('adminResetPassword');
       },
       child: Column(
         children: [
@@ -98,6 +98,24 @@ class _WebProjectSelectorPageState
                   ),
                 ),
                 const Spacer(),
+                if (user != null &&
+                    (user.role == UserRole.admin ||
+                        user.role == UserRole.stage1))
+                  ElevatedButton.icon(
+                    onPressed: () => context.push('${Routes.stage1}/new'),
+                    icon: const Icon(
+                      Icons.add,
+                      color: AppColors.cardBackground,
+                    ),
+                    label: Text(
+                      'Nuevo proyecto',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: AppColors.cardBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: AppSpacing.small),
                 PopupMenuButton<String>(
                   position: PopupMenuPosition.under,
                   padding: const EdgeInsets.symmetric(
@@ -290,7 +308,7 @@ class _WebProjectSelectorPageState
                                   AppColors.secondaryDarkPanela,
                                 ),
                                 _Chip(
-                                  g.gaveraType.label,
+                                  g.gaveraType,
                                   AppColors.primaryPanelaBrown,
                                 ),
                               ],

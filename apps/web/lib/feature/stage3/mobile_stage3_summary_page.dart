@@ -109,6 +109,7 @@ class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
                     secondIconColors: AppColors.secondaryDarkPanela,
                     textTheme: textTheme,
                   ),
+
                   const SizedBox(height: AppSpacing.xSmall),
                   SummaryCard(
                     textTheme: textTheme,
@@ -312,6 +313,14 @@ class _BasketCard extends StatelessWidget {
                     iconColor: AppColors.weight,
                     firstText: 'Peso registrado: ',
                     secondText: '${basket.realWeight.toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    icon: Icons.storage,
+                    iconColor: AppColors.weight,
+
+                    firstText: 'Gavera: ',
+                    secondText: "${basket.referenceWeight.toString()} g",
                   ),
                   const SizedBox(height: AppSpacing.xSmall),
                   CustomRichText(

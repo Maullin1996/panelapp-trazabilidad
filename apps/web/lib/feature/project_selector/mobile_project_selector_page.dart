@@ -14,8 +14,6 @@ import 'package:core/core/router/routes.dart';
 import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:core/core/services/custom_snack_bar.dart';
 
-import 'package:core/features/stage1_delivery/domain/entities/stage1_enums_labels.dart';
-
 class ProjectSelectorPage extends ConsumerStatefulWidget {
   const ProjectSelectorPage({super.key});
 
@@ -92,6 +90,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
               switch (value) {
                 case 'users':
                   context.pushNamed('adminResetPassword');
+                case 'inventory':
+                  context.push(Routes.inventory);
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
                 case 'preview':
@@ -114,6 +114,14 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   value: 'users',
                   child: _PopMenuDecoracion(
                     text: 'Usuarios',
+                    backGroundcolor: AppColors.weight,
+                  ),
+                ),
+              if (user.role == UserRole.admin)
+                const PopupMenuItem<String>(
+                  value: 'inventory',
+                  child: _PopMenuDecoracion(
+                    text: 'Inventario',
                     backGroundcolor: AppColors.weight,
                   ),
                 ),
@@ -406,7 +414,7 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                                     ),
                                   ),
                                   child: Text(
-                                    p.gaveras[index].gaveraType.label,
+                                    p.gaveras[index].gaveraType,
                                     style: textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.primaryPanelaBrown,

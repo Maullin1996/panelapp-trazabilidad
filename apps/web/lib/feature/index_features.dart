@@ -13,6 +13,7 @@ export 'stage5/web_stage5_page.dart';
 export 'stage5/web_stage52_page.dart';
 export 'stage5/web_stage52_form_page.dart';
 export 'stage5/web_stage52_summary_page.dart';
+export 'inventory/web_inventory_page.dart';
 
 // Mobile feature pages
 export 'stage1/mobile_stage1_page.dart';
@@ -25,3 +26,4 @@ export 'stage4/mobile_stage4_page.dart';
 export 'stage5/mobile_stage5_page.dart';
 export 'stage5/mobile_stage52_page.dart';
 export 'project_selector/mobile_project_selector_page.dart';
+export 'inventory/mobile_inventory_page.dart';

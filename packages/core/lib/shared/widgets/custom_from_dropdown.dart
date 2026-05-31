@@ -6,12 +6,14 @@ class CustomFromDropdown<T> extends StatelessWidget {
   final String name;
   final List<DropdownMenuItem<T>> items;
   final String? Function(T?)? validator;
+  final ValueChanged<T?>? onChanged;
 
   const CustomFromDropdown({
     super.key,
     required this.name,
     required this.items,
     this.validator,
+    this.onChanged,
   });
 
   @override
@@ -22,6 +24,7 @@ class CustomFromDropdown<T> extends StatelessWidget {
       name: name,
       items: items,
       validator: validator,
+      onChanged: onChanged,
       menuWidth: width > 600 ? 320 : width * 0.95,
       borderRadius: BorderRadius.circular(AppRadius.medium),
       dropdownColor: Colors.white,

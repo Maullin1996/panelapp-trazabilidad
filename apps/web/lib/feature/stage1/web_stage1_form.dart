@@ -1,12 +1,15 @@
 import 'dart:typed_data';
+import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:core/core/services/image_picker_service_provider.dart';
-import 'package:core/features/stage1_delivery/domain/entities/index.dart';
+import 'package:core/features/inventory/domain/entities/inventory_item.dart';
+import 'package:core/features/inventory/providers/inventory_providers.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_form_provider.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
@@ -26,6 +29,9 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
   late final List<int> _baskets;
   late final Uuid _uuid;
   Uint8List? _photoBytes;
+  bool _initialized = false;
+
+  final Map<int, InventoryItem> _selectedGaveraItems = {};
 
   @override
   void initState() {
@@ -36,8 +42,41 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
     _uuid = const Uuid();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized || widget.initialData == null) return;
+
+    final inventoryItems = ref.read(syncInventoryItemsProvider);
+    if (inventoryItems.isEmpty) return; // aún no cargó, esperar
+
+    _initialized = true;
+
+    for (int i = 0; i < widget.initialData!.gaveras.length; i++) {
+      final gavera = widget.initialData!.gaveras[i];
+      final match = inventoryItems.firstWhereOrNull(
+        (item) =>
+            item.type == InventoryItemType.gavera &&
+            (item.referenceWeight! - gavera.referenceWeight).abs() < 0.001 &&
+            item.gaveraType == gavera.gaveraType,
+      );
+      if (match != null) {
+        _selectedGaveraItems[i] = match;
+        // Actualizar el campo del form DESPUÉS del build
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _formKey.currentState?.fields['gaveraItem_$i']?.didChange(match);
+        });
+      }
+    }
+  }
+
   void _addGavera() => setState(() => _gaveras.add(_gaveras.length));
-  void _removeGavera(int index) => setState(() => _gaveras.remove(index));
+  void _removeGavera(int index) {
+    setState(() {
+      _gaveras.remove(index);
+      _selectedGaveraItems.remove(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +85,20 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
     final formNotifier = ref.read(stage1FormProvider.notifier);
     final textTheme = TextTheme.of(context);
     final isSubmitting = state.status == Stage1FormStatus.submitting;
+
+    final inventoryItems = ref.watch(syncInventoryItemsProvider);
+    final gaverasInventario = inventoryItems
+        .where((i) => i.type == InventoryItemType.gavera)
+        .toList();
+    final canastillasInventario = inventoryItems
+        .where((i) => i.type == InventoryItemType.canastilla)
+        .toList();
+
+    if (!_initialized &&
+        gaverasInventario.isNotEmpty &&
+        widget.initialData != null) {
+      didChangeDependencies(); // re-intentar ahora que hay datos
+    }
 
     return FormBuilder(
       key: _formKey,
@@ -68,11 +121,10 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
               ...{
                 for (int i = 0; i < initial.gaveras.length; i++)
                   'gaverasCantidad_$i': initial.gaveras[i].quantity.toString(),
-                for (var i = 0; i < initial.gaveras.length; i++)
-                  'gaverasPeso_$i': initial.gaveras[i].referenceWeight
-                      .toString(),
-                for (var i = 0; i < initial.gaveras.length; i++)
-                  'gaverasTipo_$i': initial.gaveras[i].gaveraType,
+              },
+              ...{
+                for (int i = 0; i < initial.gaveras.length; i++)
+                  'gaveraItem_$i': _selectedGaveraItems[i],
               },
             },
       child: Column(
@@ -107,38 +159,56 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
             iconColor: AppColors.weight,
             title: 'Gaveras',
             trailing: _AddButton(onTap: _addGavera),
-            child: Column(
-              children: _gaveras
-                  .map(
-                    (index) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (index != _gaveras.first)
-                          const Divider(height: AppSpacing.medium),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: AppSpacing.xSmall,
-                          ),
-                          child: Text(
-                            'Gavera ${_gaveras.indexOf(index) + 1}',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: AppColors.primaryPanelaBrown,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+            child: gaverasInventario.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.small,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'No hay gaveras en el inventario',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: AppColors.textDark.withAlpha(120),
                         ),
-                        _GaveraRow(
-                          index: index,
-                          showRemove: _gaveras.length > 1,
-                          formKey: _formKey,
-                          textTheme: textTheme,
-                          onRemove: () => _removeGavera(index),
-                        ),
-                      ],
+                      ),
                     ),
                   )
-                  .toList(),
-            ),
+                : Column(
+                    children: _gaveras
+                        .map(
+                          (index) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (index != _gaveras.first)
+                                const Divider(height: AppSpacing.medium),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.xSmall,
+                                ),
+                                child: Text(
+                                  'Gavera ${_gaveras.indexOf(index) + 1}',
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: AppColors.primaryPanelaBrown,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              _GaveraRow(
+                                index: index,
+                                showRemove: _gaveras.length > 1,
+                                textTheme: textTheme,
+                                gaverasInventario: gaverasInventario,
+                                selectedItem: _selectedGaveraItems[index],
+                                onRemove: () => _removeGavera(index),
+                                onItemSelected: (item) => setState(
+                                  () => _selectedGaveraItems[index] = item,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
           ),
 
           const SizedBox(height: AppSpacing.small),
@@ -151,38 +221,53 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
             trailing: _AddButton(
               onTap: () => setState(() => _baskets.add(_baskets.length)),
             ),
-            child: Column(
-              children: _baskets
-                  .map(
-                    (index) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (index != _baskets.first)
-                          const Divider(height: AppSpacing.medium),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: AppSpacing.xSmall,
-                          ),
-                          child: Text(
-                            'Canastilla ${_baskets.indexOf(index) + 1}',
-                            style: textTheme.bodySmall?.copyWith(
-                              color: AppColors.register,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+            child: canastillasInventario.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.small,
+                    ),
+                    child: Center(
+                      child: Text(
+                        'No hay canastillas en el inventario',
+                        style: textTheme.bodyMedium?.copyWith(
+                          color: AppColors.textDark.withAlpha(120),
                         ),
-                        _BasketRow(
-                          index: index,
-                          showRemove: _baskets.length > 1,
-                          textTheme: textTheme,
-                          onRemove: () =>
-                              setState(() => _baskets.remove(index)),
-                        ),
-                      ],
+                      ),
                     ),
                   )
-                  .toList(),
-            ),
+                : Column(
+                    children: _baskets
+                        .map(
+                          (index) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (index != _baskets.first)
+                                const Divider(height: AppSpacing.medium),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  bottom: AppSpacing.xSmall,
+                                ),
+                                child: Text(
+                                  'Canastilla ${_baskets.indexOf(index) + 1}',
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: AppColors.register,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              _BasketRow(
+                                index: index,
+                                showRemove: _baskets.length > 1,
+                                textTheme: textTheme,
+                                canastillasInventario: canastillasInventario,
+                                onRemove: () =>
+                                    setState(() => _baskets.remove(index)),
+                              ),
+                            ],
+                          ),
+                        )
+                        .toList(),
+                  ),
           ),
 
           const SizedBox(height: AppSpacing.small),
@@ -327,6 +412,7 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
               ],
             ),
           ),
+
           const SizedBox(height: AppSpacing.medium),
 
           // ── Botón guardar ─────────────────────────────────────
@@ -369,12 +455,15 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
     final baskets = <BasketData>[];
 
     for (int i = 0; i < _gaveras.length; i++) {
+      final selectedItem = _selectedGaveraItems[_gaveras[i]];
+      if (selectedItem == null) continue;
+      final cantidad =
+          int.tryParse(values['gaverasCantidad_${_gaveras[i]}'] ?? '') ?? 0;
       gaveras.add(
         GaveraData(
-          quantity: int.tryParse(values['gaverasCantidad_$i'] ?? '') ?? 0,
-          referenceWeight:
-              double.tryParse(values['gaverasPeso_$i'] ?? '') ?? 0.0,
-          gaveraType: values['gaverasTipo_$i'] as GaveraType,
+          quantity: cantidad,
+          referenceWeight: selectedItem.referenceWeight!,
+          gaveraType: selectedItem.gaveraType ?? '',
         ),
       );
     }
@@ -420,6 +509,215 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
   }
 }
 
+// ── GaveraRow ──────────────────────────────────────────────────────────────────
+class _GaveraRow extends StatelessWidget {
+  final int index;
+  final bool showRemove;
+  final TextTheme textTheme;
+  final List<InventoryItem> gaverasInventario;
+  final InventoryItem? selectedItem;
+  final VoidCallback onRemove;
+  final ValueChanged<InventoryItem> onItemSelected;
+
+  const _GaveraRow({
+    required this.index,
+    required this.showRemove,
+    required this.textTheme,
+    required this.gaverasInventario,
+    required this.selectedItem,
+    required this.onRemove,
+    required this.onItemSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Dropdown inventario
+            Expanded(
+              flex: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Gavera (peso — tipo)', style: textTheme.bodySmall),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomFromDropdown<InventoryItem>(
+                    name: 'gaveraItem_$index',
+                    items: gaverasInventario
+                        .map(
+                          (item) => DropdownMenuItem<InventoryItem>(
+                            key: Key('gavera_item_${item.id}'),
+                            value: item,
+                            child: Text(
+                              '${item.referenceWeight} g — ${item.gaveraType ?? ''}  (disp: ${item.availableUnits})',
+                              style: textTheme.bodyLarge,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (item) {
+                      if (item != null) onItemSelected(item);
+                    },
+                    validator: FormBuilderValidators.required(
+                      errorText: 'Requerido',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.xSmall),
+            // Cantidad
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Cantidad', style: textTheme.bodySmall),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  AppFormTextFild(
+                    name: 'gaverasCantidad_$index',
+                    hintText: '0',
+                    keyboardType: TextInputType.number,
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(errorText: 'Requerido'),
+                      FormBuilderValidators.integer(errorText: 'Solo números'),
+                      FormBuilderValidators.min(1),
+                    ]),
+                  ),
+                ],
+              ),
+            ),
+            if (showRemove)
+              Padding(
+                padding: const EdgeInsets.only(top: 22),
+                child: IconButton(
+                  onPressed: onRemove,
+                  icon: const Icon(
+                    Icons.remove_circle_outline,
+                    color: AppColors.error,
+                  ),
+                ),
+              ),
+          ],
+        ),
+        // Chip tipo autocompleto
+        if (selectedItem != null) ...[
+          const SizedBox(height: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.weight.withAlpha(20),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Tipo: ${selectedItem!.gaveraType ?? ''}',
+              style: TextStyle(
+                fontSize: AppTypography.h5,
+                fontWeight: FontWeight.w600,
+                color: AppColors.weight,
+              ),
+            ),
+          ),
+        ],
+        const SizedBox(height: AppSpacing.xSmall),
+      ],
+    );
+  }
+}
+
+// ── BasketRow ──────────────────────────────────────────────────────────────────
+class _BasketRow extends StatelessWidget {
+  final int index;
+  final bool showRemove;
+  final TextTheme textTheme;
+  final VoidCallback onRemove;
+  final List<InventoryItem> canastillasInventario;
+
+  const _BasketRow({
+    required this.index,
+    required this.showRemove,
+    required this.textTheme,
+    required this.onRemove,
+    required this.canastillasInventario,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Cantidad', style: textTheme.bodySmall),
+              const SizedBox(height: AppSpacing.xSmall),
+              AppFormTextFild(
+                name: 'basketsCantidad_$index',
+                hintText: '0',
+                keyboardType: TextInputType.number,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(errorText: 'Requerido'),
+                  FormBuilderValidators.integer(errorText: 'Solo números'),
+                  FormBuilderValidators.min(1),
+                ]),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: AppSpacing.xSmall),
+        Expanded(
+          child: Column(
+            children: [
+              Text('Tamaño', style: textTheme.bodySmall),
+              const SizedBox(height: AppSpacing.xSmall),
+              CustomFromDropdown<BasketSize>(
+                name: 'basketsTipo_$index',
+                items: BasketSize.values.map((s) {
+                  // Buscar item del inventario para este tamaño
+                  final inventoryItem = canastillasInventario.firstWhereOrNull(
+                    (i) => i.size == s,
+                  );
+                  final disponibles = inventoryItem?.availableUnits;
+
+                  return DropdownMenuItem<BasketSize>(
+                    key: Key('basket_size_${s.name}'),
+                    value: s,
+                    child: Text(
+                      disponibles != null
+                          ? '${s.label}  (disp: $disponibles)'
+                          : s.label,
+                      style: textTheme.bodyLarge,
+                    ),
+                  );
+                }).toList(),
+                validator: FormBuilderValidators.required(
+                  errorText: 'Requerido',
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (showRemove)
+          Padding(
+            padding: const EdgeInsets.only(top: 22),
+            child: IconButton(
+              onPressed: onRemove,
+              icon: const Icon(
+                Icons.remove_circle_outline,
+                color: AppColors.error,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+// ── Widgets auxiliares ────────────────────────────────────────────────────────
 class _AddButton extends StatelessWidget {
   final VoidCallback onTap;
   const _AddButton({required this.onTap});
@@ -545,188 +843,6 @@ class _TwoFields extends StatelessWidget {
             ],
           ),
         ),
-      ],
-    );
-  }
-}
-
-class _GaveraRow extends StatelessWidget {
-  final int index;
-  final bool showRemove;
-  final GlobalKey<FormBuilderState> formKey;
-  final TextTheme textTheme;
-  final VoidCallback onRemove;
-
-  const _GaveraRow({
-    required this.index,
-    required this.showRemove,
-    required this.formKey,
-    required this.textTheme,
-    required this.onRemove,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Cantidad', style: textTheme.bodySmall),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  AppFormTextFild(
-                    name: 'gaverasCantidad_$index',
-                    hintText: '0',
-                    keyboardType: TextInputType.number,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(errorText: 'Requerido'),
-                      FormBuilderValidators.integer(errorText: 'Solo números'),
-                      FormBuilderValidators.min(1),
-                    ]),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: AppSpacing.xSmall),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Peso (g)', style: textTheme.bodySmall),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  AppFormTextFild(
-                    name: 'gaverasPeso_$index',
-                    hintText: '0.0',
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) return 'Requerido';
-                      final peso = double.tryParse(value);
-                      if (peso == null || peso <= 0) return 'Número > 0';
-                      return null;
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: AppSpacing.xSmall),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Tipo', style: textTheme.bodySmall),
-                  const SizedBox(height: AppSpacing.xSmall),
-                  CustomFromDropdown<GaveraType>(
-                    name: 'gaverasTipo_$index',
-                    items: GaveraType.values
-                        .map(
-                          (g) => DropdownMenuItem(
-                            value: g,
-                            child: Text(g.label, style: textTheme.bodyLarge),
-                          ),
-                        )
-                        .toList(),
-                    validator: FormBuilderValidators.required(
-                      errorText: 'Requerido',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (showRemove)
-              Padding(
-                padding: const EdgeInsets.only(top: 22),
-                child: IconButton(
-                  onPressed: onRemove,
-                  icon: const Icon(
-                    Icons.remove_circle_outline,
-                    color: AppColors.error,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _BasketRow extends StatelessWidget {
-  final int index;
-  final bool showRemove;
-  final TextTheme textTheme;
-  final VoidCallback onRemove;
-
-  const _BasketRow({
-    required this.index,
-    required this.showRemove,
-    required this.textTheme,
-    required this.onRemove,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Cantidad', style: textTheme.bodySmall),
-              const SizedBox(height: AppSpacing.xSmall),
-              AppFormTextFild(
-                name: 'basketsCantidad_$index',
-                hintText: '0',
-                keyboardType: TextInputType.number,
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(errorText: 'Requerido'),
-                  FormBuilderValidators.integer(errorText: 'Solo números'),
-                  FormBuilderValidators.min(1),
-                ]),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: AppSpacing.xSmall),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Tamaño', style: textTheme.bodySmall),
-              const SizedBox(height: AppSpacing.xSmall),
-              CustomFromDropdown<BasketSize>(
-                name: 'basketsTipo_$index',
-                items: BasketSize.values
-                    .map(
-                      (s) => DropdownMenuItem(
-                        value: s,
-                        child: Text(s.label, style: textTheme.bodyLarge),
-                      ),
-                    )
-                    .toList(),
-                validator: FormBuilderValidators.required(
-                  errorText: 'Requerido',
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (showRemove)
-          Padding(
-            padding: const EdgeInsets.only(top: 22),
-            child: IconButton(
-              onPressed: onRemove,
-              icon: const Icon(
-                Icons.remove_circle_outline,
-                color: AppColors.error,
-              ),
-            ),
-          ),
       ],
     );
   }

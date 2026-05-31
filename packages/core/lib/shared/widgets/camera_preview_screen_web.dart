@@ -11,52 +11,68 @@ class CameraPreviewScreen extends StatefulWidget {
   const CameraPreviewScreen({super.key});
 
   @override
-  State<CameraPreviewScreen> createState() => _CameraPreviewScreenWebState();
+  State<CameraPreviewScreen> createState() => _CameraPreviewScreenState();
 }
 
-class _CameraPreviewScreenWebState extends State<CameraPreviewScreen> {
+class _CameraPreviewScreenState extends State<CameraPreviewScreen> {
   web.HTMLVideoElement? _videoElement;
   web.MediaStream? _stream;
   bool _isInitialized = false;
   bool _hasError = false;
   Uint8List? _capturedBytes;
+  bool _usingFrontCamera = false;
+  late final String _viewId;
 
   @override
   void initState() {
     super.initState();
+    _viewId = 'camera-preview-$hashCode';
+
+    // Crear el video element una sola vez
+    final video = web.HTMLVideoElement();
+    video.autoplay = true;
+    video.setAttribute('playsinline', 'true');
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.style.objectFit = 'cover';
+
+    ui_web.platformViewRegistry.registerViewFactory(_viewId, (_) => video);
+
+    _videoElement = video;
     _initCamera();
   }
 
-  Future<void> _initCamera() async {
+  Future<void> _initCamera({bool frontCamera = false}) async {
+    _stopStream();
+
+    if (!_isInitialized) {
+      setState(() => _hasError = false);
+    }
+
     try {
-      final constraints = web.MediaStreamConstraints(
-        video: true.toJS,
-        audio: false.toJS,
-      );
+      final facingMode = frontCamera ? 'user' : 'environment';
+
+      final constraints = {
+        'video': {'facingMode': facingMode},
+        'audio': false,
+      }.jsify();
+
       final stream = await web.window.navigator.mediaDevices
-          .getUserMedia(constraints)
+          .getUserMedia(constraints as web.MediaStreamConstraints)
           .toDart;
 
       _stream = stream;
 
-      final video = web.HTMLVideoElement();
-      video.srcObject = stream;
-      video.autoplay = true;
-      video.setAttribute('playsinline', 'true');
-      video.style.width = '100%';
-      video.style.height = '100%';
-      video.style.objectFit = 'cover';
+      // Siempre reutilizamos el mismo videoElement
+      _videoElement!.srcObject = stream;
+      await _videoElement!.play().toDart;
 
-      // Registrar el video element como platform view
-      // ignore: undefined_prefixed_name
-      ui_web.platformViewRegistry.registerViewFactory(
-        'camera-preview-$hashCode',
-        (_) => video,
-      );
-
-      await video.play().toDart;
-      _videoElement = video;
-      if (mounted) setState(() => _isInitialized = true);
+      if (mounted) {
+        setState(() {
+          _isInitialized = true;
+          _usingFrontCamera = frontCamera;
+        });
+      }
     } catch (e) {
       debugPrint('Error iniciando cámara web: $e');
       if (mounted) setState(() => _hasError = true);
@@ -91,6 +107,11 @@ class _CameraPreviewScreenWebState extends State<CameraPreviewScreen> {
 
   void _stopStream() {
     _stream?.getTracks().toDart.forEach((t) => t.stop());
+    _stream = null;
+  }
+
+  void _switchCamera() {
+    _initCamera(frontCamera: !_usingFrontCamera);
   }
 
   @override
@@ -130,156 +151,51 @@ class _CameraPreviewScreenWebState extends State<CameraPreviewScreen> {
       );
     }
 
-    if (!_isInitialized) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(color: Colors.white54),
-              SizedBox(height: 16),
-              Text(
-                'Iniciando cámara…',
-                style: TextStyle(color: Colors.white54, fontSize: 13),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_capturedBytes != null) {
-      return _PreviewView(
-        imageBytes: _capturedBytes!,
-        onConfirm: _confirm,
-        onRetake: _retake,
-      );
-    }
-
-    return _CaptureView(
-      viewId: 'camera-preview-$hashCode',
-      onCapture: _capturePhoto,
-      onClose: () {
-        _stopStream();
-        Navigator.pop(context);
-      },
-    );
-  }
-}
-
-// ── Vista: captura ──────────────────────────────────────────────────────────
-
-class _CaptureView extends StatelessWidget {
-  final String viewId;
-  final VoidCallback onCapture;
-  final VoidCallback onClose;
-
-  const _CaptureView({
-    required this.viewId,
-    required this.onCapture,
-    required this.onClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          HtmlElementView(viewType: viewId),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(
-                32,
-                20,
-                32,
-                MediaQuery.of(context).padding.bottom + 28,
-              ),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.black87, Colors.transparent],
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+          // ── Video siempre en el árbol ──
+          if (_isInitialized) HtmlElementView(viewType: _viewId),
+
+          // ── Loading ──
+          if (!_isInitialized && !_hasError)
+            const Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _CircleAction(
-                    icon: Icons.close_rounded,
-                    size: 22,
-                    onTap: onClose,
+                  CircularProgressIndicator(color: Colors.white54),
+                  SizedBox(height: 16),
+                  Text(
+                    'Iniciando cámara…',
+                    style: TextStyle(color: Colors.white54, fontSize: 13),
                   ),
-                  _ShutterButton(onTap: onCapture),
-                  const SizedBox(width: 48),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
-// ── Vista: previsualización ─────────────────────────────────────────────────
+          // ── Preview encima del video ──
+          if (_capturedBytes != null)
+            Positioned.fill(
+              child: Image.memory(_capturedBytes!, fit: BoxFit.cover),
+            ),
 
-class _PreviewView extends StatelessWidget {
-  final Uint8List imageBytes;
-  final VoidCallback onConfirm;
-  final VoidCallback onRetake;
+          // ── UI: preview confirmación ──
+          if (_capturedBytes != null)
+            Positioned(
+              top: MediaQuery.of(context).padding.top + 16,
+              left: 0,
+              right: 0,
+              child: const Center(child: _PillLabel(text: 'Vista previa')),
+            ),
 
-  const _PreviewView({
-    required this.imageBytes,
-    required this.onConfirm,
-    required this.onRetake,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.memory(
-            imageBytes,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            left: 0,
-            right: 0,
-            child: const Center(child: _PillLabel(text: 'Vista previa')),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(
-                40,
-                28,
-                40,
-                MediaQuery.of(context).padding.bottom + 36,
-              ),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.black87, Colors.transparent],
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          if (_capturedBytes != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: _BottomBar(
                 children: [
                   Column(
                     mainAxisSize: MainAxisSize.min,
@@ -287,7 +203,7 @@ class _PreviewView extends StatelessWidget {
                       _CircleAction(
                         icon: Icons.refresh_rounded,
                         size: 24,
-                        onTap: onRetake,
+                        onTap: _retake,
                       ),
                       const SizedBox(height: 6),
                       const Text(
@@ -303,7 +219,7 @@ class _PreviewView extends StatelessWidget {
                         icon: Icons.check_rounded,
                         size: 28,
                         filled: true,
-                        onTap: onConfirm,
+                        onTap: _confirm,
                       ),
                       const SizedBox(height: 6),
                       const Text(
@@ -319,8 +235,64 @@ class _PreviewView extends StatelessWidget {
                 ],
               ),
             ),
-          ),
+
+          // ── UI: captura ──
+          if (_capturedBytes == null && _isInitialized)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: _BottomBar(
+                children: [
+                  _CircleAction(
+                    icon: Icons.close_rounded,
+                    size: 22,
+                    onTap: () {
+                      _stopStream();
+                      Navigator.pop(context);
+                    },
+                  ),
+                  _ShutterButton(onTap: _capturePhoto),
+                  _CircleAction(
+                    icon: Icons.cameraswitch_rounded,
+                    size: 22,
+                    onTap: _switchCamera,
+                  ),
+                ],
+              ),
+            ),
         ],
+      ),
+    );
+  }
+}
+
+// ── Bottom bar ──────────────────────────────────────────────────────────────
+
+class _BottomBar extends StatelessWidget {
+  final List<Widget> children;
+  const _BottomBar({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+        32,
+        20,
+        32,
+        MediaQuery.of(context).padding.bottom + 28,
+      ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: [Colors.black87, Colors.transparent],
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: children,
       ),
     );
   }

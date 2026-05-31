@@ -43,7 +43,7 @@ final class AuthProvider extends $NotifierProvider<Auth, AuthParams> {
   }
 }
 
-String _$authHash() => r'ffc69470a68e23417d6e5d44e097ac1bc1104dd8';
+String _$authHash() => r'ee8f0d26b6a4ff7482c8cc6101b244546c1c995c';
 
 /// Notifier de autenticación con Riverpod (keepAlive).
 

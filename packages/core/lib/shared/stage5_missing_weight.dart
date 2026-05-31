@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import 'package:core/features/stage1_delivery/domain/entities/index.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:core/features/stage4_recollection/domain/entities/stage4_form_data.dart';
 import 'package:core/features/stage4_recollection/providers/stage4_ui_provider.dart';
@@ -11,6 +10,7 @@ import 'package:core/features/stage5_1_missing_weight/helper/money_format.dart';
 import 'package:core/features/stage5_1_missing_weight/providers/providers.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
+import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 
 class Stage5MissingWeight extends ConsumerStatefulWidget {
   final String projectId;

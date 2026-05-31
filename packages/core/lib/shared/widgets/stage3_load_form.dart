@@ -262,7 +262,9 @@ class _Stage3LoadFormState extends ConsumerState<Stage3LoadForm> {
                         AppFormTextFild(
                           key: Key('stage3-load-form-realWeight$index-input'),
                           name: 'realWeight_$index',
-                          keyboardType: TextInputType.number,
+                          keyboardType: TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
                               RegExp(r'[0-9\.,]'),

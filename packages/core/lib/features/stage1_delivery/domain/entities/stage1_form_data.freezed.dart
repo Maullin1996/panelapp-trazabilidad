@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GaveraData {
 
- int get quantity; double get referenceWeight; GaveraType get gaveraType;
+ int get quantity; double get referenceWeight; String get gaveraType;
 /// Create a copy of GaveraData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $GaveraDataCopyWith<$Res>  {
   factory $GaveraDataCopyWith(GaveraData value, $Res Function(GaveraData) _then) = _$GaveraDataCopyWithImpl;
 @useResult
 $Res call({
- int quantity, double referenceWeight, GaveraType gaveraType
+ int quantity, double referenceWeight, String gaveraType
 });
 
 
@@ -70,7 +70,7 @@ class _$GaveraDataCopyWithImpl<$Res>
 quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,referenceWeight: null == referenceWeight ? _self.referenceWeight : referenceWeight // ignore: cast_nullable_to_non_nullable
 as double,gaveraType: null == gaveraType ? _self.gaveraType : gaveraType // ignore: cast_nullable_to_non_nullable
-as GaveraType,
+as String,
   ));
 }
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int quantity,  double referenceWeight,  GaveraType gaveraType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int quantity,  double referenceWeight,  String gaveraType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GaveraData() when $default != null:
 return $default(_that.quantity,_that.referenceWeight,_that.gaveraType);case _:
@@ -176,7 +176,7 @@ return $default(_that.quantity,_that.referenceWeight,_that.gaveraType);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int quantity,  double referenceWeight,  GaveraType gaveraType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int quantity,  double referenceWeight,  String gaveraType)  $default,) {final _that = this;
 switch (_that) {
 case _GaveraData():
 return $default(_that.quantity,_that.referenceWeight,_that.gaveraType);case _:
@@ -196,7 +196,7 @@ return $default(_that.quantity,_that.referenceWeight,_that.gaveraType);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int quantity,  double referenceWeight,  GaveraType gaveraType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int quantity,  double referenceWeight,  String gaveraType)?  $default,) {final _that = this;
 switch (_that) {
 case _GaveraData() when $default != null:
 return $default(_that.quantity,_that.referenceWeight,_that.gaveraType);case _:
@@ -211,12 +211,12 @@ return $default(_that.quantity,_that.referenceWeight,_that.gaveraType);case _:
 @JsonSerializable()
 
 class _GaveraData implements GaveraData {
-  const _GaveraData({this.quantity = 0, required this.referenceWeight, this.gaveraType = GaveraType.kilo});
+  const _GaveraData({this.quantity = 0, required this.referenceWeight, this.gaveraType = ''});
   factory _GaveraData.fromJson(Map<String, dynamic> json) => _$GaveraDataFromJson(json);
 
 @override@JsonKey() final  int quantity;
 @override final  double referenceWeight;
-@override@JsonKey() final  GaveraType gaveraType;
+@override@JsonKey() final  String gaveraType;
 
 /// Create a copy of GaveraData
 /// with the given fields replaced by the non-null parameter values.
@@ -251,7 +251,7 @@ abstract mixin class _$GaveraDataCopyWith<$Res> implements $GaveraDataCopyWith<$
   factory _$GaveraDataCopyWith(_GaveraData value, $Res Function(_GaveraData) _then) = __$GaveraDataCopyWithImpl;
 @override @useResult
 $Res call({
- int quantity, double referenceWeight, GaveraType gaveraType
+ int quantity, double referenceWeight, String gaveraType
 });
 
 
@@ -273,7 +273,7 @@ class __$GaveraDataCopyWithImpl<$Res>
 quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int,referenceWeight: null == referenceWeight ? _self.referenceWeight : referenceWeight // ignore: cast_nullable_to_non_nullable
 as double,gaveraType: null == gaveraType ? _self.gaveraType : gaveraType // ignore: cast_nullable_to_non_nullable
-as GaveraType,
+as String,
   ));
 }
 
@@ -550,8 +550,7 @@ as int,
 /// @nodoc
 mixin _$Stage1FormData {
 
- String get id; String get name; List<GaveraData> get gaveras; List<BasketData> get baskets;// ← reemplaza basketsQuantity
- double get preservativesWeight; int get preservativesJars; double get limeWeight; int get limeJars; String get phone; DateTime get date; String? get photoPath;
+ String get id; String get name; List<GaveraData> get gaveras; List<BasketData> get baskets; double get preservativesWeight; int get preservativesJars; double get limeWeight; int get limeJars; String get phone; DateTime get date; String? get photoPath;
 /// Create a copy of Stage1FormData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -774,7 +773,6 @@ class _Stage1FormData implements Stage1FormData {
   return EqualUnmodifiableListView(_baskets);
 }
 
-// ← reemplaza basketsQuantity
 @override final  double preservativesWeight;
 @override final  int preservativesJars;
 @override final  double limeWeight;

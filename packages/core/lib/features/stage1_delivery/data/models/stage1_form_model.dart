@@ -4,7 +4,7 @@ class Stage1FormModel {
   final String id;
   final String name;
   final List<Map<String, dynamic>> gaveras;
-  final List<Map<String, dynamic>> baskets; // ← reemplaza basketsQuantity
+  final List<Map<String, dynamic>> baskets;
   final double preservativesWeight;
   final int preservativesJars;
   final double limeWeight;
@@ -36,17 +36,12 @@ class Stage1FormModel {
             (g) => {
               'quantity': g.quantity,
               'referenceWeight': g.referenceWeight,
-              'gaveraType': g.gaveraType.name, // enum → String
+              'gaveraType': g.gaveraType, // ← ya es String
             },
           )
           .toList(),
       baskets: data.baskets
-          .map(
-            (b) => {
-              'size': b.size.name, // enum → String
-              'quantity': b.quantity,
-            },
-          )
+          .map((b) => {'size': b.size.name, 'quantity': b.quantity})
           .toList(),
       preservativesWeight: data.preservativesWeight,
       preservativesJars: data.preservativesJars,
@@ -67,7 +62,7 @@ class Stage1FormModel {
             (g) => GaveraData(
               quantity: (g['quantity'] as num).toInt(),
               referenceWeight: (g['referenceWeight'] as num).toDouble(),
-              gaveraType: GaveraType.values.byName(g['gaveraType'] as String),
+              gaveraType: g['gaveraType'] as String, // ← ya es String
             ),
           )
           .toList(),

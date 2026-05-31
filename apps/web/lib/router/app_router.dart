@@ -1,3 +1,4 @@
+import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:core/features/stage5/domain/entities/stage5_invoice_data.dart';
 import 'package:core/shared/utils/tokens.dart';
 
@@ -10,12 +11,12 @@ import 'package:core/shared/splash_screen.dart';
 import 'package:core/shared/login_page.dart';
 import 'package:core/shared/stage5_invoice_summary_page.dart';
 import 'package:core/core/router/index_core.dart';
-import 'package:core/features/stage1_delivery/domain/entities/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../feature/index_features.dart';
 import 'transitions.dart';
+import 'package:core/shared/stage52_page_summary.dart';
 import '../feature/project_selector/mobile_project_selector_page.dart'
     as mobile;
 
@@ -230,9 +231,15 @@ final routerProvider = Provider<GoRouter>((ref) {
                   final projectId = state.pathParameters['projectId']!;
                   final recordId = state.pathParameters['recordId']!;
                   return slideUpPage(
-                    WebStage52SummaryPage(
-                      projectId: projectId,
-                      recordId: recordId,
+                    AdaptiveLayout(
+                      mobile: Stage52SummaryPage(
+                        projectId: recordId,
+                        recordId: recordId,
+                      ),
+                      web: WebStage52SummaryPage(
+                        projectId: projectId,
+                        recordId: recordId,
+                      ),
                     ),
                     state,
                   );
@@ -289,6 +296,18 @@ final routerProvider = Provider<GoRouter>((ref) {
           final project = state.extra as Stage1FormData;
           return slideUpPage(PdfScreen(project: project), state);
         },
+      ),
+      GoRoute(
+        name: 'inventory',
+        path: Routes.inventory,
+        pageBuilder: (_, state) => slideUpPage(
+          AdaptiveLayout(
+            mobile: const MobileInventoryPage(),
+            web: const WebInventoryPage(),
+            breakpoint: 850,
+          ),
+          state,
+        ),
       ),
       GoRoute(
         path: Routes.splash,

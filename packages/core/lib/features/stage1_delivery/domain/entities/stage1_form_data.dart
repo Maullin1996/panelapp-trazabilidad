@@ -8,7 +8,7 @@ abstract class GaveraData with _$GaveraData {
   const factory GaveraData({
     @Default(0) int quantity,
     required double referenceWeight,
-    @Default(GaveraType.kilo) GaveraType gaveraType,
+    @Default('') String gaveraType, // ← ahora es String libre
   }) = _GaveraData;
 
   factory GaveraData.fromJson(Map<String, dynamic> json) =>
@@ -32,7 +32,7 @@ abstract class Stage1FormData with _$Stage1FormData {
     required String id,
     required String name,
     required List<GaveraData> gaveras,
-    required List<BasketData> baskets, // ← reemplaza basketsQuantity
+    required List<BasketData> baskets,
     required double preservativesWeight,
     required int preservativesJars,
     required double limeWeight,
@@ -46,6 +46,11 @@ abstract class Stage1FormData with _$Stage1FormData {
       _$Stage1FormDataFromJson(json);
 }
 
-enum GaveraType { kilo, redonda, panelon, pacha, pastilla }
-
 enum BasketSize { grande, pequena }
+
+extension BasketSizeLabel on BasketSize {
+  String get label => switch (this) {
+    BasketSize.grande => 'Grande',
+    BasketSize.pequena => 'Pequeña',
+  };
+}

@@ -118,7 +118,8 @@ class WebStage3Page extends ConsumerWidget {
                               ),
                               columns: const [
                                 DataColumn(label: Text('Fecha')),
-                                DataColumn(label: Text('Canastillas enviadas')),
+                                DataColumn(label: Text('Gaveras')),
+                                DataColumn(label: Text('Canastillas')),
                                 DataColumn(label: Text('Calidad')),
                                 DataColumn(label: Text('Registradas')),
                                 DataColumn(label: Text('Faltantes')),
@@ -138,6 +139,12 @@ class WebStage3Page extends ConsumerWidget {
                                     DataCell(
                                       Text(
                                         DateFormat.yMd().format(load2.date),
+                                        style: textTheme.bodyMedium,
+                                      ),
+                                    ),
+                                    DataCell(
+                                      Text(
+                                        '${load2.baskets.referenceWeight} g',
                                         style: textTheme.bodyMedium,
                                       ),
                                     ),
@@ -302,6 +309,14 @@ class _Load2Card extends StatelessWidget {
                   iconColor: AppColors.accepted,
                   firstText: 'Calidad: ',
                   secondText: load2.baskets.quality.label,
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomRichText(
+                  icon: Icons.storage,
+                  iconColor: AppColors.weight,
+
+                  firstText: 'Gavera: ',
+                  secondText: "${load2.baskets.referenceWeight.toString()} g",
                 ),
               ],
             ),

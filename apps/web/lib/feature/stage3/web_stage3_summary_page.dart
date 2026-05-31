@@ -352,6 +352,17 @@ class WebStage3SummaryPage extends ConsumerWidget {
                                                   height: AppSpacing.xSmall,
                                                 ),
                                                 CustomRichText(
+                                                  icon: Icons.storage,
+                                                  iconColor: AppColors.weight,
+
+                                                  firstText: 'Gavera: ',
+                                                  secondText:
+                                                      "${load2.baskets.referenceWeight.toString()} g",
+                                                ),
+                                                const SizedBox(
+                                                  height: AppSpacing.xSmall,
+                                                ),
+                                                CustomRichText(
                                                   icon: Icons.verified,
                                                   iconColor: qualityColor(
                                                     quality: b.quality.label,
@@ -380,6 +391,7 @@ class WebStage3SummaryPage extends ConsumerWidget {
                                 ),
                                 columns: const [
                                   DataColumn(label: Text('#')),
+                                  DataColumn(label: Text('Gavera')),
                                   DataColumn(label: Text('Peso real (kg)')),
                                   DataColumn(label: Text('Calidad')),
                                   DataColumn(label: Text('Foto')),
@@ -395,6 +407,12 @@ class WebStage3SummaryPage extends ConsumerWidget {
                                             color:
                                                 AppColors.secondaryDarkPanela,
                                           ),
+                                        ),
+                                      ),
+                                      DataCell(
+                                        Text(
+                                          '${b.referenceWeight} g',
+                                          style: textTheme.bodyMedium,
                                         ),
                                       ),
                                       DataCell(

@@ -3,11 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import '../../stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:pdf/widgets.dart' as pw;
-import '../../stage1_delivery/domain/entities/stage1_enums_labels.dart';
 import 'package:core/shared/utils/typography.dart';
 import 'package:printing/printing.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'web_download_stub.dart' if (dart.library.html) 'web_download.dart';
+import 'package:share_plus/share_plus.dart';
 
 // Mapea tus tamaños a puntos del PDF (un poco más grandes para impresión)
 class PdfTypography {
@@ -236,10 +235,7 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
                                   vertical: 10,
                                   horizontal: 8,
                                 ),
-                                child: pw.Text(
-                                  g.gaveraType.label,
-                                  style: tBody,
-                                ),
+                                child: pw.Text(g.gaveraType, style: tBody),
                               ),
                             ],
                           ),
@@ -437,12 +433,17 @@ Future<Uint8List> generatePdf(Stage1FormData project) async {
 
 Future<void> generateAndSharePdf(Stage1FormData project) async {
   final bytes = await generatePdf(project);
+  final filename = 'proyecto_${project.id}.pdf';
   if (kIsWeb) {
-    await downloadPdfInBrowser(bytes, 'proyecto_${project.id}.pdf');
-  } else {
-    await Printing.sharePdf(
-      bytes: bytes,
-      filename: 'proyecto_${project.id}.pdf',
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile.fromData(bytes, mimeType: 'application/pdf', name: filename),
+        ],
+        title: filename,
+      ),
     );
+  } else {
+    await Printing.sharePdf(bytes: bytes, filename: filename);
   }
 }

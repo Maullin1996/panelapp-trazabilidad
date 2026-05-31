@@ -41,7 +41,7 @@ class TwoFormsRow extends StatelessWidget {
                   ),
                   FormBuilderValidators.min(0),
                 ]),
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
               ),
             ],
           ),

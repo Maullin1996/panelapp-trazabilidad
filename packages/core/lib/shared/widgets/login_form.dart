@@ -23,14 +23,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AuthParams>(authProvider, (previous, next) {
-      if (previous?.authStatus == AuthStatus.checking &&
-          next.authStatus == AuthStatus.notAuthenticated &&
+    ref.listen<AuthParams>(authProvider, (prev, next) {
+      if (next.authStatus == AuthStatus.notAuthenticated &&
           next.errorMessage != null &&
           next.errorMessage!.isNotEmpty) {
         CustomSnackBar.show(
           context,
-          message: 'Usuario inválido o revisar conexión',
+          message: _mapErrorMessage(next.errorMessage!),
           status: SnackbarStatus.error,
         );
       }
@@ -133,4 +132,21 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
   }
+}
+
+String _mapErrorMessage(String error) {
+  if (error.contains('wrong-password') ||
+      error.contains('invalid-credential')) {
+    return 'Correo o contraseña incorrectos';
+  }
+  if (error.contains('user-not-found')) {
+    return 'No existe una cuenta con ese correo';
+  }
+  if (error.contains('too-many-requests')) {
+    return 'Demasiados intentos. Intenta más tarde';
+  }
+  if (error.contains('network-request-failed')) {
+    return 'Sin conexión a internet';
+  }
+  return 'Error al iniciar sesión. Intenta de nuevo';
 }

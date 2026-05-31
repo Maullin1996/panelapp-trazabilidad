@@ -49,6 +49,11 @@ class WebLayout extends StatelessWidget {
                 label: Text('Proyectos'),
               ),
               NavigationRailDestination(
+                icon: Icon(Icons.inventory_2_outlined),
+                selectedIcon: Icon(Icons.inventory_2),
+                label: Text('Inventario'),
+              ),
+              NavigationRailDestination(
                 icon: Icon(Icons.admin_panel_settings_outlined),
                 selectedIcon: Icon(Icons.admin_panel_settings),
                 label: Text('Admin'),

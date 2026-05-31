@@ -1,1 +1,37 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"registro-panelera","appId":"1:27377303448:android:0cfaac0564536283fcf5ed","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"registro-panelera","configurations":{"android":"1:27377303448:android:0cfaac0564536283fcf5ed","ios":"1:27377303448:ios:80cbdc1f6c9f3f41fcf5ed","web":"1:27377303448:web:53ecfdf253903b93fcf5ed"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "registro-panelera",
+          "appId": "1:27377303448:android:0cfaac0564536283fcf5ed",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "registro-panelera",
+          "configurations": {
+            "android": "1:27377303448:android:0cfaac0564536283fcf5ed",
+            "ios": "1:27377303448:ios:80cbdc1f6c9f3f41fcf5ed",
+            "web": "1:27377303448:web:53ecfdf253903b93fcf5ed"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "apps/web/build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
