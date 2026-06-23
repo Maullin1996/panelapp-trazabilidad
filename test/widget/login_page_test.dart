@@ -1,139 +1,71 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../../packages/core/lib/features/auth/domain/entities/auth_status.dart';
-// import '../../packages/core/lib/features/auth/domain/enums/auth_status.dart';
-// import '../../packages/core/lib/features/auth/presentation/login_page.dart';
-// import '../../packages/core/lib/features/auth/presentation/providers/auth_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// class _TestAuth extends Auth {
-//   _TestAuth(this.initialStatus);
+import 'package:core/features/auth/providers/login_form_provider.dart'
+    show LoginFormState, loginFormProvider;
+import 'package:core/shared/widgets/login_form.dart';
 
-//   final AuthStatus initialStatus;
-//   int loginCalls = 0;
+Finder _editableTextUnder(Key parentKey) {
+  return find.descendant(
+    of: find.byKey(parentKey),
+    matching: find.byType(EditableText),
+  );
+}
 
-//   @override
-//   AuthParams build() => AuthParams(authStatus: initialStatus);
+void main() {
+  testWidgets('LoginForm renderiza campos de correo, contraseña y botón', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: Scaffold(body: LoginForm())),
+      ),
+    );
+    await tester.pump();
 
-//   @override
-//   Future<void> login({required String email, required String password}) async {
-//     loginCalls++;
-//     state = state.copyWith(authStatus: AuthStatus.authenticated);
-//   }
+    expect(find.byKey(const Key('login-email-input')), findsOneWidget);
+    expect(find.byKey(const Key('login-password-input')), findsOneWidget);
+    expect(find.byKey(const Key('login-enter-button')), findsOneWidget);
+  });
 
-//   @override
-//   Future<void> logout() async {}
+  testWidgets('LoginForm habilita submit con datos válidos', (tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: Scaffold(body: LoginForm())),
+      ),
+    );
+    await tester.pump();
 
-//   @override
-//   Future<void> checkAuthStatus() async {}
-// }
+    final buttonFinder = find.byKey(const Key('login-enter-button'));
+    final ElevatedButton buttonBefore = tester.widget(buttonFinder);
+    expect(buttonBefore.onPressed, isNull);
 
-// Finder _editableTextUnder(Key parentKey) {
-//   return find.descendant(
-//     of: find.byKey(parentKey),
-//     matching: find.byType(EditableText),
-//   );
-// }
+    await tester.enterText(
+      _editableTextUnder(const Key('login-email-input')),
+      'test@example.com',
+    );
+    await tester.enterText(
+      _editableTextUnder(const Key('login-password-input')),
+      '123456',
+    );
+    await tester.pump();
 
-// void main() {
-//   testWidgets('LoginPage renders welcome message and fields', (tester) async {
-//     final auth = _TestAuth(AuthStatus.notAuthenticated);
+    final ElevatedButton buttonAfter = tester.widget(buttonFinder);
+    expect(buttonAfter.onPressed, isNotNull);
+  });
 
-//     await tester.pumpWidget(
-//       ProviderScope(
-//         overrides: [authProvider.overrideWith(() => auth)],
-//         child: const MaterialApp(home: LoginPage()),
-//       ),
-//     );
+  testWidgets('LoginForm alterna visibilidad de contraseña', (tester) async {
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: MaterialApp(home: Scaffold(body: LoginForm())),
+      ),
+    );
+    await tester.pump();
 
-//     expect(find.byKey(const Key('login-message')), findsOneWidget);
-//     expect(find.byKey(const Key('login-email-input')), findsOneWidget);
-//     expect(find.byKey(const Key('login-password-input')), findsOneWidget);
-//     expect(find.byKey(const Key('login-enter-button')), findsOneWidget);
-//   });
-
-//   testWidgets('LoginForm enables submit with valid inputs', (tester) async {
-//     final auth = _TestAuth(AuthStatus.notAuthenticated);
-
-//     await tester.pumpWidget(
-//       ProviderScope(
-//         overrides: [authProvider.overrideWith(() => auth)],
-//         child: const MaterialApp(home: LoginPage()),
-//       ),
-//     );
-
-//     final buttonFinder = find.byKey(const Key('login-enter-button'));
-//     ElevatedButton button = tester.widget(buttonFinder);
-//     expect(button.onPressed, isNull);
-
-//     await tester.enterText(
-//       _editableTextUnder(const Key('login-email-input')),
-//       'test@example.com',
-//     );
-//     await tester.enterText(
-//       _editableTextUnder(const Key('login-password-input')),
-//       '123456',
-//     );
-//     await tester.pump();
-
-//     button = tester.widget(buttonFinder);
-//     expect(button.onPressed, isNotNull);
-//   });
-
-//   testWidgets('LoginForm toggles password visibility icon', (tester) async {
-//     final auth = _TestAuth(AuthStatus.notAuthenticated);
-
-//     await tester.pumpWidget(
-//       ProviderScope(
-//         overrides: [authProvider.overrideWith(() => auth)],
-//         child: const MaterialApp(home: LoginPage()),
-//       ),
-//     );
-
-//     expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
-//     await tester.tap(find.byIcon(Icons.visibility_outlined));
-//     await tester.pump();
-//     expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
-//   });
-
-//   testWidgets('LoginForm calls auth login on submit', (tester) async {
-//     final auth = _TestAuth(AuthStatus.notAuthenticated);
-
-//     await tester.pumpWidget(
-//       ProviderScope(
-//         overrides: [authProvider.overrideWith(() => auth)],
-//         child: const MaterialApp(home: LoginPage()),
-//       ),
-//     );
-
-//     await tester.enterText(
-//       _editableTextUnder(const Key('login-email-input')),
-//       'test@example.com',
-//     );
-//     await tester.enterText(
-//       _editableTextUnder(const Key('login-password-input')),
-//       '123456',
-//     );
-//     await tester.pump();
-
-//     await tester.tap(find.byKey(const Key('login-enter-button')));
-//     await tester.pump();
-
-//     expect(auth.loginCalls, 1);
-//   });
-
-//   testWidgets('LoginForm shows progress indicator when auth is checking', (
-//     tester,
-//   ) async {
-//     final auth = _TestAuth(AuthStatus.checking);
-
-//     await tester.pumpWidget(
-//       ProviderScope(
-//         overrides: [authProvider.overrideWith(() => auth)],
-//         child: const MaterialApp(home: LoginPage()),
-//       ),
-//     );
-
-//     expect(find.byType(CircularProgressIndicator), findsWidgets);
-//   });
-// }
+    expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.visibility_outlined));
+    await tester.pump();
+    expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+  });
+}

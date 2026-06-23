@@ -39,6 +39,7 @@ _Stage1FormData _$Stage1FormDataFromJson(Map<String, dynamic> json) =>
     _Stage1FormData(
       id: json['id'] as String,
       name: json['name'] as String,
+      moliendaId: json['moliendaId'] as String?,
       gaveras: (json['gaveras'] as List<dynamic>)
           .map((e) => GaveraData.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -58,6 +59,7 @@ Map<String, dynamic> _$Stage1FormDataToJson(_Stage1FormData instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'moliendaId': instance.moliendaId,
       'gaveras': instance.gaveras,
       'baskets': instance.baskets,
       'preservativesWeight': instance.preservativesWeight,

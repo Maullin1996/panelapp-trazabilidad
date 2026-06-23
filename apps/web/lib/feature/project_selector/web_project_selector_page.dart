@@ -71,6 +71,7 @@ class _WebProjectSelectorPageState
       onDestinationSelected: (index) {
         if (index == 1) context.push(Routes.inventory);
         if (index == 2) context.pushNamed('adminResetPassword');
+        if (index == 3) context.push(Routes.moliendas);
       },
       child: Column(
         children: [

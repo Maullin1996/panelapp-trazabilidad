@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import '../utils/tokens.dart';
 
 class EmptyWidget extends StatelessWidget {
+
   const EmptyWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.smallLarge),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.medium),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(AppSpacing.medium),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppColors.backgroundCrema,
                 shape: BoxShape.circle,
               ),
               child: const Icon(

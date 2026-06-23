@@ -40,6 +40,13 @@ class _Stage2LoadFormState extends ConsumerState<Stage2LoadForm> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<Stage2FormState>(stage2FormProvider, (previous, next) {
+      if (previous?.status == Stage2FormStatus.submitting &&
+          next.status == Stage2FormStatus.success) {
+        Navigator.of(context).pop();
+      }
+    });
+
     final init = widget.initialData;
     final formState = ref.watch(stage2FormProvider);
     final formNotifier = ref.read(stage2FormProvider.notifier);

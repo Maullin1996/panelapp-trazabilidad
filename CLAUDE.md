@@ -150,3 +150,67 @@ Routes are constants in `packages/core/lib/core/router/routes.dart`. Both apps d
 ### PDF Generation
 
 `packages/core/lib/features/pdf/helpers/generate_and_share_pdf.dart` — uses the `pdf` and `printing` packages. Web uses a stub (`web_download_stub.dart`) because sharing works differently on web vs mobile.
+
+## Feature: Moliendas
+
+### Arquitectura
+- Colección Firestore: /moliendas/{moliendaId}
+- Subcolección: /moliendas/{moliendaId}/entregas/{entregaId}
+- Búsqueda por QR: collectionGroup('entregas').where('qrToken', isEqualTo: qrToken)
+
+### Entidades (packages/core/lib/features/molienda/domain/entities/)
+- Molienda: id, nombre, telefono, creadoEn
+- Entrega: id, moliendaId, produccionId, fechaEntrega, qrToken
+
+### Providers (packages/core/lib/features/molienda/providers/molienda_providers.dart)
+- moliendaDatasourceProvider
+- moliendaRepositoryProvider
+- moliendaItemsProvider (Stream)
+- syncMoliendaItemsProvider (lista sincrónica para dropdowns)
+- moliendaEntregasProvider(moliendaId) (Stream con parámetro)
+- MoliendaForm notifier: save(isNew), delete, createEntrega
+
+### Navegación web
+- Ruta: Routes.moliendas = '/moliendas' → WebMoliendaPage (selectedIndex: 3 en WebLayout)
+- Ruta: Routes.loteDetail = '/lote' → /lote/:produccionId → WebLoteDetailPage (sin WebLayout)
+- Ruta: /moliendas/:moliendaId/entrega/:entregaId → WebEntregaDetailPage (sin WebLayout)
+- NavigationRail índice 3 en web_layout.dart
+- Manejado en web_inventory_page.dart y web_project_selector_page.dart
+- PopupMenu en mobile_project_selector_page.dart (solo admin)
+
+### Pantallas web (apps/web/lib/feature/molienda/)
+Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y web_*.dart (DataTable, Dialog), servidas por AdaptiveLayout en el router — igual que el resto de features en apps/web/.
+
+- mobile_molienda_page.dart / web_molienda_page.dart — lista de moliendas, CRUD
+- mobile_lote_detail_page.dart / web_lote_detail_page.dart — vista del lote escaneado, sin NavigationRail
+- mobile_entrega_detail_page.dart / web_entrega_detail_page.dart — muestra QrImageView(data: entrega.qrToken), fecha y botón "Ver lote"
+- molienda_form_dialog.dart — formulario crear/editar compartido entre variantes
+
+### QR
+- Paquete: qr_flutter ^4.1.0 (agregado en packages/core/pubspec.yaml)
+- El QR usa entrega.qrToken como data de QrImageView
+
+### Stage1FormData y Stage1FormModel
+- Campo moliendaId: String? agregado en Stage1FormData (después de name)
+- Stage1FormModel: moliendaId mapeado en fromJson, toJson, fromEntity, toEntity (patrón igual que photoPath)
+- web_stage1_form.dart usa CustomFromDropdown<Molienda> con syncMoliendaItemsProvider
+- Al guardar Stage1, se crea automáticamente una Entrega si moliendaId != null
+
+### Búsqueda de lote por ID
+- stage1ProjectByIdRemoteProvider(String id) — FutureProvider.family
+- Busca directamente en Firestore por id, NO usa la lista paginada en memoria
+- El provider síncrono stage1ProjectByIdProvider sigue igual (no tocar)
+
+### Tests
+- test/unit/feature/molienda/data/molienda_model_test.dart (10 tests)
+- test/unit/feature/molienda/data/molienda_repository_impl_test.dart (9 tests)
+- test/unit/feature/molienda/data/stage1_form_model_molienda_id_test.dart (8 tests)
+- test/widget/web_lote_detail_page_test.dart (3 tests)
+- test/widget/web_entrega_detail_page_test.dart (2 tests)
+- Total proyecto: 179/179 en verde
+
+### Patrones aprendidos
+- No modificar archivos existentes masivamente; cambios puntuales por archivo
+- La app principal es web; mobile está desactualizado y no se toca
+- onDestinationSelected en páginas que no manejan un índice simplemente no hace nada
+- stage1ProjectByIdProvider (síncrono, paginado) ≠ stage1ProjectByIdRemoteProvider (Firestore directo)

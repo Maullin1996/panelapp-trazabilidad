@@ -238,16 +238,23 @@ class WebStage2Page extends ConsumerWidget {
     initialData,
     bool isNew = true,
   }) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+
+    if (isMobile) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
         backgroundColor: AppColors.cardBackground,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.large),
+          ),
         ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 500),
-          child: Padding(
+        builder: (ctx) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(ctx).bottom,
+          ),
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.medium),
             child: Stage2LoadForm(
               project: project,
@@ -256,8 +263,29 @@ class WebStage2Page extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          backgroundColor: AppColors.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.large),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.medium),
+              child: Stage2LoadForm(
+                project: project,
+                initialData: initialData,
+                isNew: isNew,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _confirmDelete(

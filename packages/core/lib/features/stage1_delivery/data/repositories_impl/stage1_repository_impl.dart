@@ -31,4 +31,10 @@ class Stage1RepositoryImpl implements Stage1Repository {
         .watchAll(limit: limit)
         .map((models) => models.map((m) => m.toEntity()).toList());
   }
+
+  @override
+  Future<Stage1FormData?> getById(String id) async {
+    final model = await datasource.getById(id);
+    return model?.toEntity();
+  }
 }

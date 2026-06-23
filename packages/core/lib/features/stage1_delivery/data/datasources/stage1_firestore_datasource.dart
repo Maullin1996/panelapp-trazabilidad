@@ -19,6 +19,12 @@ class Stage1FirestoreDatasource {
     await _firestore.collection('stage1').doc(id).delete();
   }
 
+  Future<Stage1FormModel?> getById(String id) async {
+    final doc = await _firestore.collection('stage1').doc(id).get();
+    if (!doc.exists) return null;
+    return Stage1FormModel.fromJson(doc.data()!);
+  }
+
   Stream<List<Stage1FormModel>> watchAll({int limit = 10}) {
     return _firestore
         .collection('stage1')

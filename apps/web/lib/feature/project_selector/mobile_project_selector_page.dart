@@ -91,6 +91,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   context.pushNamed('adminResetPassword');
                 case 'inventory':
                   context.push(Routes.inventory);
+                case 'moliendas':
+                  context.push(Routes.moliendas);
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
                 case 'preview':
@@ -115,6 +117,14 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                   value: 'inventory',
                   child: _PopMenuDecoracion(
                     text: 'Inventario',
+                    backGroundcolor: AppColors.weight,
+                  ),
+                ),
+              if (user.role == UserRole.admin)
+                const PopupMenuItem<String>(
+                  value: 'moliendas',
+                  child: _PopMenuDecoracion(
+                    text: 'Moliendas',
                     backGroundcolor: AppColors.weight,
                   ),
                 ),

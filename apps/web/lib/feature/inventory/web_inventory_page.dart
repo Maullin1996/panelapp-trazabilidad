@@ -43,6 +43,7 @@ class WebInventoryPage extends ConsumerWidget {
       onDestinationSelected: (index) {
         if (index == 0) context.go(Routes.projects);
         if (index == 2) context.pushNamed('adminResetPassword');
+        if (index == 3) context.push(Routes.moliendas);
       },
       child: Column(
         children: [
@@ -170,16 +171,23 @@ class WebInventoryPage extends ConsumerWidget {
     required InventoryItemType type,
     InventoryItem? item,
   }) {
-    showDialog(
-      context: context,
-      builder: (_) => Dialog(
+    final isMobile = MediaQuery.sizeOf(context).width < 600;
+
+    if (isMobile) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
         backgroundColor: AppColors.cardBackground,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.large),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.large),
+          ),
         ),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: Padding(
+        builder: (ctx) => Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.viewInsetsOf(ctx).bottom,
+          ),
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppSpacing.medium),
             child: _InventoryFormDialog(
               type: type,
@@ -188,8 +196,29 @@ class WebInventoryPage extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => Dialog(
+          backgroundColor: AppColors.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.large),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.medium),
+              child: _InventoryFormDialog(
+                type: type,
+                item: item,
+                isNew: item == null,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> _confirmDelete(
@@ -485,6 +514,13 @@ class _InventoryFormDialogState extends ConsumerState<_InventoryFormDialog> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<InventoryFormState>(inventoryFormProvider, (previous, next) {
+      if (previous?.status == InventoryFormStatus.submitting &&
+          next.status == InventoryFormStatus.success) {
+        Navigator.of(context).pop();
+      }
+    });
+
     final textTheme = TextTheme.of(context);
     final isGavera = widget.type == InventoryItemType.gavera;
     final formState = ref.watch(inventoryFormProvider);
@@ -634,7 +670,5 @@ class _InventoryFormDialogState extends ConsumerState<_InventoryFormDialog> {
     );
 
     await ref.read(inventoryFormProvider.notifier).save(item, isNew: isNew);
-
-    if (mounted) Navigator.of(context).pop();
   }
 }

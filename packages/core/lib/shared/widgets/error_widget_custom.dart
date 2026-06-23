@@ -13,66 +13,76 @@ class ErrorWidgetCustom extends ConsumerWidget {
       child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.smallLarge),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.red.withAlpha(30),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.error_outline,
-                  size: 64,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'Ocurrió un error',
-                style: TextTheme.of(context).headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red.withAlpha(12),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.withAlpha(51)),
-                ),
-                child: Text(
-                  error,
-                  style: TextTheme.of(
-                    context,
-                  ).bodyMedium?.copyWith(color: AppColors.textDark),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => ref.invalidate(stage1ProjectsProvider),
-                  icon: const Icon(
-                    Icons.refresh,
-                    color: AppColors.textDark,
-                    size: 20,
+          child: Container(
+            padding: const EdgeInsets.all(AppSpacing.mediumLarge),
+            decoration: BoxDecoration(
+              color: Colors.red.withAlpha(12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.red.withAlpha(51)),
+            ),
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withAlpha(30),
+                    shape: BoxShape.circle,
                   ),
-                  label: const Text(
-                    'Reintentar',
-                    style: TextStyle(color: AppColors.textDark, fontSize: 18),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    backgroundColor: AppColors.primaryPanelaBrown,
+                  child: const Icon(
+                    Icons.error_outline,
+                    size: 64,
+                    color: Colors.red,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                Text(
+                  'Ocurrió un error',
+                  style: TextTheme.of(context).headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withAlpha(12),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.withAlpha(51)),
+                  ),
+                  child: SelectableText(
+                    error,
+                    style: TextTheme.of(
+                      context,
+                    ).bodyMedium?.copyWith(color: AppColors.textDark),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton.icon(
+                    onPressed: () => ref.invalidate(stage1ProjectsProvider),
+                    icon: const Icon(
+                      Icons.refresh,
+                      color: AppColors.textLight,
+                      size: 20,
+                    ),
+                    label: const Text(
+                      'Reintentar',
+                      style: TextStyle(color: AppColors.textLight, fontSize: 18),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      backgroundColor: AppColors.primaryPanelaBrown,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

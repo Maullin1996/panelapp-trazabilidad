@@ -26,3 +26,7 @@ final watchStage1ProjectsProvider = Provider<WatchStage1Projects>((ref) {
 final deleteStage1DataProvider = Provider<DeleteStage1Data>((ref) {
   return DeleteStage1Data(ref.read(stage1RepositoryProvider));
 });
+
+final getStage1DataByIdProvider = Provider<GetStage1DataById>((ref) {
+  return GetStage1DataById(ref.read(stage1RepositoryProvider));
+});

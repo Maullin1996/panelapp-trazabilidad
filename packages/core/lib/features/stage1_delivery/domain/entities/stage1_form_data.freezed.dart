@@ -550,7 +550,7 @@ as int,
 /// @nodoc
 mixin _$Stage1FormData {
 
- String get id; String get name; List<GaveraData> get gaveras; List<BasketData> get baskets; double get preservativesWeight; int get preservativesJars; double get limeWeight; int get limeJars; String get phone; DateTime get date; String? get photoPath;
+ String get id; String get name; String? get moliendaId; List<GaveraData> get gaveras; List<BasketData> get baskets; double get preservativesWeight; int get preservativesJars; double get limeWeight; int get limeJars; String get phone; DateTime get date; String? get photoPath;
 /// Create a copy of Stage1FormData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -563,16 +563,16 @@ $Stage1FormDataCopyWith<Stage1FormData> get copyWith => _$Stage1FormDataCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stage1FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.gaveras, gaveras)&&const DeepCollectionEquality().equals(other.baskets, baskets)&&(identical(other.preservativesWeight, preservativesWeight) || other.preservativesWeight == preservativesWeight)&&(identical(other.preservativesJars, preservativesJars) || other.preservativesJars == preservativesJars)&&(identical(other.limeWeight, limeWeight) || other.limeWeight == limeWeight)&&(identical(other.limeJars, limeJars) || other.limeJars == limeJars)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.date, date) || other.date == date)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Stage1FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.moliendaId, moliendaId) || other.moliendaId == moliendaId)&&const DeepCollectionEquality().equals(other.gaveras, gaveras)&&const DeepCollectionEquality().equals(other.baskets, baskets)&&(identical(other.preservativesWeight, preservativesWeight) || other.preservativesWeight == preservativesWeight)&&(identical(other.preservativesJars, preservativesJars) || other.preservativesJars == preservativesJars)&&(identical(other.limeWeight, limeWeight) || other.limeWeight == limeWeight)&&(identical(other.limeJars, limeJars) || other.limeJars == limeJars)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.date, date) || other.date == date)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(gaveras),const DeepCollectionEquality().hash(baskets),preservativesWeight,preservativesJars,limeWeight,limeJars,phone,date,photoPath);
+int get hashCode => Object.hash(runtimeType,id,name,moliendaId,const DeepCollectionEquality().hash(gaveras),const DeepCollectionEquality().hash(baskets),preservativesWeight,preservativesJars,limeWeight,limeJars,phone,date,photoPath);
 
 @override
 String toString() {
-  return 'Stage1FormData(id: $id, name: $name, gaveras: $gaveras, baskets: $baskets, preservativesWeight: $preservativesWeight, preservativesJars: $preservativesJars, limeWeight: $limeWeight, limeJars: $limeJars, phone: $phone, date: $date, photoPath: $photoPath)';
+  return 'Stage1FormData(id: $id, name: $name, moliendaId: $moliendaId, gaveras: $gaveras, baskets: $baskets, preservativesWeight: $preservativesWeight, preservativesJars: $preservativesJars, limeWeight: $limeWeight, limeJars: $limeJars, phone: $phone, date: $date, photoPath: $photoPath)';
 }
 
 
@@ -583,7 +583,7 @@ abstract mixin class $Stage1FormDataCopyWith<$Res>  {
   factory $Stage1FormDataCopyWith(Stage1FormData value, $Res Function(Stage1FormData) _then) = _$Stage1FormDataCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, List<GaveraData> gaveras, List<BasketData> baskets, double preservativesWeight, int preservativesJars, double limeWeight, int limeJars, String phone, DateTime date, String? photoPath
+ String id, String name, String? moliendaId, List<GaveraData> gaveras, List<BasketData> baskets, double preservativesWeight, int preservativesJars, double limeWeight, int limeJars, String phone, DateTime date, String? photoPath
 });
 
 
@@ -600,11 +600,12 @@ class _$Stage1FormDataCopyWithImpl<$Res>
 
 /// Create a copy of Stage1FormData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? gaveras = null,Object? baskets = null,Object? preservativesWeight = null,Object? preservativesJars = null,Object? limeWeight = null,Object? limeJars = null,Object? phone = null,Object? date = null,Object? photoPath = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? moliendaId = freezed,Object? gaveras = null,Object? baskets = null,Object? preservativesWeight = null,Object? preservativesJars = null,Object? limeWeight = null,Object? limeJars = null,Object? phone = null,Object? date = null,Object? photoPath = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,gaveras: null == gaveras ? _self.gaveras : gaveras // ignore: cast_nullable_to_non_nullable
+as String,moliendaId: freezed == moliendaId ? _self.moliendaId : moliendaId // ignore: cast_nullable_to_non_nullable
+as String?,gaveras: null == gaveras ? _self.gaveras : gaveras // ignore: cast_nullable_to_non_nullable
 as List<GaveraData>,baskets: null == baskets ? _self.baskets : baskets // ignore: cast_nullable_to_non_nullable
 as List<BasketData>,preservativesWeight: null == preservativesWeight ? _self.preservativesWeight : preservativesWeight // ignore: cast_nullable_to_non_nullable
 as double,preservativesJars: null == preservativesJars ? _self.preservativesJars : preservativesJars // ignore: cast_nullable_to_non_nullable
@@ -698,10 +699,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  List<GaveraData> gaveras,  List<BasketData> baskets,  double preservativesWeight,  int preservativesJars,  double limeWeight,  int limeJars,  String phone,  DateTime date,  String? photoPath)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? moliendaId,  List<GaveraData> gaveras,  List<BasketData> baskets,  double preservativesWeight,  int preservativesJars,  double limeWeight,  int limeJars,  String phone,  DateTime date,  String? photoPath)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Stage1FormData() when $default != null:
-return $default(_that.id,_that.name,_that.gaveras,_that.baskets,_that.preservativesWeight,_that.preservativesJars,_that.limeWeight,_that.limeJars,_that.phone,_that.date,_that.photoPath);case _:
+return $default(_that.id,_that.name,_that.moliendaId,_that.gaveras,_that.baskets,_that.preservativesWeight,_that.preservativesJars,_that.limeWeight,_that.limeJars,_that.phone,_that.date,_that.photoPath);case _:
   return orElse();
 
 }
@@ -719,10 +720,10 @@ return $default(_that.id,_that.name,_that.gaveras,_that.baskets,_that.preservati
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  List<GaveraData> gaveras,  List<BasketData> baskets,  double preservativesWeight,  int preservativesJars,  double limeWeight,  int limeJars,  String phone,  DateTime date,  String? photoPath)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? moliendaId,  List<GaveraData> gaveras,  List<BasketData> baskets,  double preservativesWeight,  int preservativesJars,  double limeWeight,  int limeJars,  String phone,  DateTime date,  String? photoPath)  $default,) {final _that = this;
 switch (_that) {
 case _Stage1FormData():
-return $default(_that.id,_that.name,_that.gaveras,_that.baskets,_that.preservativesWeight,_that.preservativesJars,_that.limeWeight,_that.limeJars,_that.phone,_that.date,_that.photoPath);case _:
+return $default(_that.id,_that.name,_that.moliendaId,_that.gaveras,_that.baskets,_that.preservativesWeight,_that.preservativesJars,_that.limeWeight,_that.limeJars,_that.phone,_that.date,_that.photoPath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -739,10 +740,10 @@ return $default(_that.id,_that.name,_that.gaveras,_that.baskets,_that.preservati
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  List<GaveraData> gaveras,  List<BasketData> baskets,  double preservativesWeight,  int preservativesJars,  double limeWeight,  int limeJars,  String phone,  DateTime date,  String? photoPath)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? moliendaId,  List<GaveraData> gaveras,  List<BasketData> baskets,  double preservativesWeight,  int preservativesJars,  double limeWeight,  int limeJars,  String phone,  DateTime date,  String? photoPath)?  $default,) {final _that = this;
 switch (_that) {
 case _Stage1FormData() when $default != null:
-return $default(_that.id,_that.name,_that.gaveras,_that.baskets,_that.preservativesWeight,_that.preservativesJars,_that.limeWeight,_that.limeJars,_that.phone,_that.date,_that.photoPath);case _:
+return $default(_that.id,_that.name,_that.moliendaId,_that.gaveras,_that.baskets,_that.preservativesWeight,_that.preservativesJars,_that.limeWeight,_that.limeJars,_that.phone,_that.date,_that.photoPath);case _:
   return null;
 
 }
@@ -754,11 +755,12 @@ return $default(_that.id,_that.name,_that.gaveras,_that.baskets,_that.preservati
 @JsonSerializable()
 
 class _Stage1FormData implements Stage1FormData {
-  const _Stage1FormData({required this.id, required this.name, required final  List<GaveraData> gaveras, required final  List<BasketData> baskets, required this.preservativesWeight, required this.preservativesJars, required this.limeWeight, required this.limeJars, required this.phone, required this.date, this.photoPath}): _gaveras = gaveras,_baskets = baskets;
+  const _Stage1FormData({required this.id, required this.name, this.moliendaId, required final  List<GaveraData> gaveras, required final  List<BasketData> baskets, required this.preservativesWeight, required this.preservativesJars, required this.limeWeight, required this.limeJars, required this.phone, required this.date, this.photoPath}): _gaveras = gaveras,_baskets = baskets;
   factory _Stage1FormData.fromJson(Map<String, dynamic> json) => _$Stage1FormDataFromJson(json);
 
 @override final  String id;
 @override final  String name;
+@override final  String? moliendaId;
  final  List<GaveraData> _gaveras;
 @override List<GaveraData> get gaveras {
   if (_gaveras is EqualUnmodifiableListView) return _gaveras;
@@ -794,16 +796,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stage1FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._gaveras, _gaveras)&&const DeepCollectionEquality().equals(other._baskets, _baskets)&&(identical(other.preservativesWeight, preservativesWeight) || other.preservativesWeight == preservativesWeight)&&(identical(other.preservativesJars, preservativesJars) || other.preservativesJars == preservativesJars)&&(identical(other.limeWeight, limeWeight) || other.limeWeight == limeWeight)&&(identical(other.limeJars, limeJars) || other.limeJars == limeJars)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.date, date) || other.date == date)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Stage1FormData&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.moliendaId, moliendaId) || other.moliendaId == moliendaId)&&const DeepCollectionEquality().equals(other._gaveras, _gaveras)&&const DeepCollectionEquality().equals(other._baskets, _baskets)&&(identical(other.preservativesWeight, preservativesWeight) || other.preservativesWeight == preservativesWeight)&&(identical(other.preservativesJars, preservativesJars) || other.preservativesJars == preservativesJars)&&(identical(other.limeWeight, limeWeight) || other.limeWeight == limeWeight)&&(identical(other.limeJars, limeJars) || other.limeJars == limeJars)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.date, date) || other.date == date)&&(identical(other.photoPath, photoPath) || other.photoPath == photoPath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(_gaveras),const DeepCollectionEquality().hash(_baskets),preservativesWeight,preservativesJars,limeWeight,limeJars,phone,date,photoPath);
+int get hashCode => Object.hash(runtimeType,id,name,moliendaId,const DeepCollectionEquality().hash(_gaveras),const DeepCollectionEquality().hash(_baskets),preservativesWeight,preservativesJars,limeWeight,limeJars,phone,date,photoPath);
 
 @override
 String toString() {
-  return 'Stage1FormData(id: $id, name: $name, gaveras: $gaveras, baskets: $baskets, preservativesWeight: $preservativesWeight, preservativesJars: $preservativesJars, limeWeight: $limeWeight, limeJars: $limeJars, phone: $phone, date: $date, photoPath: $photoPath)';
+  return 'Stage1FormData(id: $id, name: $name, moliendaId: $moliendaId, gaveras: $gaveras, baskets: $baskets, preservativesWeight: $preservativesWeight, preservativesJars: $preservativesJars, limeWeight: $limeWeight, limeJars: $limeJars, phone: $phone, date: $date, photoPath: $photoPath)';
 }
 
 
@@ -814,7 +816,7 @@ abstract mixin class _$Stage1FormDataCopyWith<$Res> implements $Stage1FormDataCo
   factory _$Stage1FormDataCopyWith(_Stage1FormData value, $Res Function(_Stage1FormData) _then) = __$Stage1FormDataCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, List<GaveraData> gaveras, List<BasketData> baskets, double preservativesWeight, int preservativesJars, double limeWeight, int limeJars, String phone, DateTime date, String? photoPath
+ String id, String name, String? moliendaId, List<GaveraData> gaveras, List<BasketData> baskets, double preservativesWeight, int preservativesJars, double limeWeight, int limeJars, String phone, DateTime date, String? photoPath
 });
 
 
@@ -831,11 +833,12 @@ class __$Stage1FormDataCopyWithImpl<$Res>
 
 /// Create a copy of Stage1FormData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? gaveras = null,Object? baskets = null,Object? preservativesWeight = null,Object? preservativesJars = null,Object? limeWeight = null,Object? limeJars = null,Object? phone = null,Object? date = null,Object? photoPath = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? moliendaId = freezed,Object? gaveras = null,Object? baskets = null,Object? preservativesWeight = null,Object? preservativesJars = null,Object? limeWeight = null,Object? limeJars = null,Object? phone = null,Object? date = null,Object? photoPath = freezed,}) {
   return _then(_Stage1FormData(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,gaveras: null == gaveras ? _self._gaveras : gaveras // ignore: cast_nullable_to_non_nullable
+as String,moliendaId: freezed == moliendaId ? _self.moliendaId : moliendaId // ignore: cast_nullable_to_non_nullable
+as String?,gaveras: null == gaveras ? _self._gaveras : gaveras // ignore: cast_nullable_to_non_nullable
 as List<GaveraData>,baskets: null == baskets ? _self._baskets : baskets // ignore: cast_nullable_to_non_nullable
 as List<BasketData>,preservativesWeight: null == preservativesWeight ? _self.preservativesWeight : preservativesWeight // ignore: cast_nullable_to_non_nullable
 as double,preservativesJars: null == preservativesJars ? _self.preservativesJars : preservativesJars // ignore: cast_nullable_to_non_nullable

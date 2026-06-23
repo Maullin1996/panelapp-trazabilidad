@@ -10,6 +10,8 @@ import 'package:uuid/uuid.dart';
 import 'package:core/core/services/image_picker_service_provider.dart';
 import 'package:core/features/inventory/domain/entities/inventory_item.dart';
 import 'package:core/features/inventory/providers/inventory_providers.dart';
+import 'package:core/features/molienda/domain/entities/molienda.dart';
+import 'package:core/features/molienda/providers/molienda_providers.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_form_provider.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
@@ -32,6 +34,7 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
   bool _initialized = false;
 
   final Map<int, InventoryItem> _selectedGaveraItems = {};
+  Molienda? _selectedMolienda;
 
   @override
   void initState() {
@@ -87,6 +90,7 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
     final isSubmitting = state.status == Stage1FormStatus.submitting;
 
     final inventoryItems = ref.watch(syncInventoryItemsProvider);
+    final moliendasDisponibles = ref.watch(syncMoliendaItemsProvider);
     final gaverasInventario = inventoryItems
         .where((i) => i.type == InventoryItemType.gavera)
         .toList();
@@ -117,7 +121,6 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
               'preservativesJars': initial.preservativesJars.toString(),
               'limeWeight': initial.limeWeight.toString(),
               'limeJars': initial.limeJars.toString(),
-              'phone': initial.phone,
               ...{
                 for (int i = 0; i < initial.gaveras.length; i++)
                   'gaverasCantidad_$i': initial.gaveras[i].quantity.toString(),
@@ -140,9 +143,19 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
               children: [
                 FieldLabel(textTheme, 'Nombre molienda'),
                 const SizedBox(height: AppSpacing.xSmall),
-                AppFormTextFild(
-                  name: 'name',
-                  hintText: 'Ej. Molienda El Paraíso',
+                CustomFromDropdown<Molienda>(
+                  name: 'molienda',
+                  items: moliendasDisponibles
+                      .map(
+                        (m) => DropdownMenuItem<Molienda>(
+                          key: Key('molienda_item_${m.id}'),
+                          value: m,
+                          child: Text(m.nombre, style: textTheme.bodyLarge),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (m) =>
+                      setState(() => _selectedMolienda = m),
                   validator: FormBuilderValidators.required(
                     errorText: 'Este campo es obligatorio',
                   ),
@@ -304,35 +317,6 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
 
           const SizedBox(height: AppSpacing.small),
 
-          // ── Contacto ──────────────────────────────────────────
-          SectionCard(
-            icon: Icons.phone,
-            iconColor: AppColors.weight,
-            title: 'Contacto',
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FieldLabel(textTheme, 'Teléfono'),
-                const SizedBox(height: AppSpacing.xSmall),
-                AppFormTextFild(
-                  name: 'phone',
-                  hintText: '300 000 0000',
-                  keyboardType: TextInputType.phone,
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(
-                      errorText: 'Este campo es obligatorio',
-                    ),
-                    FormBuilderValidators.numeric(errorText: 'Solo números'),
-                    FormBuilderValidators.maxLength(10),
-                    FormBuilderValidators.minLength(7),
-                  ]),
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: AppSpacing.small),
-
           // ── Foto ──────────────────────────────────────────────
           SectionCard(
             icon: Icons.camera_alt,
@@ -449,14 +433,15 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
 
     final data = Stage1FormData(
       id: widget.initialData?.id ?? _uuid.v4(),
-      name: values['name'],
+      name: _selectedMolienda!.nombre,
+      moliendaId: _selectedMolienda!.id,
       baskets: baskets,
       gaveras: gaveras,
       preservativesWeight: double.parse(values['preservativesWeight']),
       preservativesJars: int.parse(values['preservativesJars']),
       limeWeight: double.parse(values['limeWeight']),
       limeJars: int.parse(values['limeJars']),
-      phone: values['phone'],
+      phone: _selectedMolienda!.telefono,
       date: widget.initialData?.date ?? DateTime.now(),
       photoPath: widget.initialData?.photoPath,
     );

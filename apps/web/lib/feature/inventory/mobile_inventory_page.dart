@@ -128,10 +128,26 @@ class MobileInventoryPage extends ConsumerWidget {
     required InventoryItemType type,
     InventoryItem? item,
   }) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (_) =>
-          _InventoryFormDialog(type: type, item: item, isNew: item == null),
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardBackground,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.large),
+        ),
+      ),
+      builder: (ctx) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(ctx).bottom),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.medium),
+          child: _InventoryFormDialog(
+            type: type,
+            item: item,
+            isNew: item == null,
+          ),
+        ),
+      ),
     );
   }
 
@@ -396,122 +412,144 @@ class _InventoryFormDialogState extends ConsumerState<_InventoryFormDialog> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<InventoryFormState>(inventoryFormProvider, (previous, next) {
+      if (previous?.status == InventoryFormStatus.submitting &&
+          next.status == InventoryFormStatus.success) {
+        Navigator.of(context).pop();
+      }
+    });
+
     final textTheme = TextTheme.of(context);
     final isGavera = widget.type == InventoryItemType.gavera;
     final formState = ref.watch(inventoryFormProvider);
     final isSubmitting = formState.status == InventoryFormStatus.submitting;
     final item = widget.item;
 
-    return AlertDialog(
-      backgroundColor: AppColors.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-      ),
-      title: Text(
-        widget.isNew
-            ? 'Agregar ${isGavera ? 'gavera' : 'canastilla'}'
-            : 'Editar ${isGavera ? 'gavera' : 'canastilla'}',
-        style: textTheme.headlineMedium,
-      ),
-      content: FormBuilder(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        initialValue: item == null
-            ? {}
-            : {
-                if (isGavera) ...{
-                  'referenceWeight': item.referenceWeight?.toString() ?? '',
-                  'gaveraType': item.gaveraType,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Container(
+            width: 40,
+            height: 4,
+            margin: const EdgeInsets.only(bottom: AppSpacing.small),
+            decoration: BoxDecoration(
+              color: AppColors.secondaryDarkPanela.withAlpha(60),
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+        ),
+        Text(
+          widget.isNew
+              ? 'Agregar ${isGavera ? 'gavera' : 'canastilla'}'
+              : 'Editar ${isGavera ? 'gavera' : 'canastilla'}',
+          style: textTheme.headlineMedium,
+        ),
+        const SizedBox(height: AppSpacing.medium),
+        FormBuilder(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          initialValue: item == null
+              ? {}
+              : {
+                  if (isGavera) ...{
+                    'referenceWeight': item.referenceWeight?.toString() ?? '',
+                    'gaveraType': item.gaveraType,
+                  },
+                  if (!isGavera) 'size': item.size,
+                  'totalUnits': item.totalUnits.toString(),
                 },
-                if (!isGavera) 'size': item.size,
-                'totalUnits': item.totalUnits.toString(),
-              },
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isGavera) ...[
-              FieldLabel(textTheme, 'Peso de referencia (g)'),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (isGavera) ...[
+                FieldLabel(textTheme, 'Peso de referencia (g)'),
+                const SizedBox(height: AppSpacing.xSmall),
+                AppFormTextFild(
+                  name: 'referenceWeight',
+                  hintText: 'Ej. 500.0',
+                  keyboardType: TextInputType.number,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(errorText: 'Requerido'),
+                    FormBuilderValidators.numeric(errorText: 'Solo números'),
+                  ]),
+                ),
+                const SizedBox(height: AppSpacing.small),
+                FieldLabel(textTheme, 'Tipo (texto libre)'),
+                const SizedBox(height: AppSpacing.xSmall),
+                AppFormTextFild(
+                  name: 'gaveraType',
+                  hintText: 'Ej. Kilo, Redonda, Pastilla...',
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Requerido',
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.small),
+              ] else ...[
+                FieldLabel(textTheme, 'Tamaño'),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomFromDropdown<BasketSize>(
+                  name: 'size',
+                  items: BasketSize.values
+                      .map(
+                        (s) => DropdownMenuItem(
+                          value: s,
+                          child: Text(s.label, style: textTheme.bodyLarge),
+                        ),
+                      )
+                      .toList(),
+                  validator: FormBuilderValidators.required(
+                    errorText: 'Requerido',
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.small),
+              ],
+              FieldLabel(textTheme, 'Total unidades'),
               const SizedBox(height: AppSpacing.xSmall),
               AppFormTextFild(
-                name: 'referenceWeight',
-                hintText: 'Ej. 500.0',
+                name: 'totalUnits',
+                hintText: '0',
                 keyboardType: TextInputType.number,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(errorText: 'Requerido'),
-                  FormBuilderValidators.numeric(errorText: 'Solo números'),
+                  FormBuilderValidators.integer(errorText: 'Solo enteros'),
+                  FormBuilderValidators.min(1),
                 ]),
               ),
-              const SizedBox(height: AppSpacing.small),
-              FieldLabel(textTheme, 'Tipo (texto libre)'),
-              const SizedBox(height: AppSpacing.xSmall),
-              AppFormTextFild(
-                name: 'gaveraType',
-                hintText: 'Ej. Kilo, Redonda, Pastilla...',
-                validator: FormBuilderValidators.required(
-                  errorText: 'Requerido',
-                ),
-              ),
-              const SizedBox(height: AppSpacing.small),
-            ] else ...[
-              // Tamaño canastilla
-              FieldLabel(textTheme, 'Tamaño'),
-              const SizedBox(height: AppSpacing.xSmall),
-              CustomFromDropdown<BasketSize>(
-                name: 'size',
-                items: BasketSize.values
-                    .map(
-                      (s) => DropdownMenuItem(
-                        value: s,
-                        child: Text(s.label, style: textTheme.bodyLarge),
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.medium),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancelar', style: textTheme.bodyLarge),
+            ),
+            const SizedBox(width: AppSpacing.xSmall),
+            ElevatedButton(
+              onPressed: isSubmitting ? null : _onSubmit,
+              child: isSubmitting
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.cardBackground,
                       ),
                     )
-                    .toList(),
-                validator: FormBuilderValidators.required(
-                  errorText: 'Requerido',
-                ),
-              ),
-              const SizedBox(height: AppSpacing.small),
-            ],
-
-            // Total unidades
-            FieldLabel(textTheme, 'Total unidades'),
-            const SizedBox(height: AppSpacing.xSmall),
-            AppFormTextFild(
-              name: 'totalUnits',
-              hintText: '0',
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: 'Requerido'),
-                FormBuilderValidators.integer(errorText: 'Solo enteros'),
-                FormBuilderValidators.min(1),
-              ]),
+                  : Text(
+                      'Guardar',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: AppColors.cardBackground,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
             ),
           ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text('Cancelar', style: textTheme.bodyLarge),
-        ),
-        ElevatedButton(
-          onPressed: isSubmitting ? null : _onSubmit,
-          child: isSubmitting
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.cardBackground,
-                  ),
-                )
-              : Text(
-                  'Guardar',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: AppColors.cardBackground,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
         ),
       ],
     );
@@ -542,7 +580,5 @@ class _InventoryFormDialogState extends ConsumerState<_InventoryFormDialog> {
     );
 
     await ref.read(inventoryFormProvider.notifier).save(item, isNew: isNew);
-
-    if (mounted) Navigator.of(context).pop();
   }
 }

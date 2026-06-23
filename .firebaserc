@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "registro-panelera"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

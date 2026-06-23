@@ -1,30 +1,30 @@
-// import 'package:flutter/services.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:intl/intl.dart';
-// import '../../packages/core/lib/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
+import 'package:core/features/stage5_1_missing_weight/helper/money_input_formatter.dart';
 
-// void main() {
-//   test('MoneyInputFormatter strips non-digits and formats', () {
-//     final formatter = MoneyInputFormatter();
+void main() {
+  test('MoneyInputFormatter strips non-digits and formats', () {
+    final formatter = MoneyInputFormatter();
 
-//     const oldValue = TextEditingValue(text: '');
-//     const newValue = TextEditingValue(text: '12a34');
+    const oldValue = TextEditingValue(text: '');
+    const newValue = TextEditingValue(text: '12a34');
 
-//     final result = formatter.formatEditUpdate(oldValue, newValue);
-//     final expected = NumberFormat('#,###', 'eu').format(1234);
+    final result = formatter.formatEditUpdate(oldValue, newValue);
+    final expected = NumberFormat('#,###', 'eu').format(1234);
 
-//     expect(result.text, expected);
-//     expect(result.selection, TextSelection.collapsed(offset: expected.length));
-//   });
+    expect(result.text, expected);
+    expect(result.selection, TextSelection.collapsed(offset: expected.length));
+  });
 
-//   test('MoneyInputFormatter returns empty when no digits', () {
-//     final formatter = MoneyInputFormatter();
+  test('MoneyInputFormatter returns empty when no digits', () {
+    final formatter = MoneyInputFormatter();
 
-//     const oldValue = TextEditingValue(text: '');
-//     const newValue = TextEditingValue(text: '---');
+    const oldValue = TextEditingValue(text: '');
+    const newValue = TextEditingValue(text: '---');
 
-//     final result = formatter.formatEditUpdate(oldValue, newValue);
+    final result = formatter.formatEditUpdate(oldValue, newValue);
 
-//     expect(result.text, '');
-//   });
-// }
+    expect(result.text, '');
+  });
+}

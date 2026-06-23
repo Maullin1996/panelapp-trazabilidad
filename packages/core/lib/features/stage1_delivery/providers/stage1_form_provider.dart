@@ -1,12 +1,15 @@
 import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:collection/collection.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../core/storage/application/storage_providers.dart';
 import '../domain/entities/stage1_form_data.dart';
 import 'index.dart';
 import 'package:core/features/inventory/domain/entities/inventory_item.dart';
 import 'package:core/features/inventory/providers/inventory_providers.dart';
+import 'package:core/features/molienda/domain/entities/entrega.dart';
+import 'package:core/features/molienda/providers/molienda_providers.dart';
 
 part 'stage1_form_provider.g.dart';
 
@@ -67,6 +70,18 @@ class Stage1Form extends _$Stage1Form {
         }
       } else {
         await ref.read(updateStage1DataProvider)(dataToSave);
+      }
+
+      if (dataToSave.moliendaId != null) {
+        const uuid = Uuid();
+        final entrega = Entrega(
+          id: uuid.v4(),
+          moliendaId: dataToSave.moliendaId!,
+          produccionId: dataToSave.id,
+          fechaEntrega: DateTime.now(),
+          qrToken: uuid.v4(),
+        );
+        await ref.read(moliendaRepositoryProvider).createEntrega(entrega);
       }
 
       state = state.copyWith(status: Stage1FormStatus.success);

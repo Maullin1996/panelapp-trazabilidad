@@ -14,6 +14,7 @@ export 'stage5/web_stage52_page.dart';
 export 'stage5/web_stage52_form_page.dart';
 export 'stage5/web_stage52_summary_page.dart';
 export 'inventory/web_inventory_page.dart';
+export 'molienda/web_molienda_page.dart';
 
 // Mobile feature pages
 export 'stage1/mobile_stage1_page.dart';

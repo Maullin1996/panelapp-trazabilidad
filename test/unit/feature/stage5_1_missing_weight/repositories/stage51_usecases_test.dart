@@ -1,67 +1,76 @@
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:mocktail/mocktail.dart';
-// import '../../../../../packages/core/lib/features/stage4_recollection/domain/entities/stage4_form_data.dart';
-// import '../../../../../packages/core/lib/features/stage4_recollection/domain/repositories/stage4_repository.dart';
-// import '../../../../../packages/core/lib/features/stage4_recollection/domain/usecases/create_stage4_data.dart';
-// import '../../../../../packages/core/lib/features/stage4_recollection/domain/usecases/update_stage4_data.dart';
-// import '../../../../../packages/core/lib/features/stage4_recollection/domain/usecases/watch_stage4_data.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:core/features/stage5_1_missing_weight/data/datasource/stage51_payment_datasource.dart';
+import 'package:core/features/stage5_1_missing_weight/data/models/stage51_payment_data_model.dart';
+import 'package:core/features/stage5_1_missing_weight/data/repositories_impl/stage51_repository_impl.dart';
+import 'package:core/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 
-// class MockStage4Repository extends Mock implements Stage4Repository {}
+class MockStage51PaymentDatasource extends Mock
+    implements Stage51PaymentDatasource {}
 
-// class FakeStage4FormData extends Fake implements Stage4FormData {}
+class FakePaymentDataModel extends Fake implements PaymentDataModel {}
 
-// void main() {
-//   late MockStage4Repository mockRepository;
+void main() {
+  late MockStage51PaymentDatasource mockDatasource;
+  late Stage51RepositoryImpl repository;
 
-//   final tData = Stage4FormData(
-//     id: 'test-id',
-//     projectId: 'project-123',
-//     date: DateTime(2024),
-//     returnedGaveras: [ReturnedGaveras(quantity: 3, referenceWeight: 12.5)],
-//     returnedBaskets: 5,
-//     returnedPreservativesJars: 2,
-//     returnedLimeJars: 1,
-//   );
+  final tData = PaymentData(
+    id: 'test-id',
+    projectId: 'project-123',
+    date: DateTime(2024),
+    amount: 150.75,
+  );
 
-//   setUpAll(() {
-//     registerFallbackValue(FakeStage4FormData());
-//   });
+  setUpAll(() {
+    registerFallbackValue(FakePaymentDataModel());
+  });
 
-//   setUp(() {
-//     mockRepository = MockStage4Repository();
-//   });
+  setUp(() {
+    mockDatasource = MockStage51PaymentDatasource();
+    repository = Stage51RepositoryImpl(mockDatasource);
+  });
 
-//   group('CreateStage4Data', () {
-//     test('llama a repository.create', () async {
-//       when(() => mockRepository.create(any())).thenAnswer((_) async {});
+  group('Stage51RepositoryImpl', () {
+    test('create llama al datasource con el modelo correcto', () async {
+      when(() => mockDatasource.create(any())).thenAnswer((_) async {});
 
-//       await CreateStage4Data(mockRepository)(tData);
+      await repository.create(tData);
 
-//       verify(() => mockRepository.create(tData)).called(1);
-//     });
-//   });
+      final captured =
+          verify(() => mockDatasource.create(captureAny())).captured.first
+              as PaymentDataModel;
 
-//   group('UpdateStage4Data', () {
-//     test('llama a repository.update', () async {
-//       when(() => mockRepository.update(any())).thenAnswer((_) async {});
+      expect(captured.id, tData.id);
+      expect(captured.amount, tData.amount);
+    });
 
-//       await UpdateStage4Data(mockRepository)(tData);
+    test('delete llama al datasource con el id correcto', () async {
+      when(() => mockDatasource.delete(any())).thenAnswer((_) async {});
 
-//       verify(() => mockRepository.update(tData)).called(1);
-//     });
-//   });
+      await repository.delete('test-id');
 
-//   group('WatchStage4Data', () {
-//     test('retorna el stream filtrado por projectId', () async {
-//       final entries = [tData];
-//       when(
-//         () => mockRepository.watch(any()),
-//       ).thenAnswer((_) => Stream.value(entries));
+      verify(() => mockDatasource.delete('test-id')).called(1);
+    });
 
-//       final result = await WatchStage4Data(mockRepository)('project-123').first;
+    test('watch convierte los modelos a entities', () async {
+      final models = [
+        PaymentDataModel(
+          id: 'test-id',
+          projectId: 'project-123',
+          date: DateTime(2024).toIso8601String(),
+          amount: 150.75,
+        ),
+      ];
 
-//       verify(() => mockRepository.watch('project-123')).called(1);
-//       expect(result, entries);
-//     });
-//   });
-// }
+      when(
+        () => mockDatasource.watchAll(),
+      ).thenAnswer((_) => Stream.value(models));
+
+      final result = await repository.watch().first;
+
+      expect(result, isA<List<PaymentData>>());
+      expect(result.first.id, 'test-id');
+      expect(result.first.amount, 150.75);
+    });
+  });
+}

@@ -15,6 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../feature/index_features.dart';
+import '../feature/molienda/mobile_entrega_detail_page.dart';
+import '../feature/molienda/mobile_lote_detail_page.dart';
+import '../feature/molienda/mobile_molienda_page.dart';
+import '../feature/molienda/web_entrega_detail_page.dart';
+import '../feature/molienda/web_lote_detail_page.dart';
 import 'transitions.dart';
 import 'package:core/shared/stage52_page_summary.dart';
 import '../feature/project_selector/mobile_project_selector_page.dart'
@@ -308,6 +313,52 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           state,
         ),
+      ),
+      GoRoute(
+        name: 'moliendas',
+        path: Routes.moliendas,
+        pageBuilder: (_, state) => slideUpPage(
+          const AdaptiveLayout(
+            mobile: MobileMoliendaPage(),
+            web: WebMoliendaPage(),
+          ),
+          state,
+        ),
+      ),
+      GoRoute(
+        name: 'loteDetail',
+        path: '${Routes.loteDetail}/:produccionId',
+        pageBuilder: (context, state) {
+          final produccionId = state.pathParameters['produccionId']!;
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: MobileLoteDetailPage(produccionId: produccionId),
+              web: WebLoteDetailPage(produccionId: produccionId),
+            ),
+            state,
+          );
+        },
+      ),
+      GoRoute(
+        name: 'entregaDetail',
+        path: '${Routes.moliendas}/:moliendaId/entrega/:entregaId',
+        pageBuilder: (context, state) {
+          final moliendaId = state.pathParameters['moliendaId']!;
+          final entregaId = state.pathParameters['entregaId']!;
+          return slideUpPage(
+            AdaptiveLayout(
+              mobile: MobileEntregaDetailPage(
+                moliendaId: moliendaId,
+                entregaId: entregaId,
+              ),
+              web: WebEntregaDetailPage(
+                moliendaId: moliendaId,
+                entregaId: entregaId,
+              ),
+            ),
+            state,
+          );
+        },
       ),
       GoRoute(
         path: Routes.splash,

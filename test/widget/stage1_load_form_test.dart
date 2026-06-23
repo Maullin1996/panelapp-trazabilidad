@@ -1,33 +1,76 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_test/flutter_test.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../../packages/core/lib/features/stage1_delivery/presentation/widgets/stage1_load_form.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// void main() {
-//   testWidgets('Stage1LoadForm can add a gavera row', (tester) async {
-//     await tester.pumpWidget(
-//       const ProviderScope(
-//         child: MaterialApp(
-//           home: Scaffold(
-//             body: SingleChildScrollView(child: Stage1LoadForm(isNew: true)),
-//           ),
-//         ),
-//       ),
-//     );
+import 'package:core/features/inventory/providers/inventory_providers.dart';
 
-//     expect(
-//       find.byKey(const Key('stage1-load-form-add-gaveras-button')),
-//       findsOneWidget,
-//     );
+import '../../apps/web/lib/feature/stage1/mobile_stage1_form.dart';
 
-//     await tester.tap(
-//       find.byKey(const Key('stage1-load-form-add-gaveras-button')),
-//     );
-//     await tester.pump();
+void main() {
+  testWidgets('Stage1LoadForm shows structural buttons with empty inventory', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          syncInventoryItemsProvider.overrideWith((ref) => const []),
+        ],
+        child: const MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: Stage1LoadForm(isNew: true),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
 
-//     expect(
-//       find.byKey(const Key('stage1-load-form-remove-gaveras-button1')),
-//       findsOneWidget,
-//     );
-//   });
-// }
+    expect(
+      find.byKey(const Key('stage1-load-form-add-gaveras-button')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-add-baskets-button')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-molienda-dropdown')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('stage1-load-form-summit-button')),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets(
+    'Stage1LoadForm shows empty-inventory message when no gaveras in stock',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            syncInventoryItemsProvider.overrideWith((ref) => const []),
+          ],
+          child: const MaterialApp(
+            home: Scaffold(
+              body: SingleChildScrollView(
+                child: Stage1LoadForm(isNew: true),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      expect(
+        find.text('No hay gaveras en el inventario'),
+        findsOneWidget,
+      );
+      expect(
+        find.text('No hay canastillas en el inventario'),
+        findsOneWidget,
+      );
+    },
+  );
+}

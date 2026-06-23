@@ -22,7 +22,6 @@ class Stage2Page extends ConsumerWidget {
     ref.listen(stage2FormProvider, (previous, next) {
       if (previous?.status == Stage2FormStatus.submitting &&
           next.status == Stage2FormStatus.success) {
-        context.pop();
         CustomSnackBar.show(
           context,
           message: 'Cargue registrado',

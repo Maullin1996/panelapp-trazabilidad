@@ -10,4 +10,6 @@ abstract class Routes {
   static const String stage5 = '/stage5';
   static const String imageViewer = '/imageViewer';
   static const String inventory = '/inventory';
+  static const String moliendas = '/moliendas';
+  static const String loteDetail = '/lote';
 }

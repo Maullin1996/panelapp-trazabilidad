@@ -58,6 +58,11 @@ class WebLayout extends StatelessWidget {
                 selectedIcon: Icon(Icons.admin_panel_settings),
                 label: Text('Admin'),
               ),
+              NavigationRailDestination(
+                icon: Icon(Icons.store_outlined),
+                selectedIcon: Icon(Icons.store),
+                label: Text('Moliendas'),
+              ),
             ],
           ),
           const VerticalDivider(thickness: 1, width: 1),

@@ -31,6 +31,7 @@ abstract class Stage1FormData with _$Stage1FormData {
   const factory Stage1FormData({
     required String id,
     required String name,
+    String? moliendaId,
     required List<GaveraData> gaveras,
     required List<BasketData> baskets,
     required double preservativesWeight,

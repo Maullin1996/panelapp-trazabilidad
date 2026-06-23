@@ -3,6 +3,7 @@ import '../../domain/entities/stage1_form_data.dart';
 class Stage1FormModel {
   final String id;
   final String name;
+  final String? moliendaId;
   final List<Map<String, dynamic>> gaveras;
   final List<Map<String, dynamic>> baskets;
   final double preservativesWeight;
@@ -16,6 +17,7 @@ class Stage1FormModel {
   Stage1FormModel({
     required this.id,
     required this.name,
+    this.moliendaId,
     required this.gaveras,
     required this.baskets,
     required this.preservativesWeight,
@@ -31,6 +33,7 @@ class Stage1FormModel {
     return Stage1FormModel(
       id: data.id,
       name: data.name,
+      moliendaId: data.moliendaId,
       gaveras: data.gaveras
           .map(
             (g) => {
@@ -57,6 +60,7 @@ class Stage1FormModel {
     return Stage1FormData(
       id: id,
       name: name,
+      moliendaId: moliendaId,
       gaveras: gaveras
           .map(
             (g) => GaveraData(
@@ -88,6 +92,7 @@ class Stage1FormModel {
     return {
       'id': id,
       'name': name,
+      'moliendaId': moliendaId,
       'gaveras': gaveras,
       'baskets': baskets,
       'preservativesWeight': preservativesWeight,
@@ -104,6 +109,7 @@ class Stage1FormModel {
     return Stage1FormModel(
       id: json['id'] as String,
       name: json['name'] as String? ?? '',
+      moliendaId: json['moliendaId'] as String?,
       gaveras: List<Map<String, dynamic>>.from(json['gaveras'] ?? []),
       baskets: List<Map<String, dynamic>>.from(json['baskets'] ?? []),
       preservativesWeight:
