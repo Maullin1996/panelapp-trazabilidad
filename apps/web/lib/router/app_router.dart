@@ -18,6 +18,7 @@ import '../feature/index_features.dart';
 import '../feature/molienda/mobile_entrega_detail_page.dart';
 import '../feature/molienda/mobile_lote_detail_page.dart';
 import '../feature/molienda/mobile_molienda_page.dart';
+import '../feature/molienda/qr_scanner_page.dart';
 import '../feature/molienda/web_entrega_detail_page.dart';
 import '../feature/molienda/web_lote_detail_page.dart';
 import 'transitions.dart';
@@ -324,6 +325,11 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           state,
         ),
+      ),
+      GoRoute(
+        name: 'qrScanner',
+        path: '/qr-scanner',
+        pageBuilder: (_, state) => slideUpPage(const QrScannerPage(), state),
       ),
       GoRoute(
         name: 'loteDetail',

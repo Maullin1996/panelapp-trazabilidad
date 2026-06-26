@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -41,12 +42,10 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
   void _scrollListener() {
     if (!_scrollController.hasClients) return;
     final position = _scrollController.position;
-    final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
-    if (isNearBottom) {
+    if(position.pixels >= position.maxScrollExtent - 200) {
       final notifier = ref.read(stage1ProjectsProvider.notifier);
-      final projects = ref.read(syncStage1ProjectsProvider);
-
-      if (notifier.canLoadMore(projects)) {
+      final projects = ref.read(stage1ProjectsProvider).value ?? [];
+      if(notifier.canLoadMore(projects)){
         notifier.loadMore();
       }
     }
@@ -68,11 +67,10 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
       }
     });
 
-    final projects = ref.watch(syncStage1ProjectsProvider);
-    final error = ref.watch(stage1ProjectsErrorProvider);
     final user = ref.watch(authProvider).user;
+
     final textTheme = TextTheme.of(context);
-    final body = _buildBody(projects, error, textTheme);
+    final body = _buildBody(textTheme);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,16 +93,21 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
                 case 'preview':
-                  final selectedProject = projects.firstWhere(
-                    (p) => p.id == isSelected.first,
-                  );
-                  context.pushNamed('pdf-preview', extra: selectedProject);
+                  final project = ref.read(stage1ProjectsProvider).maybeWhen(
+                        data: (projects) => projects.firstWhereOrNull((p) => p.id == isSelected.first),
+                        orElse: () => [],
+                      );
+                  if (project == null) return;
+                  context.pushNamed('pdf-preview', extra: project);
                   setState(() => isSelected.clear());
+
                 case 'print':
-                  final selectedProject = projects.firstWhere(
-                    (p) => p.id == isSelected.first,
-                  );
-                  await generateAndSharePdf(selectedProject);
+                  final project = ref.read(stage1ProjectsProvider).maybeWhen(
+                        data: (projects) => projects.firstWhereOrNull((p) => p.id == isSelected.first),
+                        orElse: () => [],
+                      );
+                  if (project == null) return;
+                  await generateAndSharePdf(project as Stage1FormData);
                   setState(() => isSelected.clear());
               }
             },
@@ -197,21 +200,18 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
     );
   }
 
-  Widget _buildBody<T>(List<T> projects, String? error, TextTheme textTheme) {
-    if (error != null) {
-      return _buildErrorBody(error);
-    }
-
-    final isLoading = ref.watch(stage1ProjectsLoadingProvider);
-    if (isLoading && projects.isEmpty) {
-      return const ProjectSelectorShimmer(itemCount: 5);
-    }
-
-    if (projects.isEmpty) {
-      return _buildEmptyState();
-    }
-
-    return _buildProjectList(projects, textTheme);
+  Widget _buildBody(TextTheme textTheme) {
+    return ref.watch(stage1ProjectsProvider).when(
+      data: (projects) {
+        if(projects.isEmpty) {
+          return _buildEmptyState();
+        } else {
+          return _buildProjectList(projects, textTheme);
+        }
+      }, 
+      error: (error, _) => _buildErrorBody(error.toString()), 
+      loading: () => const ProjectSelectorShimmer(),
+      );
   }
 
   Widget _buildEmptyState() {

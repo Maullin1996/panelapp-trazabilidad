@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import '../utils/tokens.dart';
 
 class EmptyWidget extends StatelessWidget {
+  final String? message;
 
-  const EmptyWidget({super.key});
+  const EmptyWidget({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
+        constraints: const BoxConstraints(maxWidth: 400),
         padding: const EdgeInsets.all(AppSpacing.medium),
         decoration: BoxDecoration(
           color: AppColors.cardBackground,
@@ -32,19 +34,13 @@ class EmptyWidget extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'No hay proyectos',
+              message ?? 'No hay proyectos',
+              textAlign: TextAlign.center,
               style: TextTheme.of(
                 context,
               ).headlineLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(
-              'Crea uno nuevo para comenzar',
-              style: TextTheme.of(
-                context,
-              ).bodyLarge?.copyWith(color: AppColors.textDark),
-              textAlign: TextAlign.center,
-            ),
           ],
         ),
       ),

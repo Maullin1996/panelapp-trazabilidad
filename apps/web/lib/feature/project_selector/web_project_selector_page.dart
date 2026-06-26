@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 import 'package:core/features/stage1_delivery/providers/index.dart';
 import 'package:core/features/auth/providers/auth_provider.dart';
@@ -45,7 +46,7 @@ class _WebProjectSelectorPageState
     final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
     if (isNearBottom) {
       final notifier = ref.read(stage1ProjectsProvider.notifier);
-      final projects = ref.read(syncStage1ProjectsProvider);
+      final projects = ref.read(stage1ProjectsProvider).asData?.value ?? [];
       if (notifier.canLoadMore(projects)) notifier.loadMore();
     }
   }
@@ -60,11 +61,19 @@ class _WebProjectSelectorPageState
       }
     });
 
-    final projects = ref.watch(syncStage1ProjectsProvider);
-    final error = ref.watch(stage1ProjectsErrorProvider);
-    final isLoading = ref.watch(stage1ProjectsLoadingProvider);
     final user = ref.watch(authProvider).user;
     final textTheme = TextTheme.of(context);
+
+    final asyncProjects = ref.watch(stage1ProjectsProvider);
+
+    final body = asyncProjects.when(
+      data: (projects) {
+        if (projects.isEmpty) return const EmptyWidget();
+        return _buildGrid(projects, textTheme);
+      },
+      loading: () => const ProjectSelectorShimmer(itemCount: 6),
+      error: (e, _) => ErrorWidgetCustom(error: e.toString()),
+    );
 
     return WebLayout(
       selectedIndex: 0,
@@ -116,6 +125,21 @@ class _WebProjectSelectorPageState
                     ),
                   ),
                 const SizedBox(width: AppSpacing.small),
+                ElevatedButton.icon(
+                  onPressed: () => context.push('/qr-scanner'),
+                  icon: const Icon(
+                    Icons.qr_code_scanner,
+                    color: AppColors.textLight,
+                  ),
+                  label: Text(
+                    'Escanear QR',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textLight,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.small),
                 PopupMenuButton<String>(
                   position: PopupMenuPosition.under,
                   padding: const EdgeInsets.symmetric(
@@ -134,13 +158,13 @@ class _WebProjectSelectorPageState
                       case 'logout':
                         ref.read(authProvider.notifier).logout();
                       case 'preview':
-                        final selectedProject = projects.firstWhere(
-                          (p) => p.id == isSelected.first,
-                        );
-                        context.pushNamed(
-                          'pdf-preview',
-                          extra: selectedProject,
-                        );
+                        final project = ref
+                            .read(stage1ProjectsProvider)
+                            .asData
+                            ?.value
+                            .firstWhereOrNull((p) => p.id == isSelected.first);
+                        if (project == null) return;
+                        context.pushNamed('pdf-preview', extra: project);
                         setState(() => isSelected.clear());
                     }
                   },
@@ -182,23 +206,16 @@ class _WebProjectSelectorPageState
           ),
 
           // ── Contenido ─────────────────────────────────────────
-          Expanded(child: _buildBody(projects, error, isLoading, textTheme)),
+          Expanded(child: body),
         ],
       ),
     );
   }
 
-  Widget _buildBody(
+  Widget _buildGrid(
     List<Stage1FormData> projects,
-    String? error,
-    bool isLoading,
     TextTheme textTheme,
   ) {
-    if (error != null) return ErrorWidgetCustom(error: error);
-    if (isLoading && projects.isEmpty) {
-      return const ProjectSelectorShimmer(itemCount: 6);
-    }
-    if (projects.isEmpty) return const EmptyWidget();
 
     return GridView.builder(
       controller: _scrollController,

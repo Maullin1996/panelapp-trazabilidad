@@ -16,6 +16,32 @@ class CustomFromDropdown<T> extends StatelessWidget {
     this.onChanged,
   });
 
+  static const BorderRadius _borderRadius = BorderRadius.all(
+    Radius.circular(AppRadius.medium),
+  );
+
+  static const InputDecoration _decoration = InputDecoration(
+    filled: true,
+    fillColor: Colors.white,
+    contentPadding: EdgeInsets.symmetric(vertical: AppSpacing.xSmall),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: BorderSide(color: AppColors.secondaryDarkPanela, width: 2),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: BorderSide(color: AppColors.primaryPanelaBrown, width: 2),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: BorderSide(color: AppColors.error, width: 1.5),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: BorderSide(color: AppColors.error, width: 2),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.sizeOf(context).width;
@@ -26,39 +52,13 @@ class CustomFromDropdown<T> extends StatelessWidget {
       validator: validator,
       onChanged: onChanged,
       menuWidth: width > 600 ? 320 : width * 0.95,
-      borderRadius: BorderRadius.circular(AppRadius.medium),
+      borderRadius: _borderRadius,
       dropdownColor: Colors.white,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.small,
         vertical: AppSpacing.xSmall,
       ),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(vertical: AppSpacing.xSmall),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.medium),
-          borderSide: BorderSide(
-            color: AppColors.secondaryDarkPanela,
-            width: 2,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.medium),
-          borderSide: const BorderSide(
-            color: AppColors.primaryPanelaBrown,
-            width: 2,
-          ),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.medium),
-          borderSide: const BorderSide(color: AppColors.error, width: 1.5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.medium),
-          borderSide: const BorderSide(color: AppColors.error, width: 2),
-        ),
-      ),
+      decoration: _decoration,
     );
   }
 }

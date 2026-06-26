@@ -6,6 +6,12 @@ import 'package:intl/intl.dart';
 import 'package:core/features/molienda/providers/molienda_providers.dart';
 import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 import 'package:core/features/stage1_delivery/providers/index.dart';
+import 'package:core/features/stage2_load/domain/entities/index.dart';
+import 'package:core/features/stage2_load/providers/sync_stage2_loads_provider.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:core/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import 'package:core/features/stage3_weigh/helpers/quality_color.dart';
+import 'package:core/features/stage3_weigh/providers/sync_stage3_loads_provider.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
 
@@ -70,41 +76,167 @@ class _LoteDetailBody extends ConsumerWidget {
       if (entrega != null) fechaEntrega = entrega.fechaEntrega;
     }
 
+    final load2 = ref
+        .watch(syncStage2ProjectsProvider)
+        .firstWhereOrNull((l) => l.projectId == data.id);
+
+    final entry3 = load2 == null
+        ? null
+        : ref
+            .watch(syncStage3ProjectsProvider)
+            .firstWhereOrNull((e) => e.stage2LoadId == load2.id);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.medium),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 500),
-          child: CustomCard(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.medium),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _InfoRow(
-                    label: 'Molienda',
-                    value: data.name,
-                    textTheme: textTheme,
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CustomCard(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _InfoRow(
+                        label: 'Molienda',
+                        value: data.name,
+                        textTheme: textTheme,
+                      ),
+                      const SizedBox(height: AppSpacing.small),
+                      _InfoRow(
+                        label: 'Fecha de entrega',
+                        value: DateFormat('dd/MM/yyyy HH:mm').format(
+                          fechaEntrega,
+                        ),
+                        textTheme: textTheme,
+                      ),
+                      const SizedBox(height: AppSpacing.small),
+                      _InfoRow(
+                        label: 'Teléfono',
+                        value: data.phone,
+                        textTheme: textTheme,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.small),
-                  _InfoRow(
-                    label: 'Fecha de entrega',
-                    value: DateFormat('dd/MM/yyyy HH:mm').format(
-                      fechaEntrega,
-                    ),
-                    textTheme: textTheme,
-                  ),
-                  const SizedBox(height: AppSpacing.small),
-                  _InfoRow(
-                    label: 'Teléfono',
-                    value: data.phone,
-                    textTheme: textTheme,
-                  ),
-                ],
+                ),
               ),
-            ),
+              if (load2 != null && entry3 != null) ...[
+                const SizedBox(height: AppSpacing.small),
+                _BodegaCard(load2: load2, entry3: entry3, textTheme: textTheme),
+              ],
+            ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _BodegaCard extends StatelessWidget {
+  final Stage2LoadData load2;
+  final Stage3FormData entry3;
+  final TextTheme textTheme;
+  const _BodegaCard({
+    required this.load2,
+    required this.entry3,
+    required this.textTheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.xSmall,
+            ),
+            child: Row(
+              children: [
+                IconDecoration(
+                  icon: Icons.warehouse,
+                  iconColor: AppColors.register,
+                  backgroundColor: AppColors.register,
+                ),
+                const SizedBox(width: AppSpacing.xSmall),
+                Expanded(
+                  child: Text(
+                    'Registrado en Bodega',
+                    style: textTheme.headlineMedium?.copyWith(
+                      color: AppColors.primaryPanelaBrown,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.xSmall,
+            ),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.secondaryDarkPanela.withAlpha(45),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              bottom: AppSpacing.small,
+            ),
+            child: Column(
+              children: [
+                CustomRichText(
+                  icon: Icons.calendar_month,
+                  firstText: 'Fecha pesaje: ',
+                  secondText: DateFormat.yMd().format(entry3.date),
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomRichText(
+                  icon: Icons.storage,
+                  iconColor: AppColors.weight,
+                  firstText: 'Gavera: ',
+                  secondText: '${load2.baskets.referenceWeight} g',
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomRichText(
+                  icon: Icons.all_inbox_rounded,
+                  iconColor: AppColors.register,
+                  firstText: 'Total registradas: ',
+                  secondText: '${entry3.baskets.length} canastillas',
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                ...BasketQuality.values
+                    .where((q) => entry3.baskets.any((b) => b.quality == q))
+                    .map(
+                      (q) => Padding(
+                        padding: const EdgeInsets.only(
+                          left: AppSpacing.small,
+                          bottom: AppSpacing.xSmall,
+                        ),
+                        child: CustomRichText(
+                          icon: Icons.label_outline,
+                          iconColor: qualityColor(quality: q.label),
+                          firstText: '${q.label}: ',
+                          secondText:
+                              '${entry3.baskets.where((b) => b.quality == q).length}',
+                        ),
+                      ),
+                    ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

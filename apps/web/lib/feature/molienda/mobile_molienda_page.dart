@@ -39,48 +39,45 @@ class MobileMoliendaPage extends ConsumerWidget {
       appBar: AppBar(
         leading: BackButton(onPressed: () => context.pop()),
         title: Text('Moliendas', style: textTheme.headlineMedium),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: AppSpacing.small),
-            child: IconButton(
-              onPressed: () => _showFormDialog(context, ref),
-              icon: const Icon(Icons.add, color: AppColors.primaryPanelaBrown),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showFormDialog(context, ref),
+        shape: const CircleBorder(),
+        backgroundColor: AppColors.primaryPanelaBrown,
+        
+        child: const Icon(Icons.add, color: AppColors.backgroundCrema),
+      ),
+      body: SafeArea(
+        bottom: true,
+        child: itemsAsync.when(
+          loading: () => const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryPanelaBrown,
             ),
           ),
-        ],
-      ),
-      body: itemsAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.primaryPanelaBrown,
-          ),
-        ),
-        error: (e, _) => ErrorWidgetCustom(error: e.toString()),
-        data: (moliendas) => moliendas.isEmpty
-            ? Center(
-                child: Text(
-                  'Sin moliendas registradas',
-                  style: textTheme.bodyMedium?.copyWith(
-                    color: AppColors.textDark.withAlpha(120),
+          error: (e, _) => ErrorWidgetCustom(error: e.toString()),
+          data: (moliendas) => 
+          moliendas.isEmpty
+              ? Padding(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                child: EmptyWidget(message: "Todavía no has creado ninguna molienda."  ))
+              : ListView.separated(
+                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  separatorBuilder: (_, _) =>
+                      const SizedBox(height: AppSpacing.small),
+                  itemCount: moliendas.length,
+                  itemBuilder: (context, index) => _MoliendaCard(
+                    molienda: moliendas[index],
+                    textTheme: textTheme,
+                    onVerEntregas: () =>
+                        _showEntregasDialog(context, moliendas[index]),
+                    onEdit: () =>
+                        _showFormDialog(context, ref, molienda: moliendas[index]),
+                    onDelete: () =>
+                        _confirmDelete(context, ref, moliendas[index].id),
                   ),
                 ),
-              )
-            : ListView.separated(
-                padding: const EdgeInsets.all(AppSpacing.medium),
-                separatorBuilder: (_, _) =>
-                    const SizedBox(height: AppSpacing.small),
-                itemCount: moliendas.length,
-                itemBuilder: (context, index) => _MoliendaCard(
-                  molienda: moliendas[index],
-                  textTheme: textTheme,
-                  onVerEntregas: () =>
-                      _showEntregasDialog(context, moliendas[index]),
-                  onEdit: () =>
-                      _showFormDialog(context, ref, molienda: moliendas[index]),
-                  onDelete: () =>
-                      _confirmDelete(context, ref, moliendas[index].id),
-                ),
-              ),
+        ),
       ),
     );
   }
@@ -306,7 +303,7 @@ class _EntregasList extends ConsumerWidget {
           return Center(
             child: Text(
               'Sin entregas registradas',
-              style: textTheme.bodyMedium?.copyWith(
+              style: textTheme.bodyLarge?.copyWith(
                 color: AppColors.textDark.withAlpha(120),
               ),
             ),
@@ -322,13 +319,13 @@ class _EntregasList extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: Text(
                 DateFormat('dd/MM/yyyy HH:mm').format(entrega.fechaEntrega),
-                style: textTheme.bodyMedium,
+                style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
               ),
               trailing: IconButton(
                 icon: const Icon(
                   Icons.qr_code_2_outlined,
                   color: AppColors.primaryPanelaBrown,
-                  size: 20,
+                  size: 30,
                 ),
                 tooltip: 'Ver QR',
                 onPressed: () {

@@ -35,6 +35,7 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
 
   final Map<int, InventoryItem> _selectedGaveraItems = {};
   Molienda? _selectedMolienda;
+  bool _moliendaInitialized = false;
 
   @override
   void initState() {
@@ -84,10 +85,10 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
   @override
   Widget build(BuildContext context) {
     final initial = widget.initialData;
-    final state = ref.watch(stage1FormProvider);
+    final status = ref.watch(stage1FormProvider.select((s) => s.status));
     final formNotifier = ref.read(stage1FormProvider.notifier);
     final textTheme = TextTheme.of(context);
-    final isSubmitting = state.status == Stage1FormStatus.submitting;
+    final isSubmitting = status == Stage1FormStatus.submitting;
 
     final inventoryItems = ref.watch(syncInventoryItemsProvider);
     final moliendasDisponibles = ref.watch(syncMoliendaItemsProvider);
@@ -104,6 +105,21 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
       didChangeDependencies(); // re-intentar ahora que hay datos
     }
 
+    if (!_moliendaInitialized &&
+        widget.initialData?.moliendaId != null &&
+        moliendasDisponibles.isNotEmpty) {
+      final match = moliendasDisponibles.firstWhereOrNull(
+        (m) => m.id == widget.initialData!.moliendaId,
+      );
+      if (match != null) {
+        _moliendaInitialized = true;
+        _selectedMolienda = match;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _formKey.currentState?.fields['molienda']?.didChange(match);
+        });
+      }
+    }
+
     return FormBuilder(
       key: _formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -111,6 +127,7 @@ class _WebStage1FormState extends ConsumerState<WebStage1Form> {
           ? {}
           : {
               'name': initial.name,
+              'molienda': _selectedMolienda,
               ...{
                 for (var i = 0; i < initial.baskets.length; i++)
                   'basketsCantidad_$i': initial.baskets[i].quantity.toString(),

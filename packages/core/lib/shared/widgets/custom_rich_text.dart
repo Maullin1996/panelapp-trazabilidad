@@ -10,6 +10,9 @@ class CustomRichText extends StatelessWidget {
   final Color? secondTextColor;
   final IconData? icon;
   final Color iconColor;
+  final double? size;
+  final bool? backgroundDecoration;
+  final TextStyle? textStyle;
   const CustomRichText({
     super.key,
     this.iconColor = AppColors.textDark,
@@ -18,6 +21,9 @@ class CustomRichText extends StatelessWidget {
     this.firstTextColor,
     this.secondTextColor,
     this.icon,
+    this.size = 15,
+    this.backgroundDecoration,
+    this.textStyle,
   });
 
   @override
@@ -31,6 +37,8 @@ class CustomRichText extends StatelessWidget {
             icon: icon ?? Icons.inbox,
             iconColor: iconColor,
             backgroundColor: iconColor,
+            backgroundDecoration: backgroundDecoration ?? true,
+            size: size
           ),
         const SizedBox(width: AppSpacing.xSmall),
         Expanded(
@@ -40,13 +48,14 @@ class CustomRichText extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  style: textTheme.headlineLarge?.copyWith(
+                  style: textStyle ?? textTheme.headlineMedium?.copyWith(
                     color: firstTextColor,
+
                   ),
                   text: firstText,
                 ),
                 TextSpan(
-                  style: textTheme.headlineMedium?.copyWith(
+                  style: textStyle ?? textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.w400,
                     color: secondTextColor,
                   ),

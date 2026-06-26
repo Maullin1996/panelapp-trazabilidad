@@ -88,6 +88,7 @@ class Stage3Page extends ConsumerWidget {
                                 IconDecoration(
                                   icon: Icons.unarchive,
                                   iconColor: AppColors.alert,
+                                  size: 20,
                                 ),
                                 SizedBox(width: AppSpacing.xSmall),
                                 Expanded(
@@ -125,6 +126,7 @@ class Stage3Page extends ConsumerWidget {
                               children: [
                                 CustomRichText(
                                   icon: Icons.calendar_month,
+                                  size: 15,
                                   firstText: 'Fecha: ',
                                   secondText: DateFormat.yMd().format(
                                     load2.date,
@@ -135,6 +137,7 @@ class Stage3Page extends ConsumerWidget {
                                 CustomRichText(
                                   icon: Icons.inventory_2,
                                   iconColor: AppColors.secondaryDarkPanela,
+                                  size: 15,
                                   firstText: 'Enviadas: ',
                                   secondText:
                                       '${load2.baskets.count} Canastillas',
@@ -145,11 +148,13 @@ class Stage3Page extends ConsumerWidget {
                                   iconColor: AppColors.accepted,
                                   firstText: 'Calidad: ',
                                   secondText: load2.baskets.quality.label,
+                                  size: 15,
                                 ),
                                 const SizedBox(height: AppSpacing.xSmall),
                                 CustomRichText(
                                   icon: Icons.storage,
                                   iconColor: AppColors.weight,
+                                  size: 15,
 
                                   firstText: 'Gavera: ',
                                   secondText:
@@ -171,6 +176,7 @@ class Stage3Page extends ConsumerWidget {
                                   icon: Icons.warehouse,
                                   iconColor: AppColors.register,
                                   backgroundColor: AppColors.register,
+                                  size: 20,
                                 ),
                                 SizedBox(width: AppSpacing.xSmall),
                                 Expanded(
@@ -209,6 +215,7 @@ class Stage3Page extends ConsumerWidget {
                                 CustomRichText(
                                   icon: Icons.all_inbox_rounded,
                                   iconColor: AppColors.register,
+                                  size: 15,
                                   firstText: 'Registradas: ',
                                   secondText: '${summary.regCount} Canastillas',
                                 ),
@@ -221,20 +228,22 @@ class Stage3Page extends ConsumerWidget {
                                     )
                                     .map(
                                       (q) => Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: AppSpacing.small,
-                                          bottom: AppSpacing.xSmall,
-                                        ),
-                                        child: CustomRichText(
-                                          icon: Icons.label_outline,
-                                          iconColor: qualityColor(
-                                            quality: q.label,
-                                          ),
-                                          firstText: '${q.label}: ',
-                                          secondText:
-                                              '${summary.countByQuality[q]}',
-                                        ),
-                                      ),
+                                              padding: const EdgeInsets.only(
+                                                left: AppSpacing.small,
+                                                bottom: AppSpacing.xSmall,
+                                              ),
+                                              child: CustomRichText(
+                                                icon: Icons.circle,
+                                                size: 12,
+                                                backgroundDecoration: false,
+                                                iconColor: qualityColor(
+                                                  quality: q.label,
+                                                ),
+                                                firstText: '${q.label}: ',
+                                                secondText:
+                                                    '${summary.countByQuality[q]}',
+                                              ),
+                                            ),
                                     ),
                               ],
                             ),
@@ -251,6 +260,7 @@ class Stage3Page extends ConsumerWidget {
                                   icon: Icons.error_outlined,
                                   iconColor: AppColors.error,
                                   backgroundColor: AppColors.error,
+                                  size: 20,
                                 ),
                                 SizedBox(width: AppSpacing.xSmall),
                                 Expanded(
@@ -288,6 +298,7 @@ class Stage3Page extends ConsumerWidget {
                               children: [
                                 CustomRichText(
                                   icon: Icons.priority_high,
+                                  size: 15,
                                   iconColor: AppColors.error,
                                   firstText: 'Faltan: ',
                                   secondText:

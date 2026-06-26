@@ -24,7 +24,8 @@ String? authRedirectForTesting({
   }
 
   if (auth.authStatus == AuthStatus.notAuthenticated) {
-    return path != Routes.login ? Routes.login : null;
+    if (path == Routes.login || path.startsWith(Routes.loteDetail)) return null;
+    return Routes.login;
   }
 
   if (auth.authStatus == AuthStatus.authenticated) {

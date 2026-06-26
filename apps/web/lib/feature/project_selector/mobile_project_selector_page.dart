@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
 import 'package:core/features/stage1_delivery/providers/index.dart';
 import 'package:core/shared/utils/tokens.dart';
@@ -43,11 +44,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
     final isNearBottom = position.pixels >= position.maxScrollExtent - 200;
     if (isNearBottom) {
       final notifier = ref.read(stage1ProjectsProvider.notifier);
-      final projects = ref.read(syncStage1ProjectsProvider);
-
-      if (notifier.canLoadMore(projects)) {
-        notifier.loadMore();
-      }
+      final projects = ref.read(stage1ProjectsProvider).asData?.value ?? [];
+      if (notifier.canLoadMore(projects)) notifier.loadMore();
     }
   }
 
@@ -66,12 +64,18 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
         }
       }
     });
-
-    final projects = ref.watch(syncStage1ProjectsProvider);
-    final error = ref.watch(stage1ProjectsErrorProvider);
     final user = ref.watch(authProvider).user;
     final textTheme = TextTheme.of(context);
-    final body = _buildBody(projects, error, textTheme);
+    final body = ref.watch(stage1ProjectsProvider).when(
+          data: (projects) {
+            if (projects.isEmpty) {
+              return const EmptyWidget();
+            }
+            return _buildProjectList(projects, textTheme);
+          },
+          loading: () => const ProjectSelectorShimmer(itemCount: 5),
+          error: (error, _) => ErrorWidgetCustom(error: error.toString()),
+        );
 
     return Scaffold(
       appBar: AppBar(
@@ -87,6 +91,8 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
             icon: const Icon(Icons.more_vert),
             onSelected: (value) async {
               switch (value) {
+                case 'qr-scanner':
+                  context.push('/qr-scanner');
                 case 'users':
                   context.pushNamed('adminResetPassword');
                 case 'inventory':
@@ -96,14 +102,22 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
                 case 'logout':
                   ref.read(authProvider.notifier).logout();
                 case 'preview':
-                  final selectedProject = projects.firstWhere(
-                    (p) => p.id == isSelected.first,
+                  final project = ref.read(stage1ProjectsProvider).maybeWhen(
+                    data: (list) => list.firstWhereOrNull((p) => p.id == isSelected.first),
+                    orElse: () => null,
                   );
-                  context.pushNamed('pdf-preview', extra: selectedProject);
+                  context.pushNamed('pdf-preview', extra: project);
                   setState(() => isSelected.clear());
               }
             },
             itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'qr-scanner',
+                child: _PopMenuDecoracion(
+                  text: 'Escanear QR',
+                  backGroundcolor: AppColors.weight,
+                ),
+              ),
               if (user!.role == UserRole.admin)
                 const PopupMenuItem<String>(
                   value: 'users',
@@ -193,30 +207,6 @@ class _ProjectSelectorPageState extends ConsumerState<ProjectSelectorPage> {
     );
   }
 
-  Widget _buildBody<T>(List<T> projects, String? error, TextTheme textTheme) {
-    if (error != null) {
-      return _buildErrorBody(error);
-    }
-
-    final isLoading = ref.watch(stage1ProjectsLoadingProvider);
-    if (isLoading && projects.isEmpty) {
-      return const ProjectSelectorShimmer(itemCount: 5);
-    }
-
-    if (projects.isEmpty) {
-      return _buildEmptyState();
-    }
-
-    return _buildProjectList(projects, textTheme);
-  }
-
-  Widget _buildEmptyState() {
-    return const EmptyWidget();
-  }
-
-  Widget _buildErrorBody(String error) {
-    return ErrorWidgetCustom(error: error);
-  }
 
   Widget _buildProjectList<T>(List<T> projects, TextTheme textTheme) {
     final typedProjects = projects.cast<Stage1FormData>();

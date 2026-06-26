@@ -52,13 +52,17 @@ class MoliendaFormState {
     this.errorMessage,
   });
 
+  static const _undefined = Object();
+
   MoliendaFormState copyWith({
     MoliendaFormStatus? status,
-    String? errorMessage,
+    Object? errorMessage = _undefined,
   }) {
     return MoliendaFormState(
       status: status ?? this.status,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _undefined)
+          ? this.errorMessage
+          : errorMessage as String?,
     );
   }
 }

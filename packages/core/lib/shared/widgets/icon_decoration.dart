@@ -5,22 +5,27 @@ class IconDecoration extends StatelessWidget {
   final Color backgroundColor;
   final IconData icon;
   final Color iconColor;
+  final double? size;
+  final bool backgroundDecoration;
   const IconDecoration({
     super.key,
     this.backgroundColor = AppColors.secondaryDarkPanela,
     required this.icon,
-    required this.iconColor,
+    required this.iconColor, this.size = 15, 
+    this.backgroundDecoration = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xSmall),
-      decoration: BoxDecoration(
-        color: backgroundColor.withAlpha(40),
-        borderRadius: BorderRadius.circular(AppRadius.small),
-      ),
-      child: Icon(icon, size: 15, color: iconColor),
+      decoration: backgroundDecoration
+          ? BoxDecoration(
+              color: backgroundColor.withAlpha(40),
+              borderRadius: BorderRadius.circular(AppRadius.small),
+            )
+          : null,
+      child: Icon(icon, size: size, color: iconColor),
     );
   }
 }

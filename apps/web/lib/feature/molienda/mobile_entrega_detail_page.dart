@@ -1,5 +1,8 @@
+import 'dart:ui' as ui;
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -8,8 +11,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:core/features/molienda/providers/molienda_providers.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
+import 'qr_share.dart';
 
-class MobileEntregaDetailPage extends ConsumerWidget {
+class MobileEntregaDetailPage extends ConsumerStatefulWidget {
   final String moliendaId;
   final String entregaId;
   const MobileEntregaDetailPage({
@@ -19,9 +23,48 @@ class MobileEntregaDetailPage extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MobileEntregaDetailPage> createState() =>
+      _MobileEntregaDetailPageState();
+}
+
+class _MobileEntregaDetailPageState
+    extends ConsumerState<MobileEntregaDetailPage> {
+  final GlobalKey _qrBoundaryKey = GlobalKey();
+
+  Future<void> _shareQr(String moliendaNombre) async {
+    final boundary =
+        _qrBoundaryKey.currentContext?.findRenderObject()
+            as RenderRepaintBoundary?;
+    if (boundary == null) return;
+
+    final image = await boundary.toImage(pixelRatio: 3);
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    if (byteData == null) return;
+
+    final bytes = byteData.buffer.asUint8List();
+    final fileName = 'qr_${_slugify(moliendaNombre)}_${widget.entregaId}.png';
+
+    await shareOrDownloadQrPng(bytes, fileName);
+  }
+
+  String _slugify(String value) {
+    final cleaned = value
+        .trim()
+        .toLowerCase()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '_');
+    return cleaned.isEmpty ? 'molienda' : cleaned;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final textTheme = TextTheme.of(context);
-    final entregasAsync = ref.watch(moliendaEntregasProvider(moliendaId));
+    final entregasAsync = ref.watch(
+      moliendaEntregasProvider(widget.moliendaId),
+    );
+    final moliendas = ref.watch(syncMoliendaItemsProvider);
+    final moliendaNombre =
+        moliendas.firstWhereOrNull((m) => m.id == widget.moliendaId)?.nombre ??
+        'molienda';
 
     return Scaffold(
       backgroundColor: AppColors.backgroundCrema,
@@ -36,7 +79,9 @@ class MobileEntregaDetailPage extends ConsumerWidget {
         ),
         error: (e, _) => ErrorWidgetCustom(error: e.toString()),
         data: (entregas) {
-          final entrega = entregas.firstWhereOrNull((e) => e.id == entregaId);
+          final entrega = entregas.firstWhereOrNull(
+            (e) => e.id == widget.entregaId,
+          );
           if (entrega == null) {
             return Center(
               child: Text(
@@ -55,10 +100,13 @@ class MobileEntregaDetailPage extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    QrImageView(
-                      data: entrega.qrToken,
-                      size: 200,
-                      backgroundColor: AppColors.cardBackground,
+                    RepaintBoundary(
+                      key: _qrBoundaryKey,
+                      child: QrImageView(
+                        data: entrega.qrToken,
+                        size: 200,
+                        backgroundColor: AppColors.cardBackground,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.medium),
                     Text(
@@ -76,6 +124,25 @@ class MobileEntregaDetailPage extends ConsumerWidget {
                       style: textTheme.bodyLarge,
                     ),
                     const SizedBox(height: AppSpacing.medium),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () => _shareQr(moliendaNombre),
+                        icon: const Icon(
+                          Icons.share_outlined,
+                          color: AppColors.textLight,
+                          size: 18,
+                        ),
+                        label: Text(
+                          'Compartir QR',
+                          style: textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textLight,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.small),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(

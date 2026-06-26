@@ -214,3 +214,26 @@ Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y 
 - La app principal es web; mobile está desactualizado y no se toca
 - onDestinationSelected en páginas que no manejan un índice simplemente no hace nada
 - stage1ProjectByIdProvider (síncrono, paginado) ≠ stage1ProjectByIdRemoteProvider (Firestore directo)
+
+### Escáner QR (qr_scanner_page.dart)
+- Implementación WebRTC propia (sin mobile_scanner ni camera plugin)
+- Mismo patrón que camera_preview_screen_web.dart: getUserMedia + HTMLVideoElement + ui_web.platformViewRegistry
+- Decodificación con zxing_lib ^1.1.4 (agregado en packages/core/pubspec.yaml)
+- Timer.periodic cada 600ms: captura frame con HTMLCanvasElement → getImageData RGBA → RGBLuminanceSource → BinaryBitmap → QRCodeReader
+- Al detectar token: getEntregaByQrToken → navega a loteDetail
+- Ruta: /qr-scanner (name: 'qrScanner', sin AdaptiveLayout)
+- Acceso: PopupMenu en mobile_project_selector_page.dart y botón en web_project_selector_page.dart
+
+### Compartir QR como imagen
+- Captura PNG con RepaintBoundary + GlobalKey → toImage(pixelRatio:3) → toByteData
+- Export condicional (patrón idéntico a web_download.dart):
+  - qr_share.dart — barrel con if (dart.library.js_interop)
+  - qr_share_web.dart — Web Share API nativa con navigator.canShare/share + fallback a descarga Blob
+  - qr_share_stub.dart — stub vacío para VM/tests
+- NUNCA usar dart:html (obsoleto) ni Share.shareXFiles en --release (falla en web)
+- Web Share API solo funciona en HTTPS — en local (HTTP) siempre cae al fallback de descarga
+
+### Índice Firestore requerido
+- collectionGroup('entregas') con where('qrToken') requiere un índice COLLECTION_GROUP_ASC
+- Sin el índice Firestore lanza failed-precondition silenciosamente (retorna vacío)
+- Crear en: Firebase Console → Firestore → Indexes → Collection group: entregas, campo: qrToken ASC

@@ -316,7 +316,7 @@ class _EntregasList extends ConsumerWidget {
           return Center(
             child: Text(
               'Sin entregas registradas',
-              style: textTheme.bodyMedium?.copyWith(
+              style: textTheme.bodyLarge?.copyWith(
                 color: AppColors.textDark.withAlpha(120),
               ),
             ),
@@ -332,13 +332,13 @@ class _EntregasList extends ConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: Text(
                 DateFormat('dd/MM/yyyy HH:mm').format(entrega.fechaEntrega),
-                style: textTheme.bodyMedium,
+                style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
               ),
               trailing: IconButton(
                 icon: const Icon(
                   Icons.qr_code_2_outlined,
                   color: AppColors.primaryPanelaBrown,
-                  size: 20,
+                  size: 30,
                 ),
                 tooltip: 'Ver QR',
                 onPressed: () {

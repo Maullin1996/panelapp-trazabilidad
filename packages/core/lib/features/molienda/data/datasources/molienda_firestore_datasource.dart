@@ -59,13 +59,16 @@ class MoliendaFirestoreDatasource {
   }
 
   Future<Entrega?> getEntregaByQrToken(String qrToken) async {
-    // Busca en todas las moliendas (collectionGroup)
-    final snap = await _firestore
-        .collectionGroup('entregas')
-        .where('qrToken', isEqualTo: qrToken)
-        .limit(1)
-        .get();
-    if (snap.docs.isEmpty) return null;
-    return EntregaModel.fromJson(snap.docs.first.data()).toEntity();
+    try {
+      final snap = await _firestore
+          .collectionGroup('entregas')
+          .where('qrToken', isEqualTo: qrToken)
+          .limit(1)
+          .get();
+      if (snap.docs.isEmpty) return null;
+      return EntregaModel.fromJson(snap.docs.first.data()).toEntity();
+    } catch (e) {
+      return null;
+    }
   }
 }

@@ -193,12 +193,13 @@ class Stage2Page extends ConsumerWidget {
                                   IconDecoration(
                                     icon: Icons.unarchive,
                                     iconColor: AppColors.alert,
+                                    size: 20,
                                   ),
                                   SizedBox(width: AppSpacing.xSmall),
                                   Expanded(
                                     child: Text(
                                       DateFormat.yMd().format(load.date),
-                                      style: textTheme.bodyLarge?.copyWith(
+                                      style: textTheme.headlineMedium?.copyWith(
                                         color: AppColors.secondaryDarkPanela,
                                       ),
                                     ),
@@ -230,6 +231,7 @@ class Stage2Page extends ConsumerWidget {
                                   CustomRichText(
                                     icon: Icons.shopping_basket,
                                     iconColor: AppColors.register,
+                                    size: 15,
                                     firstText: 'Canastillas: ',
                                     secondText: load.baskets.count.toString(),
                                   ),
@@ -241,6 +243,7 @@ class Stage2Page extends ConsumerWidget {
                                     ),
                                     icon: Icons.verified,
                                     iconColor: AppColors.accepted,
+                                    size: 15,
                                     firstText: 'Calidad: ',
                                     secondText: load.baskets.quality.label,
                                   ),
@@ -249,6 +252,7 @@ class Stage2Page extends ConsumerWidget {
                                   CustomRichText(
                                     icon: Icons.storage_outlined,
                                     iconColor: AppColors.weight,
+                                    size: 15,
                                     firstText: 'Gavera: ',
                                     secondText:
                                         '${load.baskets.referenceWeight} g',
