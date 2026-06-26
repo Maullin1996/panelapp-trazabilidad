@@ -32,7 +32,7 @@ class Stage2Page extends ConsumerWidget {
         CustomSnackBar.show(
           context,
           message: 'Error al guardar',
-          status: SnackbarStatus.accepted,
+          status: SnackbarStatus.error,
         );
       }
     });
@@ -54,6 +54,7 @@ class Stage2Page extends ConsumerWidget {
     }
 
     final textTheme = TextTheme.of(context);
+    final user = ref.watch(authProvider).user;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,7 +85,6 @@ class Stage2Page extends ConsumerWidget {
                 itemCount: loads.length,
                 itemBuilder: (BuildContext context, int index) {
                   final load = loads[index];
-                  final user = ref.read(authProvider).user;
                   return GestureDetector(
                     onTap: () {
                       showDialog(

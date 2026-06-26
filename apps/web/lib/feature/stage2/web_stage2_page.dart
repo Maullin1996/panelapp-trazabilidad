@@ -107,121 +107,36 @@ class WebStage2Page extends ConsumerWidget {
                 ? ErrorWidgetCustom(error: error)
                 : loads.isEmpty
                 ? const EmptyWidget()
-                : LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (constraints.maxWidth < 900) {
-                        return ListView.separated(
-                          padding: const EdgeInsets.all(AppSpacing.medium),
-                          itemCount: loads.length,
-                          separatorBuilder: (_, _) =>
-                              const SizedBox(height: AppSpacing.small),
-                          itemBuilder: (_, index) {
-                            final load = loads[index];
-                            return _LoadCard(
-                              load: load,
-                              project: project,
-                              onEdit: () => _showFormDialog(
+                : GridView.builder(
+                    padding: const EdgeInsets.all(AppSpacing.medium),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 320,
+                      mainAxisSpacing: AppSpacing.small,
+                      crossAxisSpacing: AppSpacing.small,
+                      mainAxisExtent: 200,
+                    ),
+                    itemCount: loads.length,
+                    itemBuilder: (_, index) {
+                      final load = loads[index];
+                      return _LoadCard(
+                        load: load,
+                        project: project,
+                        onEdit: () => _showFormDialog(
+                          context,
+                          ref,
+                          project,
+                          initialData: load,
+                          isNew: false,
+                        ),
+                        onDelete: user?.role == UserRole.admin
+                            ? () => _confirmDelete(
                                 context,
                                 ref,
-                                project,
-                                initialData: load,
-                                isNew: false,
-                              ),
-                              onDelete: user?.role == UserRole.admin
-                                  ? () => _confirmDelete(
-                                      context,
-                                      ref,
-                                      load.id,
-                                      textTheme,
-                                    )
-                                  : null,
-                            );
-                          },
-                        );
-                      }
-
-                      return SingleChildScrollView(
-                        padding: const EdgeInsets.all(AppSpacing.medium),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: CustomCard(
-                            child: DataTable(
-                              headingRowColor: WidgetStateProperty.all(
-                                AppColors.primaryPanelaBrown.withAlpha(15),
-                              ),
-                              columns: const [
-                                DataColumn(label: Text('Fecha')),
-                                DataColumn(label: Text('Canastillas')),
-                                DataColumn(label: Text('Calidad')),
-                                DataColumn(label: Text('Gavera (g)')),
-                                DataColumn(label: Text('Acciones')),
-                              ],
-                              rows: loads.map((load) {
-                                return DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        DateFormat.yMd().format(load.date),
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        load.baskets.count.toString(),
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        load.baskets.quality.label,
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${load.baskets.referenceWeight} g',
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit_outlined,
-                                              color:
-                                                  AppColors.primaryPanelaBrown,
-                                            ),
-                                            onPressed: () => _showFormDialog(
-                                              context,
-                                              ref,
-                                              project,
-                                              initialData: load,
-                                              isNew: false,
-                                            ),
-                                          ),
-                                          if (user?.role == UserRole.admin)
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.delete_outline,
-                                                color: AppColors.error,
-                                              ),
-                                              onPressed: () => _confirmDelete(
-                                                context,
-                                                ref,
-                                                load.id,
-                                                textTheme,
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
+                                load.id,
+                                textTheme,
+                              )
+                            : null,
                       );
                     },
                   ),

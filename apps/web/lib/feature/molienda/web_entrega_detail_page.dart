@@ -11,7 +11,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:core/features/molienda/providers/molienda_providers.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
-import 'qr_share.dart';
+import 'package:core/features/molienda/helpers/qr_share.dart';
 
 class WebEntregaDetailPage extends ConsumerStatefulWidget {
   final String moliendaId;
