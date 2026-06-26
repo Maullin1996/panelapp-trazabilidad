@@ -76,15 +76,12 @@ class _LoteDetailBody extends ConsumerWidget {
       if (entrega != null) fechaEntrega = entrega.fechaEntrega;
     }
 
-    final load2 = ref
+    final loads2 = ref
         .watch(syncStage2ProjectsProvider)
-        .firstWhereOrNull((l) => l.projectId == data.id);
+        .where((l) => l.projectId == data.id)
+        .toList();
 
-    final entry3 = load2 == null
-        ? null
-        : ref
-            .watch(syncStage3ProjectsProvider)
-            .firstWhereOrNull((e) => e.stage2LoadId == load2.id);
+    final stage3List = ref.watch(syncStage3ProjectsProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.medium),
@@ -96,37 +93,79 @@ class _LoteDetailBody extends ConsumerWidget {
             children: [
               CustomCard(
                 child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.medium),
+                  padding: const EdgeInsets.all(AppSpacing.small),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _InfoRow(
-                        label: 'Molienda',
-                        value: data.name,
-                        textTheme: textTheme,
+                      Row(
+                        children: [
+                          IconDecoration(
+                            icon: Icons.note_alt_outlined,
+                            iconColor: AppColors.register,
+                            backgroundColor: AppColors.register,
+                          ),
+                          const SizedBox(width: AppSpacing.xSmall),
+                          Expanded(
+                            child: Text(
+                              'Información del lote',
+                              style: textTheme.headlineMedium?.copyWith(
+                                color: AppColors.primaryPanelaBrown,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: AppSpacing.small),
-                      _InfoRow(
-                        label: 'Fecha de entrega',
-                        value: DateFormat('dd/MM/yyyy HH:mm').format(
-                          fechaEntrega,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.small,
+                          vertical: AppSpacing.xSmall,
                         ),
-                        textTheme: textTheme,
+                        child: Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: AppColors.secondaryDarkPanela.withAlpha(45),
+                        ),
+                      ),
+                      CustomRichText(
+                        icon: Icons.factory_outlined,
+                        iconColor: AppColors.secondaryDarkPanela,
+                        firstText: 'Molienda: ',
+                        secondText: data.name,
                       ),
                       const SizedBox(height: AppSpacing.small),
-                      _InfoRow(
-                        label: 'Teléfono',
-                        value: data.phone,
-                        textTheme: textTheme,
+                      CustomRichText(
+                        icon: Icons.calendar_month,
+                        iconColor: AppColors.weight,
+                        firstText: 'Fecha de entrega: ',
+                        secondText: DateFormat.yMd().format(fechaEntrega),
+                      ),
+                      const SizedBox(height: AppSpacing.small),
+                      CustomRichText(
+                        icon: Icons.phone,
+                        iconColor: AppColors.error,
+                        firstText: 'Teléfono: ',
+                        secondText: data.phone,
                       ),
                     ],
                   ),
                 ),
               ),
-              if (load2 != null && entry3 != null) ...[
-                const SizedBox(height: AppSpacing.small),
-                _BodegaCard(load2: load2, entry3: entry3, textTheme: textTheme),
-              ],
+              ...loads2.map((load2) {
+                final entry3 = stage3List
+                    .firstWhereOrNull((e) => e.stage2LoadId == load2.id);
+                if (entry3 == null) return const SizedBox.shrink();
+                return Column(
+                  children: [
+                    const SizedBox(height: AppSpacing.small),
+                    _BodegaCard(
+                      load2: load2,
+                      entry3: entry3,
+                      textTheme: textTheme,
+                    ),
+                  ],
+                );
+              }),
             ],
           ),
         ),
@@ -225,7 +264,8 @@ class _BodegaCard extends StatelessWidget {
                           bottom: AppSpacing.xSmall,
                         ),
                         child: CustomRichText(
-                          icon: Icons.label_outline,
+                          icon: Icons.circle,
+                          backgroundDecoration: false,
                           iconColor: qualityColor(quality: q.label),
                           firstText: '${q.label}: ',
                           secondText:
@@ -238,35 +278,6 @@ class _BodegaCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _InfoRow extends StatelessWidget {
-  final String label;
-  final String value;
-  final TextTheme textTheme;
-  const _InfoRow({
-    required this.label,
-    required this.value,
-    required this.textTheme,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: textTheme.bodySmall?.copyWith(
-            color: AppColors.textDark.withAlpha(150),
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(value, style: textTheme.bodyLarge),
-      ],
     );
   }
 }
