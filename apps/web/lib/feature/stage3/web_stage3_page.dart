@@ -8,7 +8,8 @@ import 'package:core/core/router/routes.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
 import 'package:core/features/stage2_load/domain/entities/index.dart';
 import 'package:core/features/stage2_load/providers/sync_stage2_loads_provider.dart';
-import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:core/features/stage3_weigh/helpers/quality_color.dart';
 import 'package:core/features/stage3_weigh/providers/index.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
@@ -37,7 +38,6 @@ class WebStage3Page extends ConsumerWidget {
       onDestinationSelected: (_) {},
       child: Column(
         children: [
-          // ── Header ────────────────────────────────────────────
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.medium,
@@ -67,155 +67,48 @@ class WebStage3Page extends ConsumerWidget {
               ],
             ),
           ),
-
-          // ── Contenido ─────────────────────────────────────────
           Expanded(
             child: isLoading && loads2.isEmpty
                 ? const Stage3Shimmer(itemCount: 4)
                 : loads2.isEmpty
                 ? const EmptyWidget()
-                : LayoutBuilder(
-                    builder: (context, constraints) {
-                      if (constraints.maxWidth < 900) {
-                        return ListView.separated(
-                          padding: const EdgeInsets.all(AppSpacing.medium),
-                          itemCount: loads2.length,
-                          separatorBuilder: (_, _) =>
-                              const SizedBox(height: AppSpacing.small),
-                          itemBuilder: (_, index) {
-                            final load2 = loads2[index];
-                            final summary = ref.watch(
-                              loadSummaryProvider(load2.id),
-                            );
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(AppSpacing.medium),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final w = constraints.maxWidth;
+                        final cols = w < 650 ? 1 : w < 1050 ? 2 : 3;
+                        final cardWidth =
+                            (w - AppSpacing.medium * (cols - 1)) / cols;
+                        return Wrap(
+                          spacing: AppSpacing.medium,
+                          runSpacing: AppSpacing.medium,
+                          children: loads2.map((load2) {
+                            final summary =
+                                ref.watch(loadSummaryProvider(load2.id));
                             final entry3 = ref
                                 .watch(syncStage3ProjectsProvider)
                                 .firstWhereOrNull(
                                   (e) => e.stage2LoadId == load2.id,
                                 );
-                            return _Load2Card(
-                              load2: load2,
-                              summary: summary,
-                              hasEntry3: entry3 != null,
-                              onGoToSummary: () => context.push(
-                                '${Routes.stage3}/$projectId/${load2.id}/summary',
-                              ),
-                              onGoToForm: () => context.push(
-                                '${Routes.stage3}/$projectId/${load2.id}/form',
+                            return SizedBox(
+                              width: cardWidth,
+                              child: _WebLoad2Card(
+                                load2: load2,
+                                summary: summary,
+                                hasEntry3: entry3 != null,
+                                onGoToSummary: () => context.push(
+                                  '${Routes.stage3}/$projectId/${load2.id}/summary',
+                                ),
+                                onGoToForm: () => context.push(
+                                  '${Routes.stage3}/$projectId/${load2.id}/form',
+                                ),
                               ),
                             );
-                          },
+                          }).toList(),
                         );
-                      }
-
-                      return SingleChildScrollView(
-                        padding: const EdgeInsets.all(AppSpacing.medium),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: CustomCard(
-                            child: DataTable(
-                              headingRowColor: WidgetStateProperty.all(
-                                AppColors.primaryPanelaBrown.withAlpha(15),
-                              ),
-                              columns: const [
-                                DataColumn(label: Text('Fecha')),
-                                DataColumn(label: Text('Gaveras')),
-                                DataColumn(label: Text('Canastillas')),
-                                DataColumn(label: Text('Calidad')),
-                                DataColumn(label: Text('Registradas')),
-                                DataColumn(label: Text('Faltantes')),
-                                DataColumn(label: Text('Acciones')),
-                              ],
-                              rows: loads2.map((load2) {
-                                final summary = ref.watch(
-                                  loadSummaryProvider(load2.id),
-                                );
-                                final entry3 = ref
-                                    .watch(syncStage3ProjectsProvider)
-                                    .firstWhereOrNull(
-                                      (e) => e.stage2LoadId == load2.id,
-                                    );
-                                return DataRow(
-                                  cells: [
-                                    DataCell(
-                                      Text(
-                                        DateFormat.yMd().format(load2.date),
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${load2.baskets.referenceWeight} g',
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${load2.baskets.count}',
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        load2.baskets.quality.label,
-                                        style: textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${summary.regCount}',
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          color: AppColors.register,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Text(
-                                        '${summary.missingCount}',
-                                        style: textTheme.bodyMedium?.copyWith(
-                                          color: summary.missingCount > 0
-                                              ? AppColors.error
-                                              : AppColors.accepted,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    DataCell(
-                                      Row(
-                                        children: [
-                                          if (entry3 != null)
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.article_outlined,
-                                                color: AppColors.register,
-                                              ),
-                                              tooltip: 'Ver resumen',
-                                              onPressed: () => context.push(
-                                                '${Routes.stage3}/$projectId/${load2.id}/summary',
-                                              ),
-                                            ),
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.edit_outlined,
-                                              color:
-                                                  AppColors.primaryPanelaBrown,
-                                            ),
-                                            tooltip: 'Continuar formulario',
-                                            onPressed: () => context.push(
-                                              '${Routes.stage3}/$projectId/${load2.id}/form',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
+                      },
+                    ),
                   ),
           ),
         ],
@@ -224,14 +117,14 @@ class WebStage3Page extends ConsumerWidget {
   }
 }
 
-class _Load2Card extends StatelessWidget {
+class _WebLoad2Card extends StatelessWidget {
   final Stage2LoadData load2;
   final LoadSummary summary;
   final bool hasEntry3;
   final VoidCallback onGoToSummary;
   final VoidCallback onGoToForm;
 
-  const _Load2Card({
+  const _WebLoad2Card({
     required this.load2,
     required this.summary,
     required this.hasEntry3,
@@ -246,7 +139,7 @@ class _Load2Card extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header: molienda ──
+          // ── Molienda ──────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.only(
               left: AppSpacing.small,
@@ -258,6 +151,7 @@ class _Load2Card extends StatelessWidget {
                 IconDecoration(
                   icon: Icons.unarchive,
                   iconColor: AppColors.alert,
+                  size: 20,
                 ),
                 const SizedBox(width: AppSpacing.xSmall),
                 Expanded(
@@ -287,12 +181,13 @@ class _Load2Card extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: AppSpacing.small,
               right: AppSpacing.small,
-              bottom: AppSpacing.xSmall,
+              bottom: AppSpacing.smallLarge,
             ),
             child: Column(
               children: [
                 CustomRichText(
                   icon: Icons.calendar_month,
+                  size: 15,
                   firstText: 'Fecha: ',
                   secondText: DateFormat.yMd().format(load2.date),
                 ),
@@ -300,13 +195,15 @@ class _Load2Card extends StatelessWidget {
                 CustomRichText(
                   icon: Icons.inventory_2,
                   iconColor: AppColors.secondaryDarkPanela,
+                  size: 15,
                   firstText: 'Enviadas: ',
-                  secondText: '${load2.baskets.count} canastillas',
+                  secondText: '${load2.baskets.count} Canastillas',
                 ),
                 const SizedBox(height: AppSpacing.xSmall),
                 CustomRichText(
                   icon: Icons.verified,
                   iconColor: AppColors.accepted,
+                  size: 15,
                   firstText: 'Calidad: ',
                   secondText: load2.baskets.quality.label,
                 ),
@@ -314,15 +211,15 @@ class _Load2Card extends StatelessWidget {
                 CustomRichText(
                   icon: Icons.storage,
                   iconColor: AppColors.weight,
-
+                  size: 15,
                   firstText: 'Gavera: ',
-                  secondText: "${load2.baskets.referenceWeight.toString()} g",
+                  secondText: '${load2.baskets.referenceWeight} g',
                 ),
               ],
             ),
           ),
 
-          // ── Header: bodega ──
+          // ── Bodega ────────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.only(
               left: AppSpacing.small,
@@ -335,6 +232,7 @@ class _Load2Card extends StatelessWidget {
                   icon: Icons.warehouse,
                   iconColor: AppColors.register,
                   backgroundColor: AppColors.register,
+                  size: 20,
                 ),
                 const SizedBox(width: AppSpacing.xSmall),
                 Expanded(
@@ -364,32 +262,100 @@ class _Load2Card extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: AppSpacing.small,
               right: AppSpacing.small,
-              bottom: AppSpacing.xSmall,
+              bottom: AppSpacing.small,
             ),
             child: Column(
               children: [
                 CustomRichText(
                   icon: Icons.all_inbox_rounded,
                   iconColor: AppColors.register,
+                  size: 15,
                   firstText: 'Registradas: ',
-                  secondText: '${summary.regCount} canastillas',
+                  secondText: '${summary.regCount} Canastillas',
                 ),
                 const SizedBox(height: AppSpacing.xSmall),
-                CustomRichText(
-                  icon: Icons.priority_high,
-                  iconColor: AppColors.error,
-                  firstText: 'Faltan: ',
-                  secondText: '${summary.missingCount} canastillas',
-                ),
+                ...BasketQuality.values
+                    .where((q) => summary.countByQuality.containsKey(q))
+                    .map(
+                      (q) => Padding(
+                        padding: const EdgeInsets.only(
+                          left: AppSpacing.small,
+                          bottom: AppSpacing.xSmall,
+                        ),
+                        child: CustomRichText(
+                          icon: Icons.circle,
+                          size: 12,
+                          backgroundDecoration: false,
+                          iconColor: qualityColor(quality: q.label),
+                          firstText: '${q.label}: ',
+                          secondText: '${summary.countByQuality[q]}',
+                        ),
+                      ),
+                    ),
               ],
             ),
           ),
 
-          // ── Acciones ──
+          // ── Faltantes ─────────────────────────────────────────
           Padding(
             padding: const EdgeInsets.only(
               left: AppSpacing.small,
               right: AppSpacing.small,
+              top: AppSpacing.xSmall,
+            ),
+            child: Row(
+              children: [
+                IconDecoration(
+                  icon: Icons.error_outlined,
+                  iconColor: AppColors.error,
+                  backgroundColor: AppColors.error,
+                  size: 20,
+                ),
+                const SizedBox(width: AppSpacing.xSmall),
+                Expanded(
+                  child: Text(
+                    'Canastillas faltantes',
+                    style: textTheme.headlineMedium?.copyWith(
+                      color: AppColors.error,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.xSmall,
+            ),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.secondaryDarkPanela.withAlpha(45),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              bottom: AppSpacing.xSmall,
+            ),
+            child: CustomRichText(
+              icon: Icons.priority_high,
+              size: 15,
+              iconColor: AppColors.error,
+              firstText: 'Faltan: ',
+              secondText: '${summary.missingCount} canastillas',
+            ),
+          ),
+
+          // ── Acciones ──────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.xSmall,
               bottom: AppSpacing.small,
             ),
             child: Row(

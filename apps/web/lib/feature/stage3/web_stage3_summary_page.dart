@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,12 +6,14 @@ import 'package:intl/intl.dart';
 
 import 'package:core/core/router/routes.dart';
 import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
+import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:core/features/stage2_load/providers/providers.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:core/features/stage3_weigh/domain/entities/stage3_form_data.dart';
 import 'package:core/features/stage3_weigh/helpers/quality_color.dart';
 import 'package:core/features/stage3_weigh/providers/index.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import '../shared/web_layout.dart';
 
 class WebStage3SummaryPage extends ConsumerWidget {
@@ -78,17 +79,17 @@ class WebStage3SummaryPage extends ConsumerWidget {
             ),
           ),
 
-          // ── Contenido en dos columnas ──────────────────────────
+          // ── Contenido ─────────────────────────────────────────
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(AppSpacing.medium),
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1000),
+                  constraints: const BoxConstraints(maxWidth: 1200),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ── Resumen superior en Row ────────────────
+                      // ── Cards de resumen ──────────────────────
                       LayoutBuilder(
                         builder: (context, constraints) {
                           final isNarrow = constraints.maxWidth < 900;
@@ -161,8 +162,7 @@ class WebStage3SummaryPage extends ConsumerWidget {
                                     child: Column(
                                       children: BasketQuality.values
                                           .where(
-                                            (q) => summaryCalculus
-                                                .countByQuality
+                                            (q) => summaryCalculus.countByQuality
                                                 .containsKey(q),
                                           )
                                           .map(
@@ -219,262 +219,160 @@ class WebStage3SummaryPage extends ConsumerWidget {
 
                       const SizedBox(height: AppSpacing.medium),
 
-                      // ── Tabla detalle canastillas ──────────────
-                      Text(
-                        'DETALLE POR CANASTILLA',
-                        style: textTheme.labelMedium?.copyWith(
-                          letterSpacing: 1.1,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.grey,
+                      // ── Grid de canastillas ───────────────────
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2, bottom: 6),
+                        child: Text(
+                          'DETALLE POR CANASTILLA',
+                          style: textTheme.labelMedium?.copyWith(
+                            letterSpacing: 1.1,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.small),
+                      const SizedBox(height: AppSpacing.xSmall),
                       LayoutBuilder(
                         builder: (context, constraints) {
-                          if (constraints.maxWidth < 900) {
-                            return Column(
-                              children: entry3.baskets.map((b) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: AppSpacing.small,
-                                  ),
-                                  child: CustomCard(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // ── Header ──
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: AppSpacing.small,
-                                            right: AppSpacing.small,
-                                            top: AppSpacing.xSmall,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 4,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .secondaryDarkPanela
-                                                      .withAlpha(20),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                        AppRadius.small,
-                                                      ),
-                                                  border: Border.all(
-                                                    color: AppColors
-                                                        .secondaryDarkPanela
-                                                        .withAlpha(60),
-                                                    width: 1,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  '#${b.sequence + 1}',
-                                                  style: textTheme.bodyMedium
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        color: AppColors
-                                                            .secondaryDarkPanela,
-                                                      ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: AppSpacing.xSmall,
-                                              ),
-                                              Text(
-                                                'Canastilla',
-                                                style: textTheme.headlineMedium
-                                                    ?.copyWith(
-                                                      color: Colors.grey,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        // ── Foto ──
-                                        if (b.photoPath.isNotEmpty) ...[
-                                          const SizedBox(
-                                            height: AppSpacing.xSmall,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () => context.push(
-                                              Routes.imageViewer,
-                                              extra: b.photoPath,
-                                            ),
-                                            child: Center(
-                                              child: StageImageWidget(
-                                                imageUrl: b.photoPath,
-                                                width: 200,
-                                                height: 200,
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                        // ── Datos ──
-                                        Padding(
-                                          padding: const EdgeInsets.all(
-                                            AppSpacing.small,
-                                          ),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColors.weight.withAlpha(
-                                                38,
-                                              ),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(
-                                                  AppRadius.medium,
-                                                ),
-                                              ),
-                                            ),
-                                            padding: const EdgeInsets.all(
-                                              AppSpacing.small,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                CustomRichText(
-                                                  icon: Icons.scale,
-                                                  iconColor: AppColors.weight,
-                                                  firstText:
-                                                      'Peso registrado: ',
-                                                  secondText:
-                                                      '${b.realWeight.toStringAsFixed(2)} kg',
-                                                ),
-                                                const SizedBox(
-                                                  height: AppSpacing.xSmall,
-                                                ),
-                                                CustomRichText(
-                                                  icon: Icons.storage,
-                                                  iconColor: AppColors.weight,
-
-                                                  firstText: 'Gavera: ',
-                                                  secondText:
-                                                      "${load2.baskets.referenceWeight.toString()} g",
-                                                ),
-                                                const SizedBox(
-                                                  height: AppSpacing.xSmall,
-                                                ),
-                                                CustomRichText(
-                                                  icon: Icons.verified,
-                                                  iconColor: qualityColor(
-                                                    quality: b.quality.label,
-                                                  ),
-                                                  firstText: 'Calidad: ',
-                                                  secondText: b.quality.label,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            );
-                          }
-
-                          return SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: CustomCard(
-                              child: DataTable(
-                                headingRowColor: WidgetStateProperty.all(
-                                  AppColors.primaryPanelaBrown.withAlpha(15),
-                                ),
-                                columns: const [
-                                  DataColumn(label: Text('#')),
-                                  DataColumn(label: Text('Gavera')),
-                                  DataColumn(label: Text('Peso real (kg)')),
-                                  DataColumn(label: Text('Calidad')),
-                                  DataColumn(label: Text('Foto')),
-                                ],
-                                rows: entry3.baskets.map((b) {
-                                  return DataRow(
-                                    cells: [
-                                      DataCell(
-                                        Text(
-                                          '#${b.sequence + 1}',
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            color:
-                                                AppColors.secondaryDarkPanela,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${b.referenceWeight} g',
-                                          style: textTheme.bodyMedium,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          '${b.realWeight.toStringAsFixed(2)} kg',
-                                          style: textTheme.bodyMedium,
-                                        ),
-                                      ),
-                                      DataCell(
-                                        Text(
-                                          b.quality.label,
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: qualityColor(
-                                              quality: b.quality.label,
-                                            ),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      DataCell(
-                                        b.photoPath.isNotEmpty
-                                            ? InkWell(
-                                                onTap: () => context.push(
-                                                  Routes.imageViewer,
-                                                  extra: b.photoPath,
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        vertical: 4,
-                                                      ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          AppRadius.small,
-                                                        ),
-                                                    child: StageImageWidget(
-                                                      imageUrl: b.photoPath,
-                                                      width: 48,
-                                                      height: 48,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            : const Icon(
-                                                Icons
-                                                    .image_not_supported_outlined,
-                                                color: AppColors.weight,
-                                              ),
-                                      ),
-                                    ],
-                                  );
-                                }).toList(),
-                              ),
-                            ),
+                          final w = constraints.maxWidth;
+                          final cols =
+                              w < 550 ? 1 : w < 850 ? 2 : w < 1150 ? 3 : 4;
+                          final cardWidth =
+                              (w - AppSpacing.medium * (cols - 1)) / cols;
+                          return Wrap(
+                            spacing: AppSpacing.medium,
+                            runSpacing: AppSpacing.medium,
+                            children: entry3.baskets.map((b) {
+                              return SizedBox(
+                                width: cardWidth,
+                                child: _WebBasketCard(basket: b),
+                              );
+                            }).toList(),
                           );
                         },
                       ),
+
+                      const SizedBox(height: AppSpacing.mediumLarge),
                     ],
                   ),
                 ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WebBasketCard extends StatelessWidget {
+  final BasketWeighData basket;
+
+  const _WebBasketCard({required this.basket});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+    return CustomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Header ────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.small,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryDarkPanela.withAlpha(20),
+                    borderRadius: BorderRadius.circular(AppRadius.small),
+                    border: Border.all(
+                      color: AppColors.secondaryDarkPanela.withAlpha(60),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    '#${basket.sequence + 1}',
+                    style: textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.secondaryDarkPanela,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.xSmall),
+                Text(
+                  'Canastilla',
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // ── Imagen ────────────────────────────────────────────
+          if (basket.photoPath.isNotEmpty) ...[
+            const SizedBox(height: AppSpacing.xSmall),
+            GestureDetector(
+              onTap: () => context.push(
+                Routes.imageViewer,
+                extra: basket.photoPath,
+              ),
+              child: Center(
+                child: StageImageWidget(
+                  imageUrl: basket.photoPath,
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
+
+          // ── Datos ─────────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.all(AppSpacing.small),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.weight.withAlpha(38),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppRadius.medium),
+                ),
+              ),
+              padding: const EdgeInsets.all(AppSpacing.small),
+              child: Column(
+                children: [
+                  CustomRichText(
+                    icon: Icons.scale,
+                    iconColor: AppColors.weight,
+                    firstText: 'Peso registrado: ',
+                    secondText:
+                        '${basket.realWeight.toStringAsFixed(2)} kg',
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    icon: Icons.storage,
+                    iconColor: AppColors.weight,
+                    firstText: 'Gavera: ',
+                    secondText: '${basket.referenceWeight} g',
+                  ),
+                  const SizedBox(height: AppSpacing.xSmall),
+                  CustomRichText(
+                    icon: Icons.verified,
+                    iconColor: qualityColor(quality: basket.quality.label),
+                    firstText: 'Calidad: ',
+                    secondText: basket.quality.label,
+                  ),
+                ],
               ),
             ),
           ),

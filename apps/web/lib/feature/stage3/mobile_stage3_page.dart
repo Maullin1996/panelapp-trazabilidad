@@ -332,7 +332,7 @@ class Stage3Page extends ConsumerWidget {
         actions: [
           if (entry != null)
             SelectionSourceTile(
-              key: Key('stage3-page-summery-button'),
+              key: Key('stage3-page-summary-button'),
               icon: Icons.article,
               label: 'Ver resumen',
               onTap: () {

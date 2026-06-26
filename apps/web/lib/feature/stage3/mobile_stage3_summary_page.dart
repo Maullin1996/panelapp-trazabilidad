@@ -71,9 +71,7 @@ class _Stage3PageSummaryState extends ConsumerState<Stage3PageSummary> {
 
     final visibleBaskets = entry3.baskets.take(_loadedCount).toList();
 
-    if (_totalBaskets != entry3.baskets.length) {
-      _totalBaskets = entry3.baskets.length;
-    }
+    _totalBaskets = entry3.baskets.length;
 
     final textTheme = TextTheme.of(context);
 
