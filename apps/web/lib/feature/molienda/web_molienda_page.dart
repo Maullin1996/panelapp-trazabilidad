@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:core/features/auth/domain/enums/user_role.dart';
+import 'package:core/features/auth/providers/auth_provider.dart';
 import 'package:core/features/molienda/domain/entities/molienda.dart';
 import 'package:core/features/molienda/providers/molienda_providers.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
 import 'package:core/core/services/custom_snack_bar.dart';
+import 'molienda_entregas_list.dart';
 import 'molienda_form_dialog.dart';
 
 class WebMoliendaPage extends ConsumerWidget {
@@ -32,6 +35,7 @@ class WebMoliendaPage extends ConsumerWidget {
     });
 
     final itemsAsync = ref.watch(moliendaItemsProvider);
+    final isAdmin = ref.watch(authProvider).user?.role == UserRole.admin;
     final textTheme = TextTheme.of(context);
 
     return Scaffold(
@@ -67,116 +71,44 @@ class WebMoliendaPage extends ConsumerWidget {
           ),
         ),
         error: (e, _) => ErrorWidgetCustom(error: e.toString()),
-        data: (moliendas) => SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.medium),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 900),
-              child: CustomCard(
-                child: moliendas.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(AppSpacing.medium),
-                        child: Center(
-                          child: Text(
-                            'Sin moliendas registradas',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: AppColors.textDark.withAlpha(120),
-                            ),
+        data: (moliendas) => moliendas.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                child: EmptyWidget(
+                  message: 'Todavía no has creado ninguna molienda.',
+                ),
+              )
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.medium),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final w = constraints.maxWidth;
+                    final cols = w < 600 ? 1 : w < 1000 ? 2 : 3;
+                    final cardWidth =
+                        (w - AppSpacing.xSmall * (cols - 1)) / cols;
+                    return Wrap(
+                      spacing: AppSpacing.medium,
+                      runSpacing: AppSpacing.medium,
+                      children: moliendas.map((m) {
+                        return SizedBox(
+                          width: cardWidth,
+                          child: _MoliendaCard(
+                            molienda: m,
+                            onVerEntregas: () =>
+                                _showEntregasDialog(context, m),
+                            onEdit: () =>
+                                _showFormDialog(context, ref, molienda: m),
+                            onDelete: isAdmin
+                                ? () => _confirmDelete(context, ref, m.id)
+                                : null,
                           ),
-                        ),
-                      )
-                    : SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: DataTable(
-                          headingRowColor: WidgetStateProperty.all(
-                            AppColors.primaryPanelaBrown.withAlpha(15),
-                          ),
-                          columns: [
-                            DataColumn(
-                              label: Text(
-                                'Nombre',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Teléfono',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Fecha creación',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Acciones',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ],
-                          rows: moliendas
-                              .map((m) => _buildRow(context, ref, m))
-                              .toList(),
-                        ),
-                      ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
               ),
-            ),
-          ),
-        ),
       ),
-    );
-  }
-
-  DataRow _buildRow(BuildContext context, WidgetRef ref, Molienda m) {
-    return DataRow(
-      cells: [
-        DataCell(Text(m.nombre)),
-        DataCell(Text(m.telefono)),
-        DataCell(Text(DateFormat('dd/MM/yyyy').format(m.creadoEn))),
-        DataCell(
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.local_shipping_outlined,
-                  color: AppColors.weight,
-                  size: 18,
-                ),
-                tooltip: 'Ver entregas',
-                onPressed: () => _showEntregasDialog(context, m),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.edit_outlined,
-                  color: AppColors.primaryPanelaBrown,
-                  size: 18,
-                ),
-                onPressed: () => _showFormDialog(context, ref, molienda: m),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: AppColors.error,
-                  size: 18,
-                ),
-                onPressed: () => _confirmDelete(context, ref, m.id),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -255,7 +187,9 @@ class WebMoliendaPage extends ConsumerWidget {
                   style: textTheme.headlineMedium,
                 ),
                 const SizedBox(height: AppSpacing.small),
-                Expanded(child: _EntregasList(moliendaId: molienda.id)),
+                Expanded(
+                  child: MoliendaEntregasList(moliendaId: molienda.id),
+                ),
               ],
             ),
           ),
@@ -297,65 +231,117 @@ class WebMoliendaPage extends ConsumerWidget {
   }
 }
 
-class _EntregasList extends ConsumerWidget {
-  final String moliendaId;
-  const _EntregasList({required this.moliendaId});
+// ─── Tarjeta de molienda ──────────────────────────────────────────────────────
+
+class _MoliendaCard extends StatelessWidget {
+  final Molienda molienda;
+  final VoidCallback onVerEntregas;
+  final VoidCallback onEdit;
+  final VoidCallback? onDelete;
+
+  const _MoliendaCard({
+    required this.molienda,
+    required this.onVerEntregas,
+    required this.onEdit,
+    this.onDelete,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final textTheme = TextTheme.of(context);
-    final entregasAsync = ref.watch(moliendaEntregasProvider(moliendaId));
-
-    return entregasAsync.when(
-      loading: () => const Center(
-        child: CircularProgressIndicator(color: AppColors.primaryPanelaBrown),
-      ),
-      error: (e, _) => ErrorWidgetCustom(error: e.toString()),
-      data: (entregas) {
-        if (entregas.isEmpty) {
-          return Center(
-            child: Text(
-              'Sin entregas registradas',
-              style: textTheme.bodyLarge?.copyWith(
-                color: AppColors.textDark.withAlpha(120),
-              ),
+    return CustomCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              top: AppSpacing.xSmall,
             ),
-          );
-        }
-        return ListView.separated(
-          shrinkWrap: true,
-          itemCount: entregas.length,
-          separatorBuilder: (_, _) => const Divider(height: 1),
-          itemBuilder: (context, index) {
-            final entrega = entregas[index];
-            return ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                DateFormat('dd/MM/yyyy HH:mm').format(entrega.fechaEntrega),
-                style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
-              ),
-              trailing: IconButton(
-                icon: const Icon(
-                  Icons.qr_code_2_outlined,
-                  color: AppColors.primaryPanelaBrown,
-                  size: 30,
+            child: Row(
+              children: [
+                IconDecoration(
+                  icon: Icons.storefront_outlined,
+                  iconColor: AppColors.primaryPanelaBrown,
                 ),
-                tooltip: 'Ver QR',
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  context.pushNamed(
-                    'entregaDetail',
-                    pathParameters: {
-                      'moliendaId': moliendaId,
-                      'entregaId': entrega.id,
-                    },
-                  );
-                },
-              ),
-            );
-          },
-        );
-      },
+                const SizedBox(width: AppSpacing.xSmall),
+                Expanded(
+                  child: Text(
+                    molienda.nombre,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: AppColors.secondaryDarkPanela,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.local_shipping_outlined,
+                    color: AppColors.weight,
+                    size: 20,
+                  ),
+                  tooltip: 'Ver entregas',
+                  onPressed: onVerEntregas,
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit_outlined,
+                    color: AppColors.primaryPanelaBrown,
+                    size: 20,
+                  ),
+                  tooltip: 'Editar',
+                  onPressed: onEdit,
+                ),
+                if (onDelete != null)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: AppColors.error,
+                      size: 20,
+                    ),
+                    tooltip: 'Eliminar',
+                    onPressed: onDelete,
+                  ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.xSmall,
+            ),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: AppColors.secondaryDarkPanela.withAlpha(45),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: AppSpacing.small,
+              right: AppSpacing.small,
+              bottom: AppSpacing.small,
+            ),
+            child: Column(
+              children: [
+                CustomRichText(
+                  icon: Icons.phone,
+                  iconColor: AppColors.weight,
+                  firstText: 'Teléfono: ',
+                  secondText: molienda.telefono,
+                ),
+                const SizedBox(height: AppSpacing.xSmall),
+                CustomRichText(
+                  icon: Icons.calendar_month,
+                  iconColor: AppColors.secondaryDarkPanela,
+                  firstText: 'Creada: ',
+                  secondText: DateFormat('dd/MM/yyyy').format(molienda.creadoEn),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
