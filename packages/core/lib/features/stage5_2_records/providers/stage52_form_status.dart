@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../../../core/services/compress_image_bytes.dart';
 import '../../../core/storage/application/storage_providers.dart';
 import '../domain/entities/stage52_record_data.dart';
 import 'stage52_usecases_provider.dart';
@@ -32,9 +33,10 @@ class Stage52Form extends _$Stage52Form {
     try {
       if (photoBytes != null) {
         final uploadImage = ref.read(uploadImageProvider);
+        final compressed = await compressImageBytes(photoBytes);
         final downloadUrl = await uploadImage(
           path: 'stage52_photos/${data.id}.jpg',
-          bytes: photoBytes,
+          bytes: compressed,
         );
         data = data.copyWith(photoPath: downloadUrl);
       }

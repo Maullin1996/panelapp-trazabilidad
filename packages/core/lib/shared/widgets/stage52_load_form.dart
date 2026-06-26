@@ -13,6 +13,7 @@ import 'package:core/features/stage5_2_records/domain/entities/stage52_record_da
 import 'package:core/features/stage5_2_records/providers/stage52_form_status.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
+import 'package:core/features/stage2_load/domain/entities/basket_quality_label.dart';
 import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 
 class Stage52LoadForm extends ConsumerStatefulWidget {
@@ -54,7 +55,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
               'gaveras': widget.initialRecord!.gaveraWeight,
               'panelaWeight': widget.initialRecord!.panelaWeight.toString(),
               'unitCount': widget.initialRecord!.unitCount.toString(),
-              'quality': widget.initialRecord!.quality.name,
+              'quality': widget.initialRecord!.quality,
             }
           : {},
       child: Column(
@@ -149,15 +150,15 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
               children: [
                 FieldLabel(textTheme, 'Tipo de calidad'),
                 const SizedBox(height: AppSpacing.xSmall),
-                CustomFromDropdown(
+                CustomFromDropdown<BasketQuality>(
                   key: const Key('stage52-form-quality-input'),
                   name: 'quality',
                   items: BasketQuality.values
                       .map(
-                        (q) => DropdownMenuItem(
+                        (q) => DropdownMenuItem<BasketQuality>(
                           key: Key('stage52-form-quality-${q.name}'),
-                          value: q.name,
-                          child: Text(q.name.toUpperCase()),
+                          value: q,
+                          child: Text(q.label),
                         ),
                       )
                       .toList(),
@@ -306,7 +307,7 @@ class _Stage52FormPageState extends ConsumerState<Stage52LoadForm> {
       gaveraWeight: v['gaveras'] as double,
       panelaWeight: double.parse(v['panelaWeight']),
       unitCount: int.parse(v['unitCount']),
-      quality: BasketQuality.values.firstWhere((q) => q.name == v['quality']),
+      quality: v['quality'] as BasketQuality,
       photoPath: widget.initialRecord?.photoPath ?? '',
     );
     formNotifier.submit(data: record, isNew: isNew, photoBytes: _photoBytes);

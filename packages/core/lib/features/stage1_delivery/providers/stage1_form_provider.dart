@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../core/services/compress_image_bytes.dart';
 import '../../../core/storage/application/storage_providers.dart';
 import '../domain/entities/stage1_form_data.dart';
 import 'index.dart';
@@ -28,11 +29,15 @@ class Stage1Form extends _$Stage1Form {
     state = state.copyWith(status: Stage1FormStatus.submitting);
 
     try {
-      final dataToSave = photoBytes != null
+      final compressedPhoto = photoBytes != null
+          ? await compressImageBytes(photoBytes)
+          : null;
+
+      final dataToSave = compressedPhoto != null
           ? data.copyWith(
               photoPath: await ref.read(uploadImageProvider)(
                 path: 'stage1_photos/${data.id}.jpg',
-                bytes: photoBytes,
+                bytes: compressedPhoto,
               ),
             )
           : data;
@@ -68,20 +73,20 @@ class Stage1Form extends _$Stage1Form {
         } catch (e) {
           ///
         }
+
+        if (dataToSave.moliendaId != null) {
+          const uuid = Uuid();
+          final entrega = Entrega(
+            id: uuid.v4(),
+            moliendaId: dataToSave.moliendaId!,
+            produccionId: dataToSave.id,
+            fechaEntrega: DateTime.now(),
+            qrToken: uuid.v4(),
+          );
+          await ref.read(moliendaRepositoryProvider).createEntrega(entrega);
+        }
       } else {
         await ref.read(updateStage1DataProvider)(dataToSave);
-      }
-
-      if (dataToSave.moliendaId != null) {
-        const uuid = Uuid();
-        final entrega = Entrega(
-          id: uuid.v4(),
-          moliendaId: dataToSave.moliendaId!,
-          produccionId: dataToSave.id,
-          fechaEntrega: DateTime.now(),
-          qrToken: uuid.v4(),
-        );
-        await ref.read(moliendaRepositoryProvider).createEntrega(entrega);
       }
 
       state = state.copyWith(status: Stage1FormStatus.success);

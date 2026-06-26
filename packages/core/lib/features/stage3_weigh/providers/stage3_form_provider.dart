@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../../../core/services/compress_image_bytes.dart';
 import '../../../core/storage/application/storage_providers.dart';
 import '../domain/entities/stage3_form_data.dart';
 import 'stage3_usecases_provider.dart';
@@ -11,7 +12,6 @@ enum Stage3FormStatus { initial, submitting, success, error }
 class Stage3FormState {
   final Stage3FormStatus status;
   final String? errorMessage;
-  // ✅ Progreso de subida de fotos: cuántas van y el total
   final int uploadedPhotos;
   final int totalPhotos;
 
@@ -22,7 +22,6 @@ class Stage3FormState {
     this.totalPhotos = 0,
   });
 
-  // ✅ Porcentaje entre 0.0 y 1.0 para el LinearProgressIndicator
   double get uploadProgress =>
       totalPhotos == 0 ? 0.0 : uploadedPhotos / totalPhotos;
 
@@ -95,13 +94,16 @@ class Stage3Form extends _$Stage3Form {
         return b;
       }
 
+      final compressed = await compressImageBytes(bytes);
+
       int attempt = 0;
       while (true) {
         try {
-          final storagePath = 'stage3/${data.projectId}/${data.id}/${b.id}.jpg';
+          final storagePath =
+              'stage3/${data.projectId}/${data.id}/${b.id}.jpg';
           final downloadUrl = await uploadImage(
             path: storagePath,
-            bytes: bytes,
+            bytes: compressed,
           );
           onProgress?.call(++done, total);
           return b.copyWith(photoPath: downloadUrl);
@@ -115,9 +117,8 @@ class Stage3Form extends _$Stage3Form {
 
     final updated = <BasketWeighData>[];
     for (var i = 0; i < baskets.length; i += batchSize) {
-      final end = (i + batchSize < baskets.length)
-          ? i + batchSize
-          : baskets.length;
+      final end =
+          (i + batchSize < baskets.length) ? i + batchSize : baskets.length;
       final chunk = baskets.sublist(i, end);
       final results = await Future.wait(chunk.map(uploadOne));
       updated.addAll(results);
