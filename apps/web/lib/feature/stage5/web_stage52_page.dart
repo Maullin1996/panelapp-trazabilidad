@@ -6,10 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:core/core/router/routes.dart';
 import 'package:core/features/auth/domain/enums/user_role.dart';
 import 'package:core/features/auth/providers/auth_provider.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/features/stage5_2_records/providers/providers.dart';
 import 'package:core/shared/utils/tokens.dart';
 import 'package:core/shared/widgets/widgets.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 
 class WebStage52Page extends ConsumerWidget {
   final String projectId;
@@ -37,7 +38,7 @@ class WebStage52Page extends ConsumerWidget {
             color: AppColors.cardBackground,
             borderRadius: BorderRadius.circular(AppRadius.large),
             border: Border.all(
-              color: AppColors.primaryPanelaBrown.withAlpha(25),
+              color: AppColors.primaryPanelaBrown.withValues(alpha: 0.18),
               width: 0.5,
             ),
           ),
@@ -55,8 +56,9 @@ class WebStage52Page extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: ElevatedButton.icon(
-                  onPressed: () =>
-                      context.push('${Routes.stage5}/$projectId/records/form'),
+                  onPressed: () => context.push(
+                    '${Routes.stage5}/$projectId/records/form',
+                  ),
                   icon: const Icon(Icons.add, color: AppColors.cardBackground),
                   label: Text(
                     'Nuevo registro',
@@ -71,177 +73,58 @@ class WebStage52Page extends ConsumerWidget {
           ),
         ),
 
-        // ── Tabla ────────────────────────────────────────────
+        // ── Grid de registros ─────────────────────────────────
         Expanded(
           child: records.isEmpty
               ? const EmptyWidget()
-              : LayoutBuilder(
-                  builder: (context, constraints) {
-                    if (constraints.maxWidth < 1080) {
-                      return ListView.separated(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.medium,
-                        ),
-                        itemCount: records.length,
-                        separatorBuilder: (_, _) =>
-                            const SizedBox(height: AppSpacing.small),
-                        itemBuilder: (_, index) {
-                          final r = records[index];
-                          return _RecordCard(
-                            record: r,
-                            onViewSummary: () => context.push(
-                              '${Routes.stage5}/$projectId/records/${r.id}/summary',
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.medium,
+                    0,
+                    AppSpacing.medium,
+                    AppSpacing.medium,
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final w = constraints.maxWidth;
+                      final cols = w < 650 ? 1 : w < 1000 ? 2 : w < 1350 ? 3 : 4;
+                      final cardWidth =
+                          (w - AppSpacing.medium * (cols - 1)) / cols;
+                      return Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: AppSpacing.medium,
+                        runSpacing: AppSpacing.medium,
+                        children: records.map((r) {
+                          return SizedBox(
+                            width: cardWidth,
+                            child: _RecordCard(
+                              record: r,
+                              onViewSummary: () => context.push(
+                                '${Routes.stage5}/$projectId/records/${r.id}/summary',
+                              ),
+                              onEdit: () => context.push(
+                                '${Routes.stage5}/$projectId/records/${r.id}/edit',
+                              ),
+                              onDelete: user?.role == UserRole.admin
+                                  ? () => _confirmDelete(
+                                      context,
+                                      ref,
+                                      r.id,
+                                      textTheme,
+                                    )
+                                  : null,
+                              onPhotoTap: r.photoPath.isNotEmpty
+                                  ? () => context.push(
+                                      Routes.imageViewer,
+                                      extra: r.photoPath,
+                                    )
+                                  : null,
                             ),
-                            onEdit: () => context.push(
-                              '${Routes.stage5}/$projectId/records/${r.id}/edit',
-                            ),
-                            onDelete: user?.role == UserRole.admin
-                                ? () => _confirmDelete(
-                                    context,
-                                    ref,
-                                    r.id,
-                                    textTheme,
-                                  )
-                                : null,
                           );
-                        },
+                        }).toList(),
                       );
-                    }
-
-                    return SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.medium,
-                      ),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: CustomCard(
-                          child: DataTable(
-                            headingRowColor: WidgetStateProperty.all(
-                              AppColors.primaryPanelaBrown.withAlpha(15),
-                            ),
-                            columns: const [
-                              DataColumn(label: Text('Fecha')),
-                              DataColumn(label: Text('Gavera (g)')),
-                              DataColumn(label: Text('Peso panela (kg)')),
-                              DataColumn(label: Text('Unidades')),
-                              DataColumn(label: Text('Calidad')),
-                              DataColumn(label: Text('Foto')),
-                              DataColumn(label: Text('Acciones')),
-                            ],
-                            rows: records.map((r) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(
-                                    Text(
-                                      DateFormat.yMd().format(r.date),
-                                      style: textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      '${r.gaveraWeight} g',
-                                      style: textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      '${r.panelaWeight.toStringAsFixed(2)} kg',
-                                      style: textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      '${r.unitCount}',
-                                      style: textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Text(
-                                      r.quality.name.toUpperCase(),
-                                      style: textTheme.bodyMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    r.photoPath.isNotEmpty
-                                        ? InkWell(
-                                            onTap: () => context.push(
-                                              Routes.imageViewer,
-                                              extra: r.photoPath,
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: 4,
-                                                  ),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      AppRadius.small,
-                                                    ),
-                                                child: StageImageWidget(
-                                                  imageUrl: r.photoPath,
-                                                  width: 48,
-                                                  height: 48,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        : const Icon(
-                                            Icons.image_not_supported_outlined,
-                                            color: AppColors.weight,
-                                          ),
-                                  ),
-                                  DataCell(
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.article_outlined,
-                                            color: AppColors.register,
-                                          ),
-                                          tooltip: 'Ver resumen',
-                                          onPressed: () => context.push(
-                                            '${Routes.stage5}/$projectId/records/${r.id}/summary',
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.edit_outlined,
-                                            color: AppColors.primaryPanelaBrown,
-                                          ),
-                                          tooltip: 'Editar',
-                                          onPressed: () => context.push(
-                                            '${Routes.stage5}/$projectId/records/${r.id}/edit',
-                                          ),
-                                        ),
-                                        if (user?.role == UserRole.admin)
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.delete_outline,
-                                              color: AppColors.error,
-                                            ),
-                                            tooltip: 'Eliminar',
-                                            onPressed: () => _confirmDelete(
-                                              context,
-                                              ref,
-                                              r.id,
-                                              textTheme,
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 ),
         ),
       ],
@@ -280,6 +163,8 @@ class WebStage52Page extends ConsumerWidget {
     }
   }
 }
+
+// ─── Barra de resumen ─────────────────────────────────────────────────────────
 
 class _SummaryItem extends StatelessWidget {
   final String value;
@@ -320,177 +205,235 @@ class _SummaryDivider extends StatelessWidget {
     return Container(
       width: 0.5,
       height: 36,
-      color: AppColors.textDark.withAlpha(12),
+      color: AppColors.textDark.withValues(alpha: 0.12),
     );
   }
 }
+
+// ─── Tarjeta de registro ──────────────────────────────────────────────────────
 
 class _RecordCard extends StatelessWidget {
   final Stage52RecordData record;
   final VoidCallback onViewSummary;
   final VoidCallback onEdit;
   final VoidCallback? onDelete;
+  final VoidCallback? onPhotoTap;
 
   const _RecordCard({
     required this.record,
     required this.onViewSummary,
     required this.onEdit,
     this.onDelete,
+    this.onPhotoTap,
   });
 
-  Color get _qualityColor {
-    switch (record.quality.name) {
-      case 'negra':
-        return AppColors.textDark;
-      case 'regular':
-        return AppColors.alert;
-      case 'buena':
-        return AppColors.accepted;
-      default:
-        return AppColors.error;
-    }
-  }
+  Color get _qualityColor => switch (record.quality) {
+    BasketQuality.negra => AppColors.textDark,
+    BasketQuality.regular => AppColors.alert,
+    BasketQuality.buena => AppColors.accepted,
+    BasketQuality.extra => AppColors.error,
+  };
 
   @override
   Widget build(BuildContext context) {
     final r = record;
-    return CustomCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ── Header con badge de calidad y acciones ──
-          Padding(
-            padding: const EdgeInsets.only(
-              left: AppSpacing.small,
-              right: AppSpacing.small,
-              top: AppSpacing.xSmall,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _qualityColor.withAlpha(33),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    r.quality.name.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: _qualityColor,
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(
-                    Icons.article_outlined,
-                    color: AppColors.register,
-                  ),
-                  tooltip: 'Ver resumen',
-                  onPressed: onViewSummary,
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.edit_outlined,
-                    color: AppColors.primaryPanelaBrown,
-                  ),
-                  tooltip: 'Editar',
-                  onPressed: onEdit,
-                ),
-                if (onDelete != null)
-                  IconButton(
-                    icon: const Icon(
-                      Icons.delete_outline,
-                      color: AppColors.error,
-                    ),
-                    tooltip: 'Eliminar',
-                    onPressed: onDelete,
-                  ),
-              ],
-            ),
+    return Material(
+      color: AppColors.cardBackground,
+      borderRadius: BorderRadius.circular(AppRadius.large),
+      clipBehavior: Clip.hardEdge,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColors.textDark.withValues(alpha: 0.08),
+            width: 0.5,
           ),
-
-          // ── Divider ──
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.small,
-              vertical: AppSpacing.xSmall,
-            ),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-              color: AppColors.secondaryDarkPanela.withAlpha(45),
-            ),
-          ),
-
-          // ── Datos + Foto ──
-          Padding(
-            padding: const EdgeInsets.only(
-              left: AppSpacing.small,
-              right: AppSpacing.small,
-              bottom: AppSpacing.small,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
+          borderRadius: BorderRadius.circular(AppRadius.large),
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Acento lateral de calidad
+              Container(
+                width: 4,
+                decoration: BoxDecoration(
+                  color: _qualityColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(AppRadius.large),
+                    bottomLeft: Radius.circular(AppRadius.large),
+                  ),
+                ),
+              ),
+              // Contenido
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.xSmall),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomRichText(
+                      // ── Header: badge + acciones ──
+                      Row(
+                        children: [
+                          _QualityBadge(
+                            label: r.quality.name.toUpperCase(),
+                            color: _qualityColor,
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.article_outlined,
+                              color: AppColors.register,
+                            ),
+                            tooltip: 'Ver resumen',
+                            onPressed: onViewSummary,
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.edit_outlined,
+                              color: AppColors.primaryPanelaBrown,
+                            ),
+                            tooltip: 'Editar',
+                            onPressed: onEdit,
+                          ),
+                          if (onDelete != null)
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: AppColors.error,
+                              ),
+                              tooltip: 'Eliminar',
+                              onPressed: onDelete,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      // ── Métricas ──
+                      _MetricChip(
                         icon: Icons.calendar_month,
+                        label: 'Fecha',
+                        value: DateFormat.yMd().format(r.date),
                         iconColor: AppColors.weight,
-                        firstText: 'Fecha: ',
-                        secondText: DateFormat.yMd().format(r.date),
                       ),
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
+                      _MetricChip(
                         icon: Icons.unarchive_outlined,
+                        label: 'Unidades',
+                        value: '${r.unitCount}',
                         iconColor: AppColors.accepted,
-                        firstText: 'Unidades: ',
-                        secondText: '${r.unitCount}',
                       ),
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
+                      _MetricChip(
                         icon: Icons.scale,
+                        label: 'Gavera',
+                        value: '${r.gaveraWeight.toStringAsFixed(0)} g',
                         iconColor: AppColors.register,
-                        firstText: 'Gavera: ',
-                        secondText: '${r.gaveraWeight} g',
                       ),
-                      const SizedBox(height: AppSpacing.xSmall),
-                      CustomRichText(
+                      _MetricChip(
                         icon: Icons.storage_outlined,
+                        label: 'Paquete',
+                        value: '${r.panelaWeight.toStringAsFixed(2)} kg',
                         iconColor: AppColors.weight,
-                        firstText: 'Panela: ',
-                        secondText: '${r.panelaWeight.toStringAsFixed(2)} kg',
                       ),
                     ],
                   ),
                 ),
-                if (r.photoPath.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(left: AppSpacing.xSmall),
-                    child: InkWell(
-                      onTap: () =>
-                          context.push(Routes.imageViewer, extra: r.photoPath),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppRadius.medium),
-                        child: StageImageWidget(
-                          imageUrl: r.photoPath,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
+              ),
+              // Foto
+              if (r.photoPath.isNotEmpty)
+                GestureDetector(
+                  onTap: onPhotoTap,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.medium),
+                      child: StageImageWidget(
+                        imageUrl: r.photoPath,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-              ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Badge de calidad ─────────────────────────────────────────────────────────
+
+class _QualityBadge extends StatelessWidget {
+  final String label;
+  final Color color;
+  const _QualityBadge({required this.label, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.13),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: color,
+          letterSpacing: 0.4,
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Chip de métrica ──────────────────────────────────────────────────────────
+
+class _MetricChip extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color iconColor;
+
+  const _MetricChip({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.iconColor = AppColors.textDark,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = TextTheme.of(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.xSmall),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconDecoration(
+            icon: icon,
+            iconColor: iconColor,
+            backgroundColor: iconColor.withValues(alpha: 0.12),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '$label ',
+            style: textTheme.bodySmall?.copyWith(
+              fontSize: 11,
+              color: AppColors.secondaryDarkPanela,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: textTheme.bodySmall?.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textDark,
+              ),
             ),
           ),
         ],

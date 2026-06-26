@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:core/core/router/routes.dart';
 import 'package:core/features/auth/domain/enums/user_role.dart';
 import 'package:core/features/auth/providers/auth_provider.dart';
+import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
 import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 import 'package:core/features/stage5_2_records/providers/providers.dart';
 
@@ -18,7 +19,7 @@ class Stage52Page extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final records = ref.watch(stage52ByProjectProvider(projectId));
-    final user = ref.read(authProvider).user;
+    final user = ref.watch(authProvider).user;
     final summary = ref.watch(stage52SummaryProvider(projectId));
     final textTheme = TextTheme.of(context);
 
@@ -219,18 +220,12 @@ class _RecordCard extends StatelessWidget {
 
   const _RecordCard({required this.record, required this.onTap});
 
-  Color get _qualityColor {
-    switch (record.quality.name) {
-      case 'negra':
-        return AppColors.textDark;
-      case 'regular':
-        return AppColors.alert;
-      case 'buena':
-        return AppColors.accepted;
-      default:
-        return AppColors.error;
-    }
-  }
+  Color get _qualityColor => switch (record.quality) {
+    BasketQuality.negra => AppColors.textDark,
+    BasketQuality.regular => AppColors.alert,
+    BasketQuality.buena => AppColors.accepted,
+    BasketQuality.extra => AppColors.error,
+  };
 
   @override
   Widget build(BuildContext context) {
