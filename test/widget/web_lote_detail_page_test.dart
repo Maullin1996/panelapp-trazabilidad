@@ -58,9 +58,15 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Molienda El Paraíso'), findsOneWidget);
     expect(
-      find.text(DateFormat('dd/MM/yyyy HH:mm').format(tFechaEntrega)),
+      find.textContaining('Molienda El Paraíso', findRichText: true),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining(
+        DateFormat('dd/MM/yyyy HH:mm').format(tFechaEntrega),
+        findRichText: true,
+      ),
       findsOneWidget,
     );
   });

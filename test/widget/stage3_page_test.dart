@@ -104,7 +104,7 @@ void main() {
         findsOneWidget,
       );
       expect(
-        find.byKey(const Key('stage3-page-summery-button')),
+        find.byKey(const Key('stage3-page-summary-button')),
         findsNothing,
       );
     },
@@ -128,7 +128,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const Key('stage3-page-summery-button')),
+      find.byKey(const Key('stage3-page-summary-button')),
       findsOneWidget,
     );
   });

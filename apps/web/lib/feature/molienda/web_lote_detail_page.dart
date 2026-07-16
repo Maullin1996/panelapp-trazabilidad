@@ -138,7 +138,7 @@ class _LoteDetailBody extends ConsumerWidget {
                         icon: Icons.calendar_month,
                         iconColor: AppColors.weight,
                         firstText: 'Fecha de entrega: ',
-                        secondText: DateFormat.yMd().format(fechaEntrega),
+                        secondText: DateFormat('dd/MM/yyyy HH:mm').format(fechaEntrega),
                       ),
                       const SizedBox(height: AppSpacing.small),
                       CustomRichText(
