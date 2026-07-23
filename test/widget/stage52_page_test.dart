@@ -25,6 +25,7 @@ Stage52RecordData _record() => Stage52RecordData(
   date: DateTime(2024, 1, 1),
 );
 
+// ignore: strict_top_level_inference
 _baseOverrides({
   List<Stage52RecordData> records = const [],
   required _MockAuthRepository mockAuthRepo,

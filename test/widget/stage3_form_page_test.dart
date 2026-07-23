@@ -44,6 +44,7 @@ Stage3FormData _entry() => Stage3FormData(
   baskets: const [],
 );
 
+// ignore: strict_top_level_inference
 _baseOverrides({List<Stage3FormData> entries3 = const []}) => [
   stage1ProjectByIdProvider.overrideWith((ref, id) => _project()),
   syncStage2ProjectsProvider.overrideWith((ref) => [_load2()]),

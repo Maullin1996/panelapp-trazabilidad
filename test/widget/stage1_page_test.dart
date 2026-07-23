@@ -23,6 +23,7 @@ Stage1FormData _project({String id = 'p1', String name = 'Molienda'}) {
   );
 }
 
+// ignore: strict_top_level_inference
 _baseOverrides({Stage1FormData? project}) => [
   stage1ProjectByIdProvider.overrideWith((ref, id) => project),
   syncInventoryItemsProvider.overrideWith((ref) => const []),

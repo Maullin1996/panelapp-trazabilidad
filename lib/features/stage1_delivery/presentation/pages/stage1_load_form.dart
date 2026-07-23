@@ -474,7 +474,12 @@ class _Stage1LoadFormState extends ConsumerState<Stage1LoadForm> {
       date: widget.initialData?.date ?? DateTime.now(),
       photoPath: widget.initialData?.photoPath,
     );
-    formNotifier.submit(data, isNew: widget.isNew, photoBytes: _photoBytes);
+    formNotifier.submit(
+      data,
+      isNew: widget.isNew,
+      photoBytes: _photoBytes,
+      previousData: widget.initialData,
+    );
   }
 
   Future<void> _onPickImage() async {

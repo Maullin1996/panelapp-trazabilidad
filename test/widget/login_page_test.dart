@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:registro_panela/features/auth/presentation/providers/login_form_provider.dart'
-    show LoginFormState, loginFormProvider;
 import 'package:registro_panela/features/auth/presentation/pages/login_form.dart';
 
 Finder _editableTextUnder(Key parentKey) {

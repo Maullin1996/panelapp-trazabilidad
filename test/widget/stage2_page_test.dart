@@ -40,6 +40,7 @@ Stage2LoadData _load() => Stage2LoadData(
   ),
 );
 
+// ignore: strict_top_level_inference
 _baseOverrides({
   List<Stage2LoadData> loads = const [],
   _MockAuthRepository? mockAuthRepo,

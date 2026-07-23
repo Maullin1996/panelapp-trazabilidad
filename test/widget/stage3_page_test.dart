@@ -54,6 +54,7 @@ Stage3FormData _entry() => Stage3FormData(
   ],
 );
 
+// ignore: strict_top_level_inference
 _baseOverrides({
   List<Stage2LoadData> loads2 = const [],
   List<Stage3FormData> entries3 = const [],

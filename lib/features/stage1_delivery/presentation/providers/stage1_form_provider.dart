@@ -8,6 +8,7 @@ import '../../../../core/storage/application/storage_providers.dart';
 import '../../domain/entities/stage1_form_data.dart';
 import 'index.dart';
 import 'package:registro_panela/features/inventory/domain/entities/inventory_item.dart';
+import 'package:registro_panela/features/inventory/domain/repositories/inventory_repository.dart';
 import 'package:registro_panela/features/inventory/presentation/providers/inventory_providers.dart';
 import 'package:registro_panela/features/molienda/domain/entities/entrega.dart';
 import 'package:registro_panela/features/molienda/presentation/providers/molienda_providers.dart';
@@ -25,6 +26,7 @@ class Stage1Form extends _$Stage1Form {
     Stage1FormData data, {
     required bool isNew,
     Uint8List? photoBytes,
+    Stage1FormData? previousData,
   }) async {
     state = state.copyWith(status: Stage1FormStatus.submitting);
 
@@ -49,27 +51,13 @@ class Stage1Form extends _$Stage1Form {
           final inventoryRepo = ref.read(inventoryRepositoryProvider);
           final inventoryItems = await inventoryRepo.getAll();
 
-          for (final gavera in dataToSave.gaveras) {
-            final item = inventoryItems.firstWhereOrNull(
-              (i) =>
-                  i.type == InventoryItemType.gavera &&
-                  (i.referenceWeight! - gavera.referenceWeight).abs() < 0.001,
-            );
-            if (item != null && gavera.quantity > 0) {
-              await inventoryRepo.decrementAvailable(item.id, gavera.quantity);
-            }
-          }
-
-          for (final basket in dataToSave.baskets) {
-            final item = inventoryItems.firstWhereOrNull(
-              (i) =>
-                  i.type == InventoryItemType.canastilla &&
-                  i.size == basket.size,
-            );
-            if (item != null && basket.quantity > 0) {
-              await inventoryRepo.decrementAvailable(item.id, basket.quantity);
-            }
-          }
+          await _applyInventoryDelta(
+            inventoryRepo,
+            _gaveraQuantitiesByItemId(dataToSave.gaveras, inventoryItems),
+            _basketQuantitiesByItemId(dataToSave.baskets, inventoryItems),
+            {},
+            {},
+          );
         } catch (e) {
           ///
         }
@@ -87,6 +75,27 @@ class Stage1Form extends _$Stage1Form {
         }
       } else {
         await ref.read(updateStage1DataProvider)(dataToSave);
+
+        try {
+          final inventoryRepo = ref.read(inventoryRepositoryProvider);
+          final inventoryItems = await inventoryRepo.getAll();
+
+          await _applyInventoryDelta(
+            inventoryRepo,
+            _gaveraQuantitiesByItemId(dataToSave.gaveras, inventoryItems),
+            _basketQuantitiesByItemId(dataToSave.baskets, inventoryItems),
+            _gaveraQuantitiesByItemId(
+              previousData?.gaveras ?? const [],
+              inventoryItems,
+            ),
+            _basketQuantitiesByItemId(
+              previousData?.baskets ?? const [],
+              inventoryItems,
+            ),
+          );
+        } catch (e) {
+          ///
+        }
       }
 
       state = state.copyWith(status: Stage1FormStatus.success);
@@ -95,6 +104,76 @@ class Stage1Form extends _$Stage1Form {
         status: Stage1FormStatus.error,
         errorMessage: e.toString(),
       );
+    }
+  }
+
+  Map<String, int> _gaveraQuantitiesByItemId(
+    List<GaveraData> gaveras,
+    List<InventoryItem> inventoryItems,
+  ) {
+    final quantities = <String, int>{};
+    for (final gavera in gaveras) {
+      final item = inventoryItems.firstWhereOrNull(
+        (i) =>
+            i.type == InventoryItemType.gavera &&
+            (i.referenceWeight! - gavera.referenceWeight).abs() < 0.001,
+      );
+      if (item != null) {
+        quantities[item.id] = (quantities[item.id] ?? 0) + gavera.quantity;
+      }
+    }
+    return quantities;
+  }
+
+  Map<String, int> _basketQuantitiesByItemId(
+    List<BasketData> baskets,
+    List<InventoryItem> inventoryItems,
+  ) {
+    final quantities = <String, int>{};
+    for (final basket in baskets) {
+      final item = inventoryItems.firstWhereOrNull(
+        (i) => i.type == InventoryItemType.canastilla && i.size == basket.size,
+      );
+      if (item != null) {
+        quantities[item.id] = (quantities[item.id] ?? 0) + basket.quantity;
+      }
+    }
+    return quantities;
+  }
+
+  Future<void> _applyInventoryDelta(
+    InventoryRepository inventoryRepo,
+    Map<String, int> newGaveraQuantities,
+    Map<String, int> newBasketQuantities,
+    Map<String, int> previousGaveraQuantities,
+    Map<String, int> previousBasketQuantities,
+  ) async {
+    final gaveraIds = {
+      ...newGaveraQuantities.keys,
+      ...previousGaveraQuantities.keys,
+    };
+    for (final id in gaveraIds) {
+      final delta =
+          (newGaveraQuantities[id] ?? 0) - (previousGaveraQuantities[id] ?? 0);
+      if (delta > 0) {
+        await inventoryRepo.decrementAvailable(id, delta);
+      } else if (delta < 0) {
+        await inventoryRepo.incrementAvailable(id, -delta);
+      }
+    }
+
+    final basketIds = {
+      ...newBasketQuantities.keys,
+      ...previousBasketQuantities.keys,
+    };
+    for (final id in basketIds) {
+      final delta =
+          (newBasketQuantities[id] ?? 0) - (previousBasketQuantities[id] ?? 0);
+      if (delta > 0) {
+        await inventoryRepo.decrementAvailable(id, delta);
+      } else if (delta < 0) {
+        await inventoryRepo.incrementAvailable(id, -delta);
+      }
     }
   }
 }
