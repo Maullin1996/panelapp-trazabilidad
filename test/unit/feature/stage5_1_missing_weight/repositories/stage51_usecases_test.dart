@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/stage5_1_missing_weight/data/datasource/stage51_payment_datasource.dart';
-import 'package:core/features/stage5_1_missing_weight/data/models/stage51_payment_data_model.dart';
-import 'package:core/features/stage5_1_missing_weight/data/repositories_impl/stage51_repository_impl.dart';
-import 'package:core/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/data/datasource/stage51_payment_datasource.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/data/models/stage51_payment_data_model.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/data/repositories_impl/stage51_repository_impl.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/domain/entities/payment_data.dart';
 
 class MockStage51PaymentDatasource extends Mock
     implements Stage51PaymentDatasource {}

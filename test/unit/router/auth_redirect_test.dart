@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/core/router/auth_redirect.dart';
-import 'package:core/core/router/routes.dart';
-import 'package:core/features/auth/domain/entities/auth_status.dart';
-import 'package:core/features/auth/domain/entities/authenticated_user.dart';
-import 'package:core/features/auth/domain/enums/auth_status.dart';
-import 'package:core/features/auth/domain/enums/user_role.dart';
+import 'package:registro_panela/core/router/auth_redirect.dart';
+import 'package:registro_panela/core/router/routes.dart';
+import 'package:registro_panela/features/auth/domain/entities/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/entities/authenticated_user.dart';
+import 'package:registro_panela/features/auth/domain/enums/auth_status.dart';
+import 'package:registro_panela/features/auth/domain/enums/user_role.dart';
 
 AuthenticatedUser _user(UserRole role) {
   return AuthenticatedUser(

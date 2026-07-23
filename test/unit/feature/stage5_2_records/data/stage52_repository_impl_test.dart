@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage5_2_records/data/datasources/stage52_firestore_datasource.dart';
-import 'package:core/features/stage5_2_records/data/models/stage52_record_model.dart';
-import 'package:core/features/stage5_2_records/data/repositories_impl/stage52_repository_impl.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage5_2_records/data/datasources/stage52_firestore_datasource.dart';
+import 'package:registro_panela/features/stage5_2_records/data/models/stage52_record_model.dart';
+import 'package:registro_panela/features/stage5_2_records/data/repositories_impl/stage52_repository_impl.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 
 class MockStage52FirestoreDatasource extends Mock
     implements Stage52FirestoreDatasource {}

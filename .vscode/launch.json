@@ -20,66 +20,6 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        },
-        {
-            "name": "mobile",
-            "cwd": "apps\\mobile",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "mobile (profile mode)",
-            "cwd": "apps\\mobile",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "mobile (release mode)",
-            "cwd": "apps\\mobile",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
-        {
-            "name": "web",
-            "cwd": "apps\\web",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "web (profile mode)",
-            "cwd": "apps\\web",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "web (release mode)",
-            "cwd": "apps\\web",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        },
-        {
-            "name": "core",
-            "cwd": "packages\\core",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "core (profile mode)",
-            "cwd": "packages\\core",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "core (release mode)",
-            "cwd": "packages\\core",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
         }
     ]
 }

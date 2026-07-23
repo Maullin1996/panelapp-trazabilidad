@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:core/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
 
-import '../../apps/web/lib/feature/stage5/web_stage52_form_page.dart';
+import 'package:registro_panela/features/stage5_3_summary/presentation/pages/web_stage53_form_page.dart';
 
 Stage1FormData _project() => Stage1FormData(
   id: 'p1',
@@ -48,9 +48,7 @@ void main() {
             stage1ProjectByIdProvider.overrideWith((ref, id) => _project()),
             syncStage52LoadsProvider.overrideWith((ref) => const []),
           ],
-          child: const MaterialApp(
-            home: WebStage52FormPage(projectId: 'p1'),
-          ),
+          child: const MaterialApp(home: WebStage53FormPage(projectId: 'p1')),
         ),
       );
       await tester.pump();
@@ -96,7 +94,7 @@ void main() {
             syncStage52LoadsProvider.overrideWith((ref) => [_record()]),
           ],
           child: const MaterialApp(
-            home: WebStage52FormPage(projectId: 'p1', id: 'r1'),
+            home: WebStage53FormPage(projectId: 'p1', id: 'r1'),
           ),
         ),
       );

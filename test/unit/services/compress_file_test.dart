@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_image_compress_platform_interface/flutter_image_compress_platform_interface.dart';
-import 'package:core/core/services/compress_file.dart';
+import 'package:registro_panela/core/services/compress_file.dart';
 
 class _FakeCompressPlatform extends FlutterImageCompressPlatform {
   _FakeCompressPlatform({this.result});

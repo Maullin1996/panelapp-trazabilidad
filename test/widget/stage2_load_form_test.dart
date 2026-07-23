@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/shared/widgets/stage2_load_form.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage2_load/presentation/pages/stage2_load_form.dart';
 
 Stage1FormData _project() => Stage1FormData(
   id: 'p1',

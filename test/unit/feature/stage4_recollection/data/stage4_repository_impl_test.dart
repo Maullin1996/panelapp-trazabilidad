@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage4_recollection/data/datasources/stage4_firestore_datasource.dart';
-import 'package:core/features/stage4_recollection/data/models/stage4_form_model.dart';
-import 'package:core/features/stage4_recollection/data/repositories_impl/stage4_repository_impl.dart';
-import 'package:core/features/stage4_recollection/domain/entities/stage4_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage4_recollection/data/datasources/stage4_firestore_datasource.dart';
+import 'package:registro_panela/features/stage4_recollection/data/models/stage4_form_model.dart';
+import 'package:registro_panela/features/stage4_recollection/data/repositories_impl/stage4_repository_impl.dart';
+import 'package:registro_panela/features/stage4_recollection/domain/entities/stage4_form_data.dart';
 
 class MockStage4FirestoreDatasource extends Mock
     implements Stage4FirestoreDatasource {}

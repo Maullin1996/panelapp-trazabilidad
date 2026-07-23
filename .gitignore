@@ -50,14 +50,6 @@ GoogleService-Info.plist
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 
-apps/mobile/build/
-apps/web/build/
-packages/core/.dart_tool/
-
-# Firebase options
-apps/mobile/lib/firebase_options.dart
-apps/web/lib/firebase_options.dart
-
 # Local SSL certs (mkcert)
 *.pem
 

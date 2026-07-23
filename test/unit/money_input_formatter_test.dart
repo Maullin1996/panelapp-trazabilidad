@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:core/features/stage5_1_missing_weight/helper/money_input_formatter.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/helper/money_input_formatter.dart';
 
 void main() {
   test('MoneyInputFormatter strips non-digits and formats', () {

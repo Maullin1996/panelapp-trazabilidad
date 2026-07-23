@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:core/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:core/features/stage2_load/providers/providers.dart';
-import 'package:core/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage3_weigh/providers/index.dart';
-import 'package:core/shared/widgets/empty_widget.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
 
-import '../../apps/web/lib/feature/stage3/mobile_stage3_page.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/pages/mobile_stage3_page.dart';
 
 Stage1FormData _project() => Stage1FormData(
   id: 'p1',
@@ -99,14 +99,8 @@ void main() {
       await tester.tap(find.byKey(const Key('stage3-page-l1-custom-card')));
       await tester.pumpAndSettle();
 
-      expect(
-        find.byKey(const Key('stage3-page-form-button')),
-        findsOneWidget,
-      );
-      expect(
-        find.byKey(const Key('stage3-page-summary-button')),
-        findsNothing,
-      );
+      expect(find.byKey(const Key('stage3-page-form-button')), findsOneWidget);
+      expect(find.byKey(const Key('stage3-page-summary-button')), findsNothing);
     },
   );
 
@@ -115,10 +109,7 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: _baseOverrides(
-          loads2: [_load2()],
-          entries3: [_entry()],
-        ),
+        overrides: _baseOverrides(loads2: [_load2()], entries3: [_entry()]),
         child: const MaterialApp(home: Stage3Page(projectId: 'p1')),
       ),
     );
@@ -127,9 +118,6 @@ void main() {
     await tester.tap(find.byKey(const Key('stage3-page-l1-custom-card')));
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const Key('stage3-page-summary-button')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('stage3-page-summary-button')), findsOneWidget);
   });
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/features/stage3_weigh/helpers/comma_to_dot_formatter.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/helpers/comma_to_dot_formatter.dart';
 
 void main() {
   test('CommaToDotFormatter replaces commas and keeps a single dot', () {

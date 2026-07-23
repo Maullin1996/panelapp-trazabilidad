@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:core/features/stage2_load/domain/repositories/stage2_repository.dart';
-import 'package:core/features/stage2_load/domain/usecases/index.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/domain/repositories/stage2_repository.dart';
+import 'package:registro_panela/features/stage2_load/domain/usecases/index.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
 
 class MockStage2Repository extends Mock implements Stage2Repository {}
 

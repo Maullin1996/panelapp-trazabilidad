@@ -5,12 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
-import 'package:core/features/molienda/domain/entities/entrega.dart';
-import 'package:core/features/molienda/providers/molienda_providers.dart';
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/providers/index.dart';
+import 'package:registro_panela/features/molienda/domain/entities/entrega.dart';
+import 'package:registro_panela/features/molienda/presentation/providers/molienda_providers.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/index.dart';
 
-import '../../apps/web/lib/feature/molienda/web_lote_detail_page.dart';
+import 'package:registro_panela/features/molienda/presentation/pages/web_lote_detail_page.dart';
 
 void main() {
   final tDate = DateTime(2026, 3, 1, 9, 30);

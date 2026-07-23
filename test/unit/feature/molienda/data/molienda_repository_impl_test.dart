@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/molienda/data/datasources/molienda_firestore_datasource.dart';
-import 'package:core/features/molienda/data/models/molienda_model.dart';
-import 'package:core/features/molienda/data/models/entrega_model.dart';
-import 'package:core/features/molienda/data/repositories/molienda_repository_impl.dart';
-import 'package:core/features/molienda/domain/entities/molienda.dart';
-import 'package:core/features/molienda/domain/entities/entrega.dart';
+import 'package:registro_panela/features/molienda/data/datasources/molienda_firestore_datasource.dart';
+import 'package:registro_panela/features/molienda/data/models/molienda_model.dart';
+import 'package:registro_panela/features/molienda/data/models/entrega_model.dart';
+import 'package:registro_panela/features/molienda/data/repositories/molienda_repository_impl.dart';
+import 'package:registro_panela/features/molienda/domain/entities/molienda.dart';
+import 'package:registro_panela/features/molienda/domain/entities/entrega.dart';
 
 class MockMoliendaFirestoreDatasource extends Mock
     implements MoliendaFirestoreDatasource {}

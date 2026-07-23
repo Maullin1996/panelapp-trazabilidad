@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:core/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:core/features/stage2_load/providers/providers.dart';
-import 'package:core/features/stage3_weigh/domain/entities/stage3_form_data.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage3_weigh/providers/index.dart';
-import 'package:core/features/stage5_1_missing_weight/providers/global_missing_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/stage3_form_data.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
+import 'package:registro_panela/features/stage5_1_missing_weight/presentation/providers/global_missing_provider.dart';
 
 Stage2LoadData _load2({
   required String id,
@@ -79,6 +79,9 @@ void main() {
     expect(summary.totalRegisteredCount, 3); // 2 + 1
     expect(summary.totalRegisteredWeight, 2 * 11 + 1 * 9); // 31
     expect(summary.totalMissingCount, 2); // 5 - 3
-    expect(summary.totalMissingWeight, (3 * 12 + 2 * 10) - (2 * 11 + 1 * 9)); // 25
+    expect(
+      summary.totalMissingWeight,
+      (3 * 12 + 2 * 10) - (2 * 11 + 1 * 9),
+    ); // 25
   });
 }

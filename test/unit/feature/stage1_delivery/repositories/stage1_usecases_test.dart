@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/domain/repositories/stage1_repository.dart';
-import 'package:core/features/stage1_delivery/domain/usecases/index.dart';
-import 'package:core/features/stage1_delivery/domain/usecases/watch_stage1_projects.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/repositories/stage1_repository.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/usecases/index.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/usecases/watch_stage1_projects.dart';
 
 class MockStage1Repository extends Mock implements Stage1Repository {}
 

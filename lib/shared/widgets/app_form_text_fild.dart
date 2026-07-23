@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import '../../core/theme/utils/tokens.dart';
+
+class AppFormTextFild extends StatelessWidget {
+  final String name;
+
+  final String? initialValue;
+  final String? hintText;
+  final bool obscureText;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
+  final void Function(String?)? onChanged;
+  final List<TextInputFormatter>? inputFormatters;
+  final Function(String?)? valueTransformer;
+  final Widget? iconButton;
+
+  const AppFormTextFild({
+    super.key,
+    required this.name,
+    this.iconButton,
+    this.initialValue,
+    this.hintText,
+    this.obscureText = false,
+    this.keyboardType,
+    this.validator,
+    this.onChanged,
+    this.inputFormatters,
+    this.valueTransformer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilderTextField(
+      name: name,
+      decoration: InputDecoration(
+        suffixIcon: iconButton,
+        hintText: hintText,
+        hintStyle: TextStyle(color: AppColors.textDark.withAlpha(80)),
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.smallLarge,
+          vertical: AppSpacing.small,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(
+            color: AppColors.secondaryDarkPanela,
+            width: 2,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(
+            color: AppColors.primaryPanelaBrown,
+            width: 2.5,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.error, width: 2),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderSide: const BorderSide(color: AppColors.error, width: 2.5),
+        ),
+      ),
+      initialValue: initialValue,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      validator: validator,
+      style: Theme.of(context).textTheme.bodyLarge,
+      onChanged: onChanged,
+      inputFormatters: inputFormatters,
+      valueTransformer: valueTransformer,
+    );
+  }
+}

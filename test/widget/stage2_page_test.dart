@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:core/features/auth/domain/repositories/auth_repository.dart';
-import 'package:core/features/auth/providers/auth_repository_provider.dart';
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:core/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:core/features/stage2_load/providers/providers.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/shared/widgets/empty_widget.dart';
+import 'package:registro_panela/features/auth/domain/repositories/auth_repository.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_repository_provider.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
 
-import '../../apps/web/lib/feature/stage2/mobile_stage2_page.dart';
+import 'package:registro_panela/features/stage2_load/presentation/pages/mobile_stage2_page.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -80,10 +80,7 @@ void main() {
   testWidgets('Stage2Page renderiza la card de un cargue', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: _baseOverrides(
-          loads: [_load()],
-          mockAuthRepo: mockAuthRepo,
-        ),
+        overrides: _baseOverrides(loads: [_load()], mockAuthRepo: mockAuthRepo),
         child: const MaterialApp(home: Stage2Page(projectId: 'p1')),
       ),
     );
@@ -93,19 +90,13 @@ void main() {
       find.byKey(const Key('stage2-page-load-custom-card-l1')),
       findsOneWidget,
     );
-    expect(
-      find.byKey(const Key('stage2_page_buena-quality')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const Key('stage2_page_buena-quality')), findsOneWidget);
   });
 
   testWidgets('Stage2Page abre dialog al tocar una card', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: _baseOverrides(
-          loads: [_load()],
-          mockAuthRepo: mockAuthRepo,
-        ),
+        overrides: _baseOverrides(loads: [_load()], mockAuthRepo: mockAuthRepo),
         child: const MaterialApp(home: Stage2Page(projectId: 'p1')),
       ),
     );
@@ -114,6 +105,9 @@ void main() {
     await tester.tap(find.byKey(const Key('stage2-page-load-custom-card-l1')));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('stage2-page-edit-textbutton')), findsOneWidget);
+    expect(
+      find.byKey(const Key('stage2-page-edit-textbutton')),
+      findsOneWidget,
+    );
   });
 }

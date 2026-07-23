@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
-import 'package:core/features/stage1_delivery/providers/stage1_project_by_id_provider.dart';
-import 'package:core/features/inventory/providers/inventory_providers.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/providers/stage1_project_by_id_provider.dart';
+import 'package:registro_panela/features/inventory/presentation/providers/inventory_providers.dart';
 
-import '../../apps/web/lib/feature/stage1/mobile_stage1_page.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/pages/mobile_stage1_page.dart';
 
 Stage1FormData _project({String id = 'p1', String name = 'Molienda'}) {
   return Stage1FormData(

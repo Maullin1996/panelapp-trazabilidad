@@ -4,43 +4,42 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Registro Panela** is a Flutter monorepo (managed with Melos) for tracking panela production workflows. It has a mobile app and a web app sharing a `core` package, backed by Firebase.
+**Registro Panela** is a Flutter web app for tracking panela production workflows, backed by Firebase.
 
-> **Active development scope:** `apps/web` only. The `apps/mobile` app is paused — do not modify it.
+> Originally this repo held a Melos monorepo with a mobile app, a web app, and a shared `core` package. The mobile app was retired and everything was collapsed into this single standard Flutter project — there is now only one `pubspec.yaml`, one `lib/`, one `test/`.
 
-## Monorepo Structure
+## Project Structure
 
 ```
 registro_panela/
-├── melos.yaml               # Monorepo config
-├── apps/
-│   ├── mobile/              # Flutter mobile app (Android/iOS)
-│   └── web/                 # Flutter web app
-├── packages/
-│   └── core/                # Shared business logic, entities, providers, widgets
-└── functions/               # Firebase Cloud Functions (TypeScript)
+├── pubspec.yaml
+├── lib/
+│   ├── main.dart            # Firebase init, ProviderScope, MaterialApp.router
+│   ├── firebase_options.dart
+│   ├── router/               # GoRouter config (app_router.dart)
+│   ├── feature/               # Platform-agnostic page widgets (the actual app screens)
+│   ├── core/                  # Shared router helpers, services, storage
+│   ├── features/              # Business logic per feature (data/domain/providers)
+│   └── shared/                # Shared UI: theme, widgets, utils
+├── test/
+│   ├── unit/
+│   └── widget/
+├── web/                       # Flutter web target (index.html, manifest, icons)
+└── functions/                 # Firebase Cloud Functions (TypeScript)
 ```
+
+`lib/feature/` (singular) holds the actual screens shown to the user. `lib/features/` (plural) holds the business logic (entities, repositories, use cases, providers) that those screens consume — this split predates the monorepo collapse and was kept as-is since it separates presentation from domain logic.
 
 ## Common Commands
 
-### Monorepo bootstrap (run after cloning or adding packages)
+### Run the app
 ```bash
-melos bootstrap
-```
-
-### Run apps
-```bash
-# Mobile
-cd apps/mobile && flutter run
-
-# Web
-cd apps/web && flutter run -d chrome
+flutter pub get
+flutter run -d chrome
 ```
 
 ### Code generation (Freezed, Riverpod, json_serializable)
-Run this inside `packages/core` or any package that uses `build_runner`:
 ```bash
-cd packages/core
 dart run build_runner build --delete-conflicting-outputs
 
 # Watch mode
@@ -54,7 +53,7 @@ flutter analyze
 
 ### Tests
 ```bash
-cd packages/core && flutter test
+flutter test
 ```
 
 ### Firebase Functions (TypeScript)
@@ -66,14 +65,18 @@ npm run serve       # local emulator
 firebase deploy --only functions
 ```
 
+### Deploy web hosting
+```bash
+flutter build web
+firebase deploy --only hosting
+```
+
 ## Architecture
 
-### Core Package (`packages/core`)
-
-All business logic lives here. Features follow clean architecture:
+Features follow clean architecture under `lib/features/<feature_name>/`:
 
 ```
-packages/core/lib/features/<feature_name>/
+lib/features/<feature_name>/
 ├── data/
 │   ├── datasources/    # Firestore queries
 │   ├── models/         # JSON serializable models (toJson/fromJson)
@@ -85,18 +88,11 @@ packages/core/lib/features/<feature_name>/
 └── providers/          # Riverpod providers (riverpod_annotation, @riverpod)
 ```
 
-Shared UI that both apps use lives in `packages/core/lib/shared/`.
+Shared UI lives in `lib/shared/`. The actual pages/screens live in `lib/feature/<feature_name>/`.
 
-### App Layer
+### Responsive UI
 
-Each app (`mobile`, `web`) only contains:
-- `main.dart` — Firebase init, `ProviderScope`, `MaterialApp.router`
-- `router/app_router.dart` — GoRouter config with `authRedirect`
-- `feature/` — Platform-specific page widgets
-
-### Responsive UI (web app)
-
-Within `apps/web`, every route has **two layout variants** served by `AdaptiveLayout` (breakpoint 600px by default):
+Every route has **two layout variants** served by `AdaptiveLayout` (breakpoint 600px by default):
 
 | Variant | File prefix | Screen target |
 |---|---|---|
@@ -110,13 +106,13 @@ AdaptiveLayout(
 )
 ```
 
-Large-screen pages use `WebLayout` (side `NavigationRail`) from `apps/web/lib/feature/shared/web_layout.dart`. When adding or changing a feature, always update **both** variants.
+Large-screen pages use `WebLayout` (side `NavigationRail`) from `lib/feature/shared/web_layout.dart`. When adding or changing a feature, always update **both** variants.
 
 ### State Management
 
-Riverpod with code generation (`@riverpod`, `riverpod_annotation`). Providers live in `packages/core/lib/features/<feature>/providers/`. Generated files end in `.g.dart` — never edit them manually.
+Riverpod with code generation (`@riverpod`, `riverpod_annotation`). Providers live in `lib/features/<feature>/providers/`. Generated files end in `.g.dart` — never edit them manually.
 
-Auth state is in `Auth` notifier (`packages/core/lib/features/auth/providers/auth_provider.dart`), kept alive with `@Riverpod(keepAlive: true)`. GoRouter uses `GoRouterNotifier` + `authRedirect` for route guards.
+Auth state is in `Auth` notifier (`lib/features/auth/providers/auth_provider.dart`), kept alive with `@Riverpod(keepAlive: true)`. GoRouter uses `GoRouterNotifier` + `authRedirect` for route guards.
 
 ### Data Models
 
@@ -141,15 +137,15 @@ After modifying any entity, re-run `build_runner`.
 
 ### User Roles
 
-Defined in `packages/core/lib/features/auth/domain/enums/user_role.dart`. The `admin` role is enforced server-side via Firebase custom claims in Cloud Functions (`functions/src/index.ts`).
+Defined in `lib/features/auth/domain/enums/user_role.dart`. The `admin` role is enforced server-side via Firebase custom claims in Cloud Functions (`functions/src/index.ts`).
 
 ### Routing
 
-Routes are constants in `packages/core/lib/core/router/routes.dart`. Both apps define their own `routerProvider` but share the same `Routes` constants and `authRedirect` logic from core.
+Routes are constants in `lib/core/router/routes.dart`. The app's `routerProvider` uses the shared `Routes` constants and `authRedirect` logic.
 
 ### PDF Generation
 
-`packages/core/lib/features/pdf/helpers/generate_and_share_pdf.dart` — uses the `pdf` and `printing` packages. Web uses a stub (`web_download_stub.dart`) because sharing works differently on web vs mobile.
+`lib/features/pdf/helpers/generate_and_share_pdf.dart` — uses the `pdf` and `printing` packages. Web uses a stub (`web_download_stub.dart`) because sharing works differently on web vs mobile (kept for the web/non-web export pattern even though only web ships now).
 
 ## Feature: Moliendas
 
@@ -158,11 +154,11 @@ Routes are constants in `packages/core/lib/core/router/routes.dart`. Both apps d
 - Subcolección: /moliendas/{moliendaId}/entregas/{entregaId}
 - Búsqueda por QR: collectionGroup('entregas').where('qrToken', isEqualTo: qrToken)
 
-### Entidades (packages/core/lib/features/molienda/domain/entities/)
+### Entidades (lib/features/molienda/domain/entities/)
 - Molienda: id, nombre, telefono, creadoEn
 - Entrega: id, moliendaId, produccionId, fechaEntrega, qrToken
 
-### Providers (packages/core/lib/features/molienda/providers/molienda_providers.dart)
+### Providers (lib/features/molienda/providers/molienda_providers.dart)
 - moliendaDatasourceProvider
 - moliendaRepositoryProvider
 - moliendaItemsProvider (Stream)
@@ -178,8 +174,8 @@ Routes are constants in `packages/core/lib/core/router/routes.dart`. Both apps d
 - Manejado en web_inventory_page.dart y web_project_selector_page.dart
 - PopupMenu en mobile_project_selector_page.dart (solo admin)
 
-### Pantallas web (apps/web/lib/feature/molienda/)
-Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y web_*.dart (DataTable, Dialog), servidas por AdaptiveLayout en el router — igual que el resto de features en apps/web/.
+### Pantallas (lib/feature/molienda/)
+Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y web_*.dart (DataTable, Dialog), servidas por AdaptiveLayout en el router.
 
 - mobile_molienda_page.dart / web_molienda_page.dart — lista de moliendas, CRUD
 - mobile_lote_detail_page.dart / web_lote_detail_page.dart — vista del lote escaneado, sin NavigationRail
@@ -187,7 +183,7 @@ Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y 
 - molienda_form_dialog.dart — formulario crear/editar compartido entre variantes
 
 ### QR
-- Paquete: qr_flutter ^4.1.0 (agregado en packages/core/pubspec.yaml)
+- Paquete: qr_flutter ^4.1.0
 - El QR usa entrega.qrToken como data de QrImageView
 
 ### Stage1FormData y Stage1FormModel
@@ -211,14 +207,14 @@ Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y 
 
 ### Patrones aprendidos
 - No modificar archivos existentes masivamente; cambios puntuales por archivo
-- La app principal es web; mobile está desactualizado y no se toca
+- Solo existe la versión web; no hay app mobile que mantener
 - onDestinationSelected en páginas que no manejan un índice simplemente no hace nada
 - stage1ProjectByIdProvider (síncrono, paginado) ≠ stage1ProjectByIdRemoteProvider (Firestore directo)
 
 ### Escáner QR (qr_scanner_page.dart)
 - Implementación WebRTC propia (sin mobile_scanner ni camera plugin)
 - Mismo patrón que camera_preview_screen_web.dart: getUserMedia + HTMLVideoElement + ui_web.platformViewRegistry
-- Decodificación con zxing_lib ^1.1.4 (agregado en packages/core/pubspec.yaml)
+- Decodificación con zxing_lib ^1.1.4
 - Timer.periodic cada 600ms: captura frame con HTMLCanvasElement → getImageData RGBA → RGBLuminanceSource → BinaryBitmap → QRCodeReader
 - Al detectar token: getEntregaByQrToken → navega a loteDetail
 - Ruta: /qr-scanner (name: 'qrScanner', sin AdaptiveLayout)

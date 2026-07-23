@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:core/features/stage2_load/domain/entities/stage2_load_data.dart';
-import 'package:core/features/stage2_load/providers/providers.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage3_weigh/providers/index.dart';
-import 'package:core/features/stage5_summary/providers/providers.dart';
+import 'package:registro_panela/features/stage2_load/domain/entities/stage2_load_data.dart';
+import 'package:registro_panela/features/stage2_load/presentation/providers/providers.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage3_weigh/presentation/providers/index.dart';
+import 'package:registro_panela/features/stage5_3_summary/presentation/providers/providers.dart';
 
 Stage2LoadData _load({
   required String id,

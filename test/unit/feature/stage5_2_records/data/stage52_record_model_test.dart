@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage5_2_records/data/models/stage52_record_model.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage5_2_records/data/models/stage52_record_model.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
 
 void main() {
   final tDate = DateTime(2024, 1, 15);

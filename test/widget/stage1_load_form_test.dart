@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:core/features/inventory/providers/inventory_providers.dart';
-
-import '../../apps/web/lib/feature/stage1/mobile_stage1_form.dart';
+import 'package:registro_panela/features/inventory/presentation/providers/inventory_providers.dart';
+import 'package:registro_panela/features/stage1_delivery/presentation/pages/stage1_load_form.dart';
 
 void main() {
   testWidgets('Stage1LoadForm shows structural buttons with empty inventory', (
@@ -12,14 +11,10 @@ void main() {
   ) async {
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          syncInventoryItemsProvider.overrideWith((ref) => const []),
-        ],
+        overrides: [syncInventoryItemsProvider.overrideWith((ref) => const [])],
         child: const MaterialApp(
           home: Scaffold(
-            body: SingleChildScrollView(
-              child: Stage1LoadForm(isNew: true),
-            ),
+            body: SingleChildScrollView(child: Stage1LoadForm(isNew: true)),
           ),
         ),
       ),
@@ -54,23 +49,15 @@ void main() {
           ],
           child: const MaterialApp(
             home: Scaffold(
-              body: SingleChildScrollView(
-                child: Stage1LoadForm(isNew: true),
-              ),
+              body: SingleChildScrollView(child: Stage1LoadForm(isNew: true)),
             ),
           ),
         ),
       );
       await tester.pump();
 
-      expect(
-        find.text('No hay gaveras en el inventario'),
-        findsOneWidget,
-      );
-      expect(
-        find.text('No hay canastillas en el inventario'),
-        findsOneWidget,
-      );
+      expect(find.text('No hay gaveras en el inventario'), findsOneWidget);
+      expect(find.text('No hay canastillas en el inventario'), findsOneWidget);
     },
   );
 }

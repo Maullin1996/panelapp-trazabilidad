@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:core/features/inventory/data/models/inventory_item_model.dart';
-import 'package:core/features/inventory/domain/entities/inventory_item.dart';
-import 'package:core/features/stage1_delivery/domain/entities/stage1_form_data.dart';
+import 'package:registro_panela/features/inventory/data/models/inventory_item_model.dart';
+import 'package:registro_panela/features/inventory/domain/entities/inventory_item.dart';
+import 'package:registro_panela/features/stage1_delivery/domain/entities/stage1_form_data.dart';
 
 void main() {
   group('InventoryItemModel — gavera', () {

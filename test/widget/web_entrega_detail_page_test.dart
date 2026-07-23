@@ -5,10 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import 'package:core/features/molienda/domain/entities/entrega.dart';
-import 'package:core/features/molienda/providers/molienda_providers.dart';
+import 'package:registro_panela/features/molienda/domain/entities/entrega.dart';
+import 'package:registro_panela/features/molienda/presentation/providers/molienda_providers.dart';
 
-import '../../apps/web/lib/feature/molienda/web_entrega_detail_page.dart';
+import 'package:registro_panela/features/molienda/presentation/pages/web_entrega_detail_page.dart';
 
 void main() {
   final tFechaEntrega = DateTime(2026, 3, 2, 14, 0);

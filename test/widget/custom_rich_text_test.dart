@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:core/shared/widgets/custom_rich_text.dart';
+import 'package:registro_panela/shared/widgets/custom_rich_text.dart';
 
 void main() {
   testWidgets('CustomRichText muestra icono y dos spans de texto', (

@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:core/features/auth/domain/repositories/auth_repository.dart';
-import 'package:core/features/auth/providers/auth_repository_provider.dart';
-import 'package:core/features/stage3_weigh/domain/entities/basket_quality.dart';
-import 'package:core/features/stage5_2_records/domain/entities/stage52_record_data.dart';
-import 'package:core/features/stage5_2_records/providers/sync_stage52_loads_provider.dart';
-import 'package:core/shared/widgets/empty_widget.dart';
+import 'package:registro_panela/features/auth/domain/repositories/auth_repository.dart';
+import 'package:registro_panela/features/auth/presentation/providers/auth_repository_provider.dart';
+import 'package:registro_panela/features/stage3_weigh/domain/entities/basket_quality.dart';
+import 'package:registro_panela/features/stage5_2_records/domain/entities/stage52_record_data.dart';
+import 'package:registro_panela/features/stage5_2_records/presentation/providers/sync_stage52_loads_provider.dart';
+import 'package:registro_panela/shared/widgets/empty_widget.dart';
 
-import '../../apps/web/lib/feature/stage5/mobile_stage52_page.dart';
+import 'package:registro_panela/features/stage5_3_summary/presentation/pages/mobile_stage53_page.dart';
 
 class _MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -48,16 +48,13 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: _baseOverrides(mockAuthRepo: mockAuthRepo),
-          child: const MaterialApp(home: Stage52Page(projectId: 'p1')),
+          child: const MaterialApp(home: MobileStage53Page(projectId: 'p1')),
         ),
       );
       await tester.pump();
 
       expect(find.byType(EmptyWidget), findsOneWidget);
-      expect(
-        find.byKey(const Key('stage52-page-form-button')),
-        findsOneWidget,
-      );
+      expect(find.byKey(const Key('stage52-page-form-button')), findsOneWidget);
     },
   );
 
@@ -70,7 +67,7 @@ void main() {
           records: [_record()],
           mockAuthRepo: mockAuthRepo,
         ),
-        child: const MaterialApp(home: Stage52Page(projectId: 'p1')),
+        child: const MaterialApp(home: MobileStage53Page(projectId: 'p1')),
       ),
     );
     await tester.pump();

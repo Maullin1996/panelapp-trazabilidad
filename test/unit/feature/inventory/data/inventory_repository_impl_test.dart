@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:core/features/inventory/data/datasources/inventory_firestore_datasource.dart';
-import 'package:core/features/inventory/data/models/inventory_item_model.dart';
-import 'package:core/features/inventory/data/repositories/inventory_repository_impl.dart';
-import 'package:core/features/inventory/domain/entities/inventory_item.dart';
+import 'package:registro_panela/features/inventory/data/datasources/inventory_firestore_datasource.dart';
+import 'package:registro_panela/features/inventory/data/models/inventory_item_model.dart';
+import 'package:registro_panela/features/inventory/data/repositories/inventory_repository_impl.dart';
+import 'package:registro_panela/features/inventory/domain/entities/inventory_item.dart';
 
 class MockInventoryFirestoreDatasource extends Mock
     implements InventoryFirestoreDatasource {}
