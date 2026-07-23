@@ -16,11 +16,9 @@ registro_panela/
 ├── lib/
 │   ├── main.dart            # Firebase init, ProviderScope, MaterialApp.router
 │   ├── firebase_options.dart
-│   ├── router/               # GoRouter config (app_router.dart)
-│   ├── feature/               # Platform-agnostic page widgets (the actual app screens)
-│   ├── core/                  # Shared router helpers, services, storage
-│   ├── features/              # Business logic per feature (data/domain/providers)
-│   └── shared/                # Shared UI: theme, widgets, utils
+│   ├── core/                  # Router (app_router.dart, routes.dart), theme, services, storage
+│   ├── features/              # One folder per feature: data/domain/presentation
+│   └── shared/                # Shared UI: widgets, helpers
 ├── test/
 │   ├── unit/
 │   └── widget/
@@ -28,7 +26,7 @@ registro_panela/
 └── functions/                 # Firebase Cloud Functions (TypeScript)
 ```
 
-`lib/feature/` (singular) holds the actual screens shown to the user. `lib/features/` (plural) holds the business logic (entities, repositories, use cases, providers) that those screens consume — this split predates the monorepo collapse and was kept as-is since it separates presentation from domain logic.
+Everything — business logic and the actual screens — lives under `lib/features/<feature_name>/`. There is no separate `lib/feature/` (singular) directory anymore: pages/screens live in `presentation/pages/`, providers in `presentation/providers/`, alongside that feature's own `data/` and `domain/`. (An earlier pass of this migration kept presentation and domain logic in separate `feature`/`features` trees; that split was folded into a single `presentation/` subfolder per feature.)
 
 ## Common Commands
 
@@ -85,10 +83,14 @@ lib/features/<feature_name>/
 │   ├── entities/       # Freezed immutable data classes
 │   ├── repositories/   # Abstract interfaces
 │   └── usecases/       # Single-responsibility use case classes
-└── providers/          # Riverpod providers (riverpod_annotation, @riverpod)
+└── presentation/
+    ├── pages/           # mobile_*.dart / web_*.dart screens (see Responsive UI below)
+    └── providers/       # Riverpod providers (riverpod_annotation, @riverpod)
 ```
 
-Shared UI lives in `lib/shared/`. The actual pages/screens live in `lib/feature/<feature_name>/`.
+Some smaller/UI-only features (`project_selector`, `splash`, `stage_selector`, `shared`) only have a `presentation/` folder — no `data`/`domain` because they have no persistence needs of their own.
+
+Shared UI lives in `lib/shared/`.
 
 ### Responsive UI
 
@@ -106,13 +108,13 @@ AdaptiveLayout(
 )
 ```
 
-Large-screen pages use `WebLayout` (side `NavigationRail`) from `lib/feature/shared/web_layout.dart`. When adding or changing a feature, always update **both** variants.
+Large-screen pages use `WebLayout` (side `NavigationRail`) from `lib/features/shared/web_layout.dart` (`AdaptiveLayout` itself is in `lib/features/shared/adaptive_layout.dart`). When adding or changing a feature, always update **both** variants.
 
 ### State Management
 
-Riverpod with code generation (`@riverpod`, `riverpod_annotation`). Providers live in `lib/features/<feature>/providers/`. Generated files end in `.g.dart` — never edit them manually.
+Riverpod with code generation (`@riverpod`, `riverpod_annotation`). Providers live in `lib/features/<feature>/presentation/providers/`. Generated files end in `.g.dart` — never edit them manually.
 
-Auth state is in `Auth` notifier (`lib/features/auth/providers/auth_provider.dart`), kept alive with `@Riverpod(keepAlive: true)`. GoRouter uses `GoRouterNotifier` + `authRedirect` for route guards.
+Auth state is in `Auth` notifier (`lib/features/auth/presentation/providers/auth_provider.dart`), kept alive with `@Riverpod(keepAlive: true)`. GoRouter uses `GoRouterNotifier` + `authRedirect` for route guards.
 
 ### Data Models
 
@@ -131,9 +133,11 @@ After modifying any entity, re-run `build_runner`.
 | `stage2` | Load data |
 | `stage3` | Weighing |
 | `stage4` | Recollection |
-| `stage5` | Invoice/summary |
+| `stage51` | Stage 5.1 — missing weight payments |
+| `stage52` | Stage 5.2 — individual panela records (the Stage 5 invoice/summary are computed from these, no collection of their own) |
 | `users` | User profiles with `role` field |
 | `inventory` | Gaveras and canastillas inventory |
+| `moliendas` / `moliendas/{id}/entregas` | Moliendas and their delivery (entrega) subcollection, see Feature: Moliendas below |
 
 ### User Roles
 
@@ -141,7 +145,7 @@ Defined in `lib/features/auth/domain/enums/user_role.dart`. The `admin` role is 
 
 ### Routing
 
-Routes are constants in `lib/core/router/routes.dart`. The app's `routerProvider` uses the shared `Routes` constants and `authRedirect` logic.
+Routes are constants in `lib/core/router/routes.dart`. The app's `routerProvider` (`lib/core/router/app_router.dart`) uses the shared `Routes` constants and `authRedirect` logic.
 
 ### PDF Generation
 
@@ -158,7 +162,7 @@ Routes are constants in `lib/core/router/routes.dart`. The app's `routerProvider
 - Molienda: id, nombre, telefono, creadoEn
 - Entrega: id, moliendaId, produccionId, fechaEntrega, qrToken
 
-### Providers (lib/features/molienda/providers/molienda_providers.dart)
+### Providers (lib/features/molienda/presentation/providers/molienda_providers.dart)
 - moliendaDatasourceProvider
 - moliendaRepositoryProvider
 - moliendaItemsProvider (Stream)
@@ -174,7 +178,7 @@ Routes are constants in `lib/core/router/routes.dart`. The app's `routerProvider
 - Manejado en web_inventory_page.dart y web_project_selector_page.dart
 - PopupMenu en mobile_project_selector_page.dart (solo admin)
 
-### Pantallas (lib/feature/molienda/)
+### Pantallas (lib/features/molienda/presentation/pages/)
 Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y web_*.dart (DataTable, Dialog), servidas por AdaptiveLayout en el router.
 
 - mobile_molienda_page.dart / web_molienda_page.dart — lista de moliendas, CRUD
@@ -189,7 +193,7 @@ Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y 
 ### Stage1FormData y Stage1FormModel
 - Campo moliendaId: String? agregado en Stage1FormData (después de name)
 - Stage1FormModel: moliendaId mapeado en fromJson, toJson, fromEntity, toEntity (patrón igual que photoPath)
-- web_stage1_form.dart usa CustomFromDropdown<Molienda> con syncMoliendaItemsProvider
+- stage1_load_form.dart usa CustomFromDropdown<Molienda> con syncMoliendaItemsProvider
 - Al guardar Stage1, se crea automáticamente una Entrega si moliendaId != null
 
 ### Búsqueda de lote por ID
@@ -210,6 +214,7 @@ Cada pantalla tiene variante mobile_*.dart (ListView/Cards, ModalBottomSheet) y 
 - Solo existe la versión web; no hay app mobile que mantener
 - onDestinationSelected en páginas que no manejan un índice simplemente no hace nada
 - stage1ProjectByIdProvider (síncrono, paginado) ≠ stage1ProjectByIdRemoteProvider (Firestore directo)
+- `Stage1Form.submit()` ajusta el inventario de gaveras/canastillas tanto al crear como al editar (`stage1_form_provider.dart`): calcula el delta entre `previousData` y los datos nuevos por ítem de inventario y hace `decrementAvailable`/`incrementAvailable` según corresponda. Si se agrega lógica de guardado similar en otro stage, no olvidar la rama de edición — originalmente solo se ajustaba el inventario al crear (`isNew`), no al editar
 
 ### Escáner QR (qr_scanner_page.dart)
 - Implementación WebRTC propia (sin mobile_scanner ni camera plugin)
